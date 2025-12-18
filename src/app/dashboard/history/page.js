@@ -1,9 +1,83 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { get } from "@/services/api";
+import { formatRelativeTime } from "@/utils/format";
 
 export default function History() {
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [statusFilter]);
+
+  const fetchJobs = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const params = new URLSearchParams();
+      if (statusFilter) params.append('status', statusFilter);
+      params.append('limit', '100');
+      
+      const response = await get(`/ads/jobs?${params.toString()}`);
+      
+      // Handle response structure: { data: { jobs: [...] }, ... }
+      if (response && response.data) {
+        setJobs(response.data.jobs || []);
+      } else {
+        setJobs([]);
+      }
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+      // More detailed error message
+      if (err.status === 0) {
+        setError('Network error: Could not connect to server. Please check if the backend is running.');
+      } else if (err.status === 401) {
+        setError('Authentication required. Please log in again.');
+      } else {
+        setError(err.message || `Failed to load job history (${err.status || 'Unknown error'})`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredJobs = jobs.filter((job) => {
+    if (!search) return true;
+    const searchLower = search.toLowerCase();
+    return (
+      job.id.toLowerCase().includes(searchLower) ||
+      job.coverage?.keyword?.toLowerCase().includes(searchLower) ||
+      job.coverage?.country?.toLowerCase().includes(searchLower)
+    );
+  });
+
+  const getStatusBadge = (status) => {
+    const statusConfig = {
+      completed: { bg: "bg-green-100", text: "text-green-700", label: "Completed" },
+      running: { bg: "bg-purple-100", text: "text-purple-700", label: "Running" },
+      pending: { bg: "bg-yellow-100", text: "text-yellow-700", label: "Pending" },
+      failed: { bg: "bg-red-100", text: "text-red-700", label: "Failed" },
+      paused: { bg: "bg-orange-100", text: "text-orange-700", label: "Paused" }
+    };
+
+    const config = statusConfig[status] || statusConfig.pending;
+    return (
+      <span className={`${config.bg} ${config.text} px-3 py-1 rounded-full text-xs font-medium`}>
+        {config.label}
+      </span>
+    );
+  };
+
+  const formatJobInfo = (job) => {
+    if (!job.coverage) return "N/A";
+    const { keyword, country, dateStart, dateEnd } = job.coverage;
+    return `${keyword} (${country}) - ${dateStart} to ${dateEnd}`;
+  };
 
   return (
     <div>
@@ -18,80 +92,107 @@ export default function History() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <input
           type="text"
-          placeholder="Search by Job ID or URL..."
+          placeholder="Search by Job ID, Keyword, or Country..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full md:w-80 px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#433974] transition"
         />
-        <select className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#433974]">
+        <select 
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#433974]"
+        >
           <option value="">All Status</option>
           <option value="completed">Completed</option>
           <option value="running">Running</option>
+          <option value="pending">Pending</option>
           <option value="failed">Failed</option>
+          <option value="paused">Paused</option>
         </select>
       </div>
 
-      <div className="overflow-x-auto rounded-xl shadow-sm border border-gray-200 bg-white">
-        <table className="min-w-full text-md">
-          <thead>
-            <tr className="bg-[#433974] text-white">
-              <th className="py-4 px-4 text-left font-semibold">Job ID</th>
-              <th className="py-4 px-4 text-left font-semibold">URL</th>
-              <th className="py-4 px-4 text-left font-semibold">Status</th>
-              <th className="py-4 px-4 text-left font-semibold">Rows</th>
-              <th className="py-4 px-4 text-left font-semibold">Created</th>
-            </tr>
-          </thead>
+      {loading && (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+          <p className="mt-4 text-gray-500">Loading job history...</p>
+        </div>
+      )}
 
-          <tbody className="divide-y divide-gray-200">
-            <tr className="hover:bg-gray-50 transition">
-              <td className="py-4 px-4 font-medium text-gray-800">
-                #2025-112
-              </td>
-              <td className="py-4 px-4 truncate max-w-[220px] text-[#6052a9]">
-                https://example.com/products
-              </td>
-              <td className="py-4 px-4">
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
-                  Completed
-                </span>
-              </td>
-              <td className="py-4 px-4">118</td>
-              <td className="py-4 px-4 text-gray-500">10m ago</td>
-            </tr>
-            <tr className="bg-gray-50/40 hover:bg-gray-50 transition">
-              <td className="py-4 px-4 font-medium text-gray-800">
-                #2025-111
-              </td>
-              <td className="py-4 px-4 truncate max-w-[220px] text-[#6052a9]">
-                https://shop.com/search?page=1
-              </td>
-              <td className="py-4 px-4">
-                <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium">
-                  Running
-                </span>
-              </td>
-              <td className="py-4 px-4">—</td>
-              <td className="py-4 px-4 text-gray-500">20m ago</td>
-            </tr>
-            <tr className="hover:bg-gray-50 transition">
-              <td className="py-4 px-4 font-medium text-gray-800">
-                #2025-110
-              </td>
-              <td className="py-4 px-4 truncate max-w-[220px] text-[#6052a9]">
-                https://blocked.com
-              </td>
-              <td className="py-4 px-4">
-                <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium">
-                  Failed
-                </span>
-              </td>
-              <td className="py-4 px-4">0</td>
-              <td className="py-4 px-4 text-gray-500">1h ago</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div className="overflow-x-auto rounded-xl shadow-sm border border-gray-200 bg-white">
+          {filteredJobs.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              <p className="text-lg">No jobs found</p>
+              <p className="text-sm mt-2">Start a search to see job history here</p>
+            </div>
+          ) : (
+            <table className="min-w-full text-md">
+              <thead>
+                <tr className="bg-[#433974] text-white">
+                  <th className="py-4 px-4 text-left font-semibold">Job ID</th>
+                  <th className="py-4 px-4 text-left font-semibold">Keyword & Details</th>
+                  <th className="py-4 px-4 text-left font-semibold">Status</th>
+                  <th className="py-4 px-4 text-left font-semibold">Ads Found</th>
+                  <th className="py-4 px-4 text-left font-semibold">Progress</th>
+                  <th className="py-4 px-4 text-left font-semibold">Created</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredJobs.map((job) => (
+                  <tr key={job.id} className="hover:bg-gray-50 transition">
+                    <td className="py-4 px-4 font-medium text-gray-800 font-mono text-sm">
+                      {job.id.substring(0, 8)}...
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="max-w-[300px]">
+                        <div className="font-medium text-gray-800 truncate">
+                          {job.coverage?.keyword || "N/A"}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {job.coverage?.country} • {job.coverage?.dateStart} to {job.coverage?.dateEnd}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-4 px-4">
+                      {getStatusBadge(job.status)}
+                    </td>
+                    <td className="py-4 px-4">
+                      {job.coverage?.isComplete ? (
+                        <span className="font-medium">{job.adsScraped || job.coverage?.totalAds || 0}</span>
+                      ) : (
+                        <span className="text-gray-400">{job.adsScraped || 0}</span>
+                      )}
+                    </td>
+                    <td className="py-4 px-4">
+                      {job.status === 'running' ? (
+                        <div className="text-sm">
+                          <div className="text-gray-600">Page {job.currentPage || 0}</div>
+                          {job.coverage?.coveragePercentage !== undefined && (
+                            <div className="text-gray-500">{job.coverage.coveragePercentage}%</div>
+                          )}
+                        </div>
+                      ) : job.coverage?.isComplete ? (
+                        <span className="text-green-600 font-medium">100%</span>
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
+                    </td>
+                    <td className="py-4 px-4 text-gray-500 text-sm">
+                      {formatRelativeTime(job.createdAt)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,19 +1,70 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { register, login, forgotPassword } from "@/services/auth.service";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Home() {
+  const router = useRouter();
+  const { login: authLogin, isAuthenticated, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { email, password, name };
-    console.log(
-      `${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}:`,
-      data
-    );
+    setError("");
+    setSuccess("");
+    setSubmitting(true);
+
+    try {
+      if (activeTab === "login") {
+        const response = await login({ email, password });
+        console.log('Login response:', response);
+        if (response.code === 200) {
+          authLogin(response.data.user);
+          router.push("/dashboard");
+        } else {
+          setError(response.message || "Login failed");
+        }
+      } else if (activeTab === "register") {
+        const response = await register({ name, email, password });
+        console.log('Register response:', response);
+        if (response.code === 201) {
+          authLogin(response.data.user);
+          router.push("/dashboard");
+        } else {
+          setError(response.message || "Registration failed");
+        }
+      } else if (activeTab === "forgot") {
+        const response = await forgotPassword(email);
+        if (response.code === 200) {
+          setSuccess(response.message || "OTP sent to your email! Redirecting...");
+          setTimeout(() => {
+            router.push(`/reset-password?email=${encodeURIComponent(email)}`);
+          }, 1500);
+        }
+      }
+    } catch (err) {
+      setError(err.message || "An error occurred. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setError("");
+    setSuccess("");
+    setEmail("");
+    setPassword("");
+    setName("");
   };
 
   return (
@@ -24,7 +75,8 @@ export default function Home() {
         <div className="w-full max-w-md p-8">
           <div className="flex mb-8 p-2 rounded-full bg-[#f1eeff]">
             <button
-              onClick={() => setActiveTab("login")}
+              type="button"
+              onClick={() => handleTabChange("login")}
               className={`flex-1 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
                 activeTab === "login" || activeTab === "forgot"
                   ? "bg-[#433974] text-white shadow-md"
@@ -34,7 +86,8 @@ export default function Home() {
               Sign In
             </button>
             <button
-              onClick={() => setActiveTab("register")}
+              type="button"
+              onClick={() => handleTabChange("register")}
               className={`flex-1 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
                 activeTab === "register"
                   ? "bg-[#433974] text-white shadow-md"
@@ -44,6 +97,20 @@ export default function Home() {
               Sign Up
             </button>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Success Message */}
+          {success && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
+              {success}
+            </div>
+          )}
 
           {activeTab === "login" && (
             <>
@@ -81,15 +148,17 @@ export default function Home() {
 
                 <button
                   type="submit"
-                  className="w-full px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition"
+                  disabled={submitting}
+                  className="w-full px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Sign In
+                  {submitting ? "Signing In..." : "Sign In"}
                 </button>
               </form>
 
               <div className="mt-6 text-center">
                 <button
-                  onClick={() => setActiveTab("forgot")}
+                  type="button"
+                  onClick={() => handleTabChange("forgot")}
                   className="text-sm text-[#433974] font-semibold hover:text-[#5145a3] transition-colors duration-200 underline"
                 >
                   Forgot Password?
@@ -148,9 +217,10 @@ export default function Home() {
 
                 <button
                   type="submit"
-                  className="w-full px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition"
+                  disabled={submitting}
+                  className="w-full px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Create Account
+                  {submitting ? "Creating Account..." : "Create Account"}
                 </button>
               </form>
             </>
@@ -181,20 +251,32 @@ export default function Home() {
 
                 <button
                   type="submit"
-                  className="w-full px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition"
+                  disabled={submitting}
+                  className="w-full px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Reset Link
+                  {submitting ? "Sending..." : "Send Reset Link"}
                 </button>
               </form>
+
+              <div className="mt-6 text-center">
+                <button
+                  type="button"
+                  onClick={() => handleTabChange("login")}
+                  className="text-sm text-[#433974] font-semibold hover:text-[#5145a3] transition-colors duration-200 underline"
+                >
+                  Back to Sign In
+                </button>
+              </div>
             </>
           )}
 
           {activeTab === "login" && (
             <div className="mt-8 text-center pt-6 border-t border-gray-200">
               <p className="text-gray-600 text-sm">
-                Don't have an account?
+                Don't have an account?{" "}
                 <button
-                  onClick={() => setActiveTab("register")}
+                  type="button"
+                  onClick={() => handleTabChange("register")}
                   className="font-semibold text-[#433974] hover:text-[#5145a3] transition-colors duration-200"
                 >
                   Sign up
@@ -206,9 +288,10 @@ export default function Home() {
           {activeTab === "register" && (
             <div className="mt-8 text-center pt-6 border-t border-gray-200">
               <p className="text-gray-600 text-sm">
-                Already have an account?
+                Already have an account?{" "}
                 <button
-                  onClick={() => setActiveTab("login")}
+                  type="button"
+                  onClick={() => handleTabChange("login")}
                   className="font-semibold text-[#433974] hover:text-[#5145a3] transition-colors duration-200"
                 >
                   Sign in

@@ -1,205 +1,331 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { searchAds, getJobStatus, getAdsByCoverage } from "@/services/ads.service";
+import { countries } from "@/data/countries";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
+import Button from "@/components/ui/Button";
+import Alert from "@/components/ui/Alert";
+
 export default function Dashboard() {
+  const { user } = useAuth();
+  
+  // Form state
+  const [keyword, setKeyword] = useState("");
+  const [country, setCountry] = useState("DE");
+  const [dateStart, setDateStart] = useState("");
+  const [dateEnd, setDateEnd] = useState("");
+  
+  // Search state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  
+  // Results state
+  const [coverage, setCoverage] = useState(null);
+  const [ads, setAds] = useState([]);
+  const [jobId, setJobId] = useState(null);
+  const [isScraping, setIsScraping] = useState(false);
+  const [scrapingProgress, setScrapingProgress] = useState(null);
+
+  // Set default date range (last 30 days)
+  useEffect(() => {
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    
+    setDateEnd(today.toISOString().split('T')[0]);
+    setDateStart(thirtyDaysAgo.toISOString().split('T')[0]);
+  }, []);
+
+  // Poll job status if scraping is in progress
+  useEffect(() => {
+    if (!jobId || !isScraping) return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await getJobStatus(jobId);
+        
+        if (response.code === 200 && response.data) {
+          const job = response.data.job;
+          const coverageData = response.data.coverage;
+          
+          setScrapingProgress({
+            status: job.status,
+            currentPage: job.currentPage || 0,
+            adsScraped: job.adsScraped || 0,
+            coveragePercentage: coverageData?.coveragePercentage || 0
+          });
+
+          // If job is completed, fetch ads
+          if (job.status === 'completed' && coverageData?.isComplete) {
+            setIsScraping(false);
+            await fetchAds(coverageData.id);
+          } else if (job.status === 'failed') {
+            setIsScraping(false);
+            setError(job.errorMessage || 'Scraping failed');
+          }
+        }
+      } catch (err) {
+        console.error('Error polling job status:', err);
+      }
+    }, 3000); // Poll every 3 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [jobId, isScraping]);
+
+  const fetchAds = async (coverageId) => {
+    try {
+      const response = await getAdsByCoverage(coverageId, { limit: 100, offset: 0 });
+      if (response.code === 200 && response.data) {
+        setAds(response.data.ads || []);
+        setCoverage(response.data.coverage);
+      }
+    } catch (err) {
+      console.error('Error fetching ads:', err);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+    setAds([]);
+    setCoverage(null);
+    setIsScraping(false);
+    setJobId(null);
+
+    try {
+      const response = await searchAds({
+        keyword,
+        country,
+        dateStart,
+        dateEnd,
+      });
+
+      if (response.code === 200) {
+        // Coverage is complete, show results immediately
+        setCoverage(response.data.coverage);
+        setAds(response.data.ads || []);
+        setSuccess(`Found ${response.data.totalAds} ads for "${keyword}"`);
+      } else if (response.code === 202) {
+        // Scraping in progress
+        setCoverage(response.data.coverage);
+        setJobId(response.data.job.id);
+        setIsScraping(true);
+        setScrapingProgress({
+          status: response.data.job.status,
+          currentPage: response.data.job.currentPage || 0,
+          adsScraped: response.data.job.adsScraped || 0,
+          coveragePercentage: response.data.coverage.coveragePercentage || 0
+        });
+        setSuccess(response.message || "Preparing results, this may take a few minutes.");
+      } else {
+        setError(response.message || "Search failed");
+      }
+    } catch (err) {
+      setError(err.message || "An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Format country options
+  const countryOptions = countries
+    .filter(c => c.code !== "ALL")
+    .map(c => ({ value: c.code, label: c.name }));
+
   return (
-    <div className="space-y-12">
-      {/* Title */}
+    <div className="space-y-6">
+      {/* Welcome Section */}
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">Good morning, <span className="text-[#433974] font-bold">John Doe</span></h2>
+        <h2 className="text-3xl font-bold text-gray-900">
+          Welcome, <span className="text-[#433974]">{user?.name || 'User'}</span>!
+        </h2>
         <p className="text-gray-500 mt-1">
-          Your scraping activity, system insights & data exports.
+          Search Facebook ads by keyword with intelligent coverage tracking.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-         <div>
-          <div className="p-6 rounded-2xl shadow-md border">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Create Scraper
-            </h3>
+      {/* Search Form */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Search Ads</h3>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Keyword"
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="e.g., 50% Rabatt, Winterjacke"
+              required
+              error={error && !keyword ? "Keyword is required" : ""}
+            />
 
-            <form className="space-y-5">
-              {/* Country */}
-              <div className="flex flex-col space-y-1">
-                <label className="text-sm font-medium text-gray-700">
-                  Select Country
-                </label>
-                <select
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 
-        focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300"
-                >
-                  <option value="">Choose country</option>
-                  <option value="india">India</option>
-                  <option value="usa">USA</option>
-                  <option value="uk">United Kingdom</option>
-                </select>
-              </div>
+            <Select
+              label="Country"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              options={countryOptions}
+              required
+            />
+          </div>
 
-              {/* Prompt */}
-              <div className="flex flex-col space-y-1">
-                <label className="text-sm font-medium text-gray-700">
-                  Enter Prompt
-                </label>
-                <input
-                  type="text"
-                  placeholder="Describe what to scrape..."
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 
-        focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300 resize-none"
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Start Date"
+              type="date"
+              value={dateStart}
+              onChange={(e) => setDateStart(e.target.value)}
+              required
+            />
 
-              {/* Date Range */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col space-y-1">
-                  <label className="text-sm font-medium text-gray-700">
-                    From Date
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 
-          focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300"
-                  />
-                </div>
+            <Input
+              label="End Date"
+              type="date"
+              value={dateEnd}
+              onChange={(e) => setDateEnd(e.target.value)}
+              required
+            />
+          </div>
 
-                <div className="flex flex-col space-y-1">
-                  <label className="text-sm font-medium text-gray-700">
-                    To Date
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 
-          focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300"
-                  />
-                </div>
-              </div>
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            loading={loading}
+            disabled={loading || isScraping}
+            className="w-full md:w-auto"
+          >
+            {isScraping ? "Scraping in Progress..." : "Search Ads"}
+          </Button>
+        </form>
 
-              {/* Status */}
-              <div className="flex flex-col space-y-1">
-                <label className="text-sm font-medium text-gray-700">
-                  Status
-                </label>
-                <select
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 
-        focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
+        {/* Status Messages */}
+        {error && (
+          <div className="mt-4">
+            <Alert variant="error" message={error} />
+          </div>
+        )}
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition"
+        {success && (
+          <div className="mt-4">
+            <Alert variant="success" message={success} />
+          </div>
+        )}
+
+        {/* Scraping Progress */}
+        {isScraping && scrapingProgress && (
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-blue-900">
+                Preparing results, this may take a few minutes...
+              </span>
+              <span className="text-sm text-blue-700">
+                {scrapingProgress.coveragePercentage}% complete
+              </span>
+            </div>
+            <div className="w-full bg-blue-200 rounded-full h-2">
+              <div
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${scrapingProgress.coveragePercentage}%` }}
+              />
+            </div>
+            <div className="mt-2 text-xs text-blue-700">
+              Page {scrapingProgress.currentPage} • {scrapingProgress.adsScraped} ads scraped
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Coverage Info */}
+      {coverage && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 className="text-xl font-bold text-gray-900 mb-4">Coverage Status</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <p className="text-sm text-gray-500">Keyword</p>
+              <p className="font-semibold text-gray-900">{coverage.keyword}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Country</p>
+              <p className="font-semibold text-gray-900">{coverage.country}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Coverage</p>
+              <p className="font-semibold text-gray-900">
+                {coverage.isComplete ? (
+                  <span className="text-green-600">100% Complete</span>
+                ) : (
+                  <span className="text-yellow-600">{coverage.coveragePercentage}%</span>
+                )}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Total Ads</p>
+              <p className="font-semibold text-gray-900">{coverage.totalAds || 0}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Results */}
+      {ads.length > 0 && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <h3 className="text-xl font-bold text-gray-900 mb-4">
+            Results ({ads.length} ads)
+          </h3>
+          <div className="space-y-4">
+            {ads.map((ad) => (
+              <div
+                key={ad.id}
+                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
               >
-                Create Scraper
-              </button>
-            </form>
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <h4 className="font-semibold text-gray-900">
+                      {ad.page_name || "Unknown Advertiser"}
+                    </h4>
+                    {ad.ad_creative_link_title && (
+                      <p className="text-sm text-gray-600 mt-1">{ad.ad_creative_link_title}</p>
+                    )}
+                  </div>
+                  {ad.ad_snapshot_url && (
+                    <a
+                      href={ad.ad_snapshot_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-[#433974] hover:underline"
+                    >
+                      View Ad →
+                    </a>
+                  )}
+                </div>
+                {ad.ad_creative_body && (
+                  <p className="text-sm text-gray-700 mt-2 line-clamp-2">
+                    {ad.ad_creative_body}
+                  </p>
+                )}
+                {ad.landing_page_url && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    Landing Page: <span className="text-[#433974]">{ad.landing_page_url}</span>
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-6 rounded-2xl shadow-md border overflow-hidden relative bg-gradient-to-br from-blue-50 to-white">
-            <p className="text-md text-gray-600 font-bold">Registered Users</p>
-            <h3 className="text-5xl font-bold mt-2 text-blue-700">342</h3>
-            <p className="mt-3 text-sm text-[#6052a9]">+18 this month</p>
-            <i className="text-[150px] text-[#6052a9] absolute bottom-[-30px] right-[-30px] opacity-15 leading-none ri-group-line"></i>
-          </div>
+      )}
 
-          <div className="p-6 rounded-2xl shadow-md border overflow-hidden relative bg-gradient-to-br from-purple-50 to-white">
-            <p className="text-md text-gray-600 font-bold">Total Scrape Requests</p>
-            <h3 className="text-5xl font-bold mt-2 text-purple-700">1,284</h3>
-            <p className="mt-3 text-sm text-purple-600">12 running now</p>
-            <i className="text-[150px] text-purple-600 absolute bottom-[-30px] right-[-30px] opacity-15 leading-none ri-git-pull-request-line"></i>
-          </div>
-
-          <div className="p-6 rounded-2xl shadow-md border overflow-hidden relative bg-gradient-to-br from-green-50 to-white">
-            <p className="text-md text-gray-600 font-bold">Google Sheet Sync</p>
-            <h3 className="text-5xl font-semibold mt-2 text-green-700">
-              Active
-            </h3>
-            <p className="mt-3 text-sm text-green-600">Last sync: 1 min ago</p>
-            <i className="text-[150px] text-green-600 absolute bottom-[-30px] right-[-30px] opacity-15 leading-none ri-file-excel-2-line"></i>
-          </div>
-
-          <div className="p-6 rounded-2xl shadow-md border overflow-hidden relative bg-gradient-to-br from-orange-50 to-white">
-            <p className="text-md text-gray-600 font-bold">Success Rate</p>
-            <h3 className="text-5xl font-bold mt-2 text-orange-700">94%</h3>
-            <p className="mt-3 text-sm text-orange-600">Last 7 days data</p>
-             <i className="text-[150px] text-orange-600 absolute bottom-[-30px] right-[-30px] opacity-15 leading-none ri-percent-line"></i>
-          </div>
+      {/* Empty State */}
+      {!loading && !isScraping && ads.length === 0 && coverage && coverage.isComplete && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+          <p className="text-gray-500">No ads found for this keyword and date range.</p>
         </div>
-      </div>
-
-      <div>
-        <h3 className="text-2xl font-bold mb-4 text-gray-900">
-          Recent Scrape History
-        </h3>
-
-        <div className="overflow-x-auto rounded-xl shadow-sm border border-gray-200 bg-white">
-          <table className="min-w-full text-md">
-            <thead>
-              <tr className="bg-[#433974] text-white">
-                <th className="py-4 px-4 text-left font-semibold">Job ID</th>
-                <th className="py-4 px-4 text-left font-semibold">URL</th>
-                <th className="py-4 px-4 text-left font-semibold">Status</th>
-                <th className="py-4 px-4 text-left font-semibold">Rows</th>
-                <th className="py-4 px-4 text-left font-semibold">Created</th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-gray-200">
-              {/* Row 1 */}
-              <tr className="hover:bg-gray-50 transition">
-                <td className="py-4 px-4 font-medium text-gray-800">
-                  #2025-112
-                </td>
-                <td className="py-4 px-4 truncate max-w-[220px] text-[#6052a9]">
-                  https://example.com/products
-                </td>
-                <td className="py-4 px-4">
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
-                    Completed
-                  </span>
-                </td>
-                <td className="py-4 px-4">118</td>
-                <td className="py-4 px-4 text-gray-500">10m ago</td>
-              </tr>
-
-              {/* Row 2 */}
-              <tr className="bg-gray-50/40 hover:bg-gray-50 transition">
-                <td className="py-4 px-4 font-medium text-gray-800">
-                  #2025-111
-                </td>
-                <td className="py-4 px-4 truncate max-w-[220px] text-[#6052a9]">
-                  https://shop.com/search?page=1
-                </td>
-                <td className="py-4 px-4">
-                  <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium">
-                    Running
-                  </span>
-                </td>
-                <td className="py-4 px-4">—</td>
-                <td className="py-4 px-4 text-gray-500">20m ago</td>
-              </tr>
-
-              {/* Row 3 */}
-              <tr className="hover:bg-gray-50 transition">
-                <td className="py-4 px-4 font-medium text-gray-800">
-                  #2025-110
-                </td>
-                <td className="py-4 px-4 truncate max-w-[220px] text-[#6052a9]">
-                  https://blocked.com
-                </td>
-                <td className="py-4 px-4">
-                  <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-medium">
-                    Failed
-                  </span>
-                </td>
-                <td className="py-4 px-4">0</td>
-                <td className="py-4 px-4 text-gray-500">1h ago</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

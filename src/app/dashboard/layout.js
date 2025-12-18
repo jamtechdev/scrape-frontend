@@ -1,13 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import Topbar from "@/components/Topbar";
 import Sidebar from "@/components/SIdebar";
 
 
 export default function Layout({ children }) {
+  const router = useRouter();
+  const { isAuthenticated, loading } = useAuth();
   // start closed on mobile, open on desktop
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!loading && !isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, loading, router]);
 
   useEffect(() => {
     // set initial state once on client
@@ -18,6 +29,15 @@ export default function Layout({ children }) {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  // Show loading or nothing while checking auth
+  if (loading || !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="text-black bg-[url('/auth-bg.jpg')] bg-no-repeat bg-cover bg-center">

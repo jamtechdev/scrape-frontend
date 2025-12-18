@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { logout } from "@/services/auth.service";
 
 export default function Sidebar({ open, setOpen }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const menu = [
     { name: "Dashboard", icon: <i className="ri-xl ri-dashboard-line"></i>, href: "/dashboard" },
@@ -49,7 +52,7 @@ export default function Sidebar({ open, setOpen }) {
               className={`font-semibold text-xl transition-all duration-300 text-white overflow-hidden
                 ${!open ? "opacity-0 translate-x-5" : "opacity-100 translate-x-0"}`}
             >
-              Scraper
+              Search
             </h1>
 
             {/* Small close button visible only on mobile */}
@@ -113,10 +116,24 @@ export default function Sidebar({ open, setOpen }) {
 
           {/* LOGOUT */}
           <button
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-red-500 text-white transition-all duration-300"
-            onClick={() => {
-              // handle logout
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-red-500 text-white transition-all duration-300 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={async () => {
+              if (isLoggingOut) return;
+              
+              setIsLoggingOut(true);
+              try {
+                await logout();
+                // Redirect to login page after successful logout
+                router.push('/');
+              } catch (error) {
+                console.error('Logout error:', error);
+                // Even if logout fails, redirect to login page
+                router.push('/');
+              } finally {
+                setIsLoggingOut(false);
+              }
             }}
+            disabled={isLoggingOut}
           >
             <i className="ri-logout-circle-line text-lg text-white"></i>
 
@@ -124,7 +141,7 @@ export default function Sidebar({ open, setOpen }) {
               className={`text-sm font-semibold transition-all duration-300
                 ${!open && "opacity-0 translate-x-5 fixed"}`}
             >
-              Logout
+              {isLoggingOut ? "Logging out..." : "Logout"}
             </span>
           </button>
         </div>
