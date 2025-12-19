@@ -56,12 +56,28 @@ export function useAdSearch() {
           const job = response.data.job;
           const coverageData = response.data.coverage;
           
+          // Update progress with latest data
           setScrapingProgress({
             status: job.status,
             currentPage: job.currentPage || 0,
+            totalPages: job.totalPages || 0,
             adsScraped: job.adsScraped || 0,
             coveragePercentage: coverageData?.coveragePercentage || 0
           });
+
+          // Update coverage data dynamically
+          if (coverageData) {
+            setCoverage({
+              id: coverageData.id,
+              keyword: coverageData.keyword,
+              country: coverageData.country,
+              dateStart: coverageData.dateStart,
+              dateEnd: coverageData.dateEnd,
+              isComplete: coverageData.isComplete,
+              coveragePercentage: coverageData.coveragePercentage || 0,
+              totalAds: coverageData.totalAds || 0
+            });
+          }
 
           if (job.status === 'completed' && coverageData?.isComplete) {
             setIsScraping(false);
@@ -77,9 +93,9 @@ export function useAdSearch() {
       }
     };
 
-    // Poll immediately, then every 2 seconds for real-time updates
+    // Poll immediately, then every 1 second for real-time updates
     pollJobStatus();
-    const pollInterval = setInterval(pollJobStatus, 2000);
+    const pollInterval = setInterval(pollJobStatus, 1000);
 
     return () => clearInterval(pollInterval);
   }, [jobId, isScraping]);
