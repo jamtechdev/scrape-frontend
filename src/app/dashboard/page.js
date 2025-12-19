@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { countries } from "@/data/countries";
 import { useAdSearch } from "@/hooks/useAdSearch";
@@ -29,6 +30,24 @@ export default function Dashboard() {
     scrapingProgress,
     handleSearch
   } = useAdSearch();
+
+  // Warn user before refreshing when scraping is in progress
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isScraping) {
+        e.preventDefault();
+        // Modern browsers ignore custom message, but we still need to set returnValue
+        e.returnValue = "Scraping is in progress. Are you sure you want to leave?";
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isScraping]);
 
   // Format country options
   const countryOptions = countries

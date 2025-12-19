@@ -43,11 +43,12 @@ export function useAdSearch() {
     setDateStart(thirtyDaysAgo.toISOString().split('T')[0]);
   }, []);
 
-  // Poll job status if scraping is in progress
+  // Poll job status if scraping is in progress (real-time updates)
   useEffect(() => {
     if (!jobId || !isScraping) return;
 
-    const pollInterval = setInterval(async () => {
+    // Poll immediately when scraping starts
+    const pollJobStatus = async () => {
       try {
         const response = await getJobStatus(jobId);
         
@@ -64,6 +65,7 @@ export function useAdSearch() {
 
           if (job.status === 'completed' && coverageData?.isComplete) {
             setIsScraping(false);
+            setSuccess("Scraping completed successfully!");
             await fetchAds(coverageData.id);
           } else if (job.status === 'failed') {
             setIsScraping(false);
@@ -73,7 +75,11 @@ export function useAdSearch() {
       } catch (err) {
         console.error('Error polling job status:', err);
       }
-    }, 3000);
+    };
+
+    // Poll immediately, then every 2 seconds for real-time updates
+    pollJobStatus();
+    const pollInterval = setInterval(pollJobStatus, 2000);
 
     return () => clearInterval(pollInterval);
   }, [jobId, isScraping]);
