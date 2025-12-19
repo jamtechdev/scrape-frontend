@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { get } from "@/services/api";
 import { formatRelativeTime } from "@/utils/format";
+import { getAdsByCoverage } from "@/services/ads.service";
+import AdCard from "@/components/dashboard/AdCard";
 
 export default function History() {
   const [search, setSearch] = useState("");
@@ -10,6 +12,13 @@ export default function History() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Ads modal state
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [ads, setAds] = useState([]);
+  const [adsLoading, setAdsLoading] = useState(false);
+  const [adsError, setAdsError] = useState(null);
+  const [showAdsModal, setShowAdsModal] = useState(false);
 
   useEffect(() => {
     fetchJobs();
@@ -79,6 +88,62 @@ export default function History() {
     return `${keyword} (${country}) - ${dateStart} to ${dateEnd}`;
   };
 
+  // Handle job click to show ads
+  const handleJobClick = async (job) => {
+    if (!job.coverage?.id) {
+      setAdsError('Coverage ID not found for this job');
+      return;
+    }
+
+    setSelectedJob(job);
+    setShowAdsModal(true);
+    setAds([]);
+    setAdsError(null);
+    setAdsLoading(true);
+
+    try {
+      // Fetch all ads for this coverage (fetch in batches)
+      const allAds = [];
+      let offset = 0;
+      const limit = 100;
+      let hasMore = true;
+
+      while (hasMore) {
+        const response = await getAdsByCoverage(job.coverage.id, { limit, offset });
+        
+        if (response.code === 200 && response.data) {
+          const fetchedAds = response.data.ads || [];
+          allAds.push(...fetchedAds);
+          
+          // Check if there are more ads
+          const totalAds = response.data.coverage?.totalAds || 0;
+          if (allAds.length >= totalAds || fetchedAds.length < limit) {
+            hasMore = false;
+          } else {
+            offset += limit;
+          }
+        } else {
+          hasMore = false;
+        }
+      }
+
+      setAds(allAds);
+    } catch (err) {
+      console.error('Error fetching ads:', err);
+      setAdsError(err.message || 'Failed to load ads');
+    } finally {
+      setAdsLoading(false);
+    }
+  };
+
+  // Close modal
+  const closeModal = () => {
+    setShowAdsModal(false);
+    setSelectedJob(null);
+    setAds([]);
+    setAdsError(null);
+  };
+
   return (
     <div>
       <div className="mb-6">
@@ -145,7 +210,11 @@ export default function History() {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {filteredJobs.map((job) => (
-                  <tr key={job.id} className="hover:bg-gray-50 transition">
+                  <tr 
+                    key={job.id} 
+                    className="hover:bg-gray-50 transition cursor-pointer"
+                    onClick={() => handleJobClick(job)}
+                  >
                     <td className="py-4 px-4 font-medium text-gray-800 font-mono text-sm">
                       {job.id.substring(0, 8)}...
                     </td>
@@ -191,6 +260,84 @@ export default function History() {
               </tbody>
             </table>
           )}
+        </div>
+      )}
+
+      {/* Ads Modal */}
+      {showAdsModal && selectedJob && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-6xl w-full max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Ads for "{selectedJob.coverage?.keyword || 'N/A'}"
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  {selectedJob.coverage?.country} • {selectedJob.coverage?.dateStart} to {selectedJob.coverage?.dateEnd}
+                </p>
+              </div>
+              <button
+                onClick={closeModal}
+                className="text-gray-400 hover:text-gray-600 transition p-2"
+              >
+                <i className="ri-close-line text-2xl"></i>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {adsLoading && (
+                <div className="text-center py-12">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+                  <p className="mt-4 text-gray-500">Loading ads...</p>
+                </div>
+              )}
+
+              {adsError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                  {adsError}
+                </div>
+              )}
+
+              {!adsLoading && !adsError && ads.length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                  <p className="text-lg">No ads found</p>
+                  <p className="text-sm mt-2">This job may still be in progress or no ads were found.</p>
+                </div>
+              )}
+
+              {!adsLoading && !adsError && ads.length > 0 && (
+                <div>
+                  <div className="mb-4 flex items-center justify-between">
+                    <p className="text-sm text-gray-600">
+                      Showing {ads.length} {ads.length === 1 ? 'ad' : 'ads'}
+                    </p>
+                    {selectedJob.coverage?.isComplete && (
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                        Completed
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {ads.map((ad) => (
+                      <AdCard key={ad.id} ad={ad} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="border-t border-gray-200 p-4 flex justify-end">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 bg-[#433974] text-white rounded-lg hover:bg-[#5145a3] transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

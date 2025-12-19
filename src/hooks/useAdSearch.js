@@ -20,16 +20,44 @@ export function useAdSearch() {
   const [isScraping, setIsScraping] = useState(false);
   const [scrapingProgress, setScrapingProgress] = useState(null);
 
-  // Fetch ads by coverage ID
+  // Fetch ALL ads by coverage ID (with pagination to get everything)
   const fetchAds = async (coverageId) => {
     try {
-      const response = await getAdsByCoverage(coverageId, { limit: 100, offset: 0 });
-      if (response.code === 200 && response.data) {
-        setAds(response.data.ads || []);
-        setCoverage(response.data.coverage);
+      const allAds = [];
+      let offset = 0;
+      const limit = 100;
+      let hasMore = true;
+
+      // Fetch all ads in batches
+      while (hasMore) {
+        const response = await getAdsByCoverage(coverageId, { limit, offset });
+        
+        if (response.code === 200 && response.data) {
+          const fetchedAds = response.data.ads || [];
+          allAds.push(...fetchedAds);
+          
+          // Update coverage info from first response
+          if (offset === 0) {
+            setCoverage(response.data.coverage);
+          }
+          
+          // Check if there are more ads to fetch
+          const totalAds = response.data.coverage?.totalAds || 0;
+          if (allAds.length >= totalAds || fetchedAds.length < limit) {
+            hasMore = false;
+          } else {
+            offset += limit;
+          }
+        } else {
+          hasMore = false;
+        }
       }
+
+      setAds(allAds);
+      console.log(`✅ Loaded ${allAds.length} ads for coverage ${coverageId}`);
     } catch (err) {
       console.error('Error fetching ads:', err);
+      setError('Failed to load ads. Please try again.');
     }
   };
 
@@ -119,9 +147,16 @@ export function useAdSearch() {
       });
 
       if (response.code === 200) {
+        // Coverage is complete - fetch ALL ads
         setCoverage(response.data.coverage);
-        setAds(response.data.ads || []);
-        setSuccess(`Found ${response.data.totalAds} ads for "${keyword}"`);
+        if (response.data.coverage?.id) {
+          // Fetch all ads for this coverage
+          await fetchAds(response.data.coverage.id);
+        } else {
+          // Fallback to ads from response if coverage ID not available
+          setAds(response.data.ads || []);
+        }
+        setSuccess(`Found ${response.data.totalAds || response.data.ads?.length || 0} ads for "${keyword}"`);
       } else if (response.code === 202) {
         setCoverage(response.data.coverage);
         setJobId(response.data.job.id);
