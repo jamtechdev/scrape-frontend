@@ -19,37 +19,90 @@ export default function ScrapingProgress({ progress }) {
       : `Page ${currentPage}`;
 
   return (
-    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-semibold text-green-900 flex items-center gap-2">
-          <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-          Scraping in progress...
-        </span>
-        <span className="text-sm text-green-700 font-bold">
-          {coveragePercentage.toFixed(1)}% complete
-        </span>
-      </div>
-      <div className="w-full bg-green-200 rounded-full h-3 mb-3">
-        <div
-          className="bg-green-600 h-3 rounded-full transition-all duration-500 ease-out"
-          style={{ width: `${Math.max(coveragePercentage, 2)}%` }}
-        />
-      </div>
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="text-sm text-green-800 font-medium">
-          {progressText} • {adsScraped.toLocaleString()} ads scraped
+    <div className="mt-6 bg-gradient-to-br from-[#433974] to-[#5145a3] rounded-xl shadow-lg border border-purple-300 overflow-hidden">
+      {/* Animated Header */}
+      <div className="p-6 pb-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            {/* Animated Spinner */}
+            <div className="relative">
+              <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <i className="ri-search-line text-white text-lg"></i>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                Scraping in Progress
+                <span className="inline-flex items-center gap-1">
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></span>
+                </span>
+              </h3>
+              <p className="text-sm text-white/80 mt-0.5">Actively scraping and classifying ads...</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-2xl font-bold text-white">
+              {coveragePercentage.toFixed(1)}%
+            </div>
+            <div className="text-xs text-white/70">Complete</div>
+          </div>
         </div>
-        <div className="text-xs text-amber-700 bg-amber-100 px-2 py-1 rounded flex items-center gap-1">
-          <i className="ri-information-line"></i>
-          <span>Please don't refresh this page</span>
+
+        {/* Progress Bar */}
+        <div className="relative">
+          <div className="w-full bg-white/20 rounded-full h-4 overflow-hidden backdrop-blur-sm">
+            <div
+              className="bg-gradient-to-r from-green-400 via-green-300 to-green-400 h-4 rounded-full transition-all duration-500 ease-out relative overflow-hidden"
+              style={{ width: `${Math.max(coveragePercentage, 3)}%` }}
+            >
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+            </div>
+          </div>
+          {/* Progress percentage indicator on bar */}
+          {coveragePercentage > 10 && (
+            <div 
+              className="absolute top-0 h-4 flex items-center text-xs font-bold text-white drop-shadow-md"
+              style={{ left: `calc(${coveragePercentage}% - 20px)` }}
+            >
+              {coveragePercentage.toFixed(0)}%
+            </div>
+          )}
         </div>
       </div>
-      {status === "running" && (
-        <div className="mt-2 text-xs text-green-700">
-          <i className="ri-loader-4-line animate-spin mr-1"></i>
-          Actively scraping and classifying ads...
+
+      {/* Stats Section */}
+      <div className="px-6 pb-4">
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
+            <div className="text-xs text-white/70 mb-1">Current Page</div>
+            <div className="text-lg font-bold text-white">{currentPage}</div>
+            {totalPages > 0 && (
+              <div className="text-xs text-white/60">of {totalPages}</div>
+            )}
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
+            <div className="text-xs text-white/70 mb-1">Ads Scraped</div>
+            <div className="text-lg font-bold text-white">{adsScraped.toLocaleString()}</div>
+            <div className="text-xs text-white/60">and counting...</div>
+          </div>
         </div>
-      )}
+
+        {/* Warning Banner */}
+        <div className="bg-amber-500/20 border border-amber-400/30 rounded-lg p-3 flex items-start gap-2 backdrop-blur-sm">
+          <i className="ri-information-line text-amber-300 text-lg mt-0.5"></i>
+          <div className="flex-1">
+            <div className="text-sm font-semibold text-amber-100">Please don't refresh this page</div>
+            <div className="text-xs text-amber-200/80 mt-0.5">Scraping will continue in the background</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Animated Bottom Border */}
+      <div className="h-1 bg-gradient-to-r from-green-400 via-purple-400 to-green-400 animate-gradient-x"></div>
     </div>
   );
 }

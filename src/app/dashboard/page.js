@@ -7,6 +7,7 @@ import SearchForm from "@/components/dashboard/SearchForm";
 import ScrapingProgress from "@/components/dashboard/ScrapingProgress";
 import CoverageInfo from "@/components/dashboard/CoverageInfo";
 import AdsList from "@/components/dashboard/AdsList";
+import RecentJobs from "@/components/dashboard/RecentJobs";
 import Alert from "@/components/ui/Alert";
 
 export default function Dashboard() {
@@ -110,6 +111,9 @@ export default function Dashboard() {
           <p className="text-gray-500">No ads found for this keyword and date range.</p>
         </div>
       )}
+
+      {/* Recent Completed Jobs - Always show when not scraping */}
+      {!isScraping && <RecentJobs />}
     </div>
   );
 }

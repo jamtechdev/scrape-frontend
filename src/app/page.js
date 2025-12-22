@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import TabSwitcher from "@/components/auth/TabSwitcher";
@@ -9,6 +10,7 @@ import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 import MessageDisplay from "@/components/auth/MessageDisplay";
 
 export default function Home() {
+  const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState("login");
   const {
@@ -21,10 +23,31 @@ export default function Home() {
     resetMessages
   } = useAuthForm();
 
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, authLoading, router]);
+
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     resetMessages();
   };
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render login page if authenticated (will redirect)
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center">

@@ -1,24 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { get } from "@/services/api";
 import { formatRelativeTime } from "@/utils/format";
 import { getAdsByCoverage } from "@/services/ads.service";
-import AdCard from "@/components/dashboard/AdCard";
 
 export default function History() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Ads modal state
-  const [selectedJob, setSelectedJob] = useState(null);
-  const [ads, setAds] = useState([]);
-  const [adsLoading, setAdsLoading] = useState(false);
-  const [adsError, setAdsError] = useState(null);
-  const [showAdsModal, setShowAdsModal] = useState(false);
+  const [thumbnails, setThumbnails] = useState({}); // Store thumbnails by coverageId
 
   useEffect(() => {
     fetchJobs();
@@ -36,7 +31,11 @@ export default function History() {
       
       // Handle response structure: { data: { jobs: [...] }, ... }
       if (response && response.data) {
-        setJobs(response.data.jobs || []);
+        const fetchedJobs = response.data.jobs || [];
+        setJobs(fetchedJobs);
+
+        // Fetch thumbnails for completed jobs
+        fetchThumbnails(fetchedJobs);
       } else {
         setJobs([]);
       }
@@ -82,66 +81,43 @@ export default function History() {
     );
   };
 
-  const formatJobInfo = (job) => {
-    if (!job.coverage) return "N/A";
-    const { keyword, country, dateStart, dateEnd } = job.coverage;
-    return `${keyword} (${country}) - ${dateStart} to ${dateEnd}`;
+  // Fetch thumbnail for each job's first ad
+  const fetchThumbnails = async (jobsList) => {
+    const thumbnailPromises = jobsList
+      .filter(job => job.coverage?.id && job.coverage?.isComplete && job.adsScraped > 0)
+      .map(async (job) => {
+        try {
+          const response = await getAdsByCoverage(job.coverage.id, { limit: 1, offset: 0 });
+          if (response.code === 200 && response.data?.ads?.length > 0) {
+            const firstAd = response.data.ads[0];
+            return {
+              coverageId: job.coverage.id,
+              thumbnail: firstAd.thumbnail_url || firstAd.video_url || null
+            };
+          }
+        } catch (err) {
+          console.error(`Error fetching thumbnail for job ${job.id}:`, err);
+        }
+        return { coverageId: job.coverage.id, thumbnail: null };
+      });
+
+    const results = await Promise.all(thumbnailPromises);
+    const thumbnailMap = {};
+    results.forEach(({ coverageId, thumbnail }) => {
+      if (coverageId) {
+        thumbnailMap[coverageId] = thumbnail;
+      }
+    });
+    setThumbnails(prev => ({ ...prev, ...thumbnailMap }));
   };
 
-  // Handle job click to show ads
-  const handleJobClick = async (job) => {
+  // Handle view ads button click - navigate to ads page with query parameter
+  const handleViewAds = (job) => {
     if (!job.coverage?.id) {
-      setAdsError('Coverage ID not found for this job');
+      alert('Coverage ID not found for this job');
       return;
     }
-
-    setSelectedJob(job);
-    setShowAdsModal(true);
-    setAds([]);
-    setAdsError(null);
-    setAdsLoading(true);
-
-    try {
-      // Fetch all ads for this coverage (fetch in batches)
-      const allAds = [];
-      let offset = 0;
-      const limit = 100;
-      let hasMore = true;
-
-      while (hasMore) {
-        const response = await getAdsByCoverage(job.coverage.id, { limit, offset });
-        
-        if (response.code === 200 && response.data) {
-          const fetchedAds = response.data.ads || [];
-          allAds.push(...fetchedAds);
-          
-          // Check if there are more ads
-          const totalAds = response.data.coverage?.totalAds || 0;
-          if (allAds.length >= totalAds || fetchedAds.length < limit) {
-            hasMore = false;
-          } else {
-            offset += limit;
-          }
-        } else {
-          hasMore = false;
-        }
-      }
-
-      setAds(allAds);
-    } catch (err) {
-      console.error('Error fetching ads:', err);
-      setAdsError(err.message || 'Failed to load ads');
-    } finally {
-      setAdsLoading(false);
-    }
-  };
-
-  // Close modal
-  const closeModal = () => {
-    setShowAdsModal(false);
-    setSelectedJob(null);
-    setAds([]);
-    setAdsError(null);
+    router.push(`/dashboard/ads?coverageId=${job.coverage.id}`);
   };
 
   return (
@@ -190,156 +166,190 @@ export default function History() {
       )}
 
       {!loading && !error && (
-        <div className="overflow-x-auto rounded-xl shadow-sm border border-gray-200 bg-white">
+        <>
           {filteredJobs.length === 0 ? (
-            <div className="text-center py-12 text-gray-500">
+            <div className="text-center py-12 text-gray-500 bg-white rounded-xl border border-gray-200">
               <p className="text-lg">No jobs found</p>
               <p className="text-sm mt-2">Start a search to see job history here</p>
             </div>
           ) : (
-            <table className="min-w-full text-md">
-              <thead>
-                <tr className="bg-[#433974] text-white">
-                  <th className="py-4 px-4 text-left font-semibold">Job ID</th>
-                  <th className="py-4 px-4 text-left font-semibold">Keyword & Details</th>
-                  <th className="py-4 px-4 text-left font-semibold">Status</th>
-                  <th className="py-4 px-4 text-left font-semibold">Ads Found</th>
-                  <th className="py-4 px-4 text-left font-semibold">Progress</th>
-                  <th className="py-4 px-4 text-left font-semibold">Created</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredJobs.map((job) => (
-                  <tr 
-                    key={job.id} 
-                    className="hover:bg-gray-50 transition cursor-pointer"
-                    onClick={() => handleJobClick(job)}
-                  >
-                    <td className="py-4 px-4 font-medium text-gray-800 font-mono text-sm">
-                      {job.id.substring(0, 8)}...
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="max-w-[300px]">
-                        <div className="font-medium text-gray-800 truncate">
-                          {job.coverage?.keyword || "N/A"}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {job.coverage?.country} • {job.coverage?.dateStart} to {job.coverage?.dateEnd}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      {getStatusBadge(job.status)}
-                    </td>
-                    <td className="py-4 px-4">
-                      {job.coverage?.isComplete ? (
-                        <span className="font-medium">{job.adsScraped || job.coverage?.totalAds || 0}</span>
-                      ) : (
-                        <span className="text-gray-400">{job.adsScraped || 0}</span>
-                      )}
-                    </td>
-                    <td className="py-4 px-4">
-                      {job.status === 'running' ? (
-                        <div className="text-sm">
-                          <div className="text-gray-600">Page {job.currentPage || 0}</div>
-                          {job.coverage?.coveragePercentage !== undefined && (
-                            <div className="text-gray-500">{job.coverage.coveragePercentage}%</div>
-                          )}
-                        </div>
-                      ) : job.coverage?.isComplete ? (
-                        <span className="text-green-600 font-medium">100%</span>
-                      ) : (
-                        <span className="text-gray-400">—</span>
-                      )}
-                    </td>
-                    <td className="py-4 px-4 text-gray-500 text-sm">
-                      {formatRelativeTime(job.createdAt)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
+              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Thumbnail
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Keyword
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Country
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Date Range
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Ads Found
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Progress
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Created
+                        </th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {filteredJobs.map((job) => {
+                        const thumbnail = job.coverage?.id ? thumbnails[job.coverage.id] : null;
+                        const adsCount = job.coverage?.isComplete
+                          ? (job.adsScraped || job.coverage?.totalAds || 0)
+                          : (job.adsScraped || 0);
 
-      {/* Ads Modal */}
-      {showAdsModal && selectedJob && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-6xl w-full max-h-[90vh] flex flex-col">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Ads for "{selectedJob.coverage?.keyword || 'N/A'}"
-                </h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  {selectedJob.coverage?.country} • {selectedJob.coverage?.dateStart} to {selectedJob.coverage?.dateEnd}
-                </p>
+                        return (
+                          <tr
+                            key={job.id}
+                            className="hover:bg-gray-50 transition-colors"
+                          >
+                            {/* Thumbnail */}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                                {thumbnail ? (
+                                  <img
+                                    src={thumbnail}
+                                    alt={job.coverage?.keyword || "Ad thumbnail"}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.target.style.display = 'none';
+                                      e.target.nextSibling.style.display = 'flex';
+                                    }}
+                                  />
+                                ) : null}
+                                <div
+                                  className={`w-full h-full flex items-center justify-center ${thumbnail ? 'hidden' : 'flex'}`}
+                                  style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}
+                                >
+                                  <div className="text-white text-xl font-bold">
+                                    {job.coverage?.keyword?.charAt(0)?.toUpperCase() || 'A'}
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Keyword */}
+                            <td className="px-6 py-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {job.coverage?.keyword || "N/A"}
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {job.id}
+                              </div>
+                            </td>
+
+                            {/* Country */}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900">
+                                {job.coverage?.country || "N/A"}
+                              </div>
+                            </td>
+
+                            {/* Date Range */}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900">
+                                {job.coverage?.dateStart || "—"}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                to {job.coverage?.dateEnd || "—"}
+                              </div>
+                            </td>
+
+                            {/* Status */}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {getStatusBadge(job.status)}
+                            </td>
+
+                            {/* Ads Found */}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm font-semibold text-gray-900">
+                                {job.coverage?.isComplete ? (
+                                  adsCount
+                                ) : (
+                                  <span className="text-gray-400">{adsCount}</span>
+                                )}
+                              </div>
+                            </td>
+
+                            {/* Progress */}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {job.status === 'running' ? (
+                                <div className="w-32">
+                                  <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                                    <span>Page {job.currentPage || 0}</span>
+                                    <span className="font-medium">
+                                      {job.coverage?.coveragePercentage !== undefined
+                                        ? `${job.coverage.coveragePercentage}%`
+                                        : '0%'}
+                                    </span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                    <div
+                                      className="bg-[#433974] h-2 rounded-full transition-all duration-300"
+                                      style={{
+                                        width: `${job.coverage?.coveragePercentage || 0}%`,
+                                        minWidth: job.coverage?.coveragePercentage > 0 ? '2px' : '0'
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
+                              ) : job.coverage?.isComplete ? (
+                                <div className="text-xs text-green-600 font-medium">
+                                  100% Complete
+                                </div>
+                                ) : job.status === 'failed' ? (
+                                  <div className="text-xs text-red-600 font-medium">
+                                    Failed
+                                  </div>
+                                  ) : (
+                                    <div className="text-xs text-gray-400">—</div>
+                              )}
+                            </td>
+
+                            {/* Created */}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-500">
+                                {formatRelativeTime(job.createdAt)}
+                              </div>
+                            </td>
+
+                            {/* Actions */}
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <button
+                                onClick={() => handleViewAds(job)}
+                                disabled={!job.coverage?.id || job.adsScraped === 0}
+                                className="px-4 py-2 bg-[#433974] text-white rounded-lg hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                              >
+                                View Ads
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <button
-                onClick={closeModal}
-                className="text-gray-400 hover:text-gray-600 transition p-2"
-              >
-                <i className="ri-close-line text-2xl"></i>
-              </button>
-            </div>
-
-            {/* Modal Content */}
-            <div className="flex-1 overflow-y-auto p-6">
-              {adsLoading && (
-                <div className="text-center py-12">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
-                  <p className="mt-4 text-gray-500">Loading ads...</p>
-                </div>
-              )}
-
-              {adsError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                  {adsError}
-                </div>
-              )}
-
-              {!adsLoading && !adsError && ads.length === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                  <p className="text-lg">No ads found</p>
-                  <p className="text-sm mt-2">This job may still be in progress or no ads were found.</p>
-                </div>
-              )}
-
-              {!adsLoading && !adsError && ads.length > 0 && (
-                <div>
-                  <div className="mb-4 flex items-center justify-between">
-                    <p className="text-sm text-gray-600">
-                      Showing {ads.length} {ads.length === 1 ? 'ad' : 'ads'}
-                    </p>
-                    {selectedJob.coverage?.isComplete && (
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                        Completed
-                      </span>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {ads.map((ad) => (
-                      <AdCard key={ad.id} ad={ad} />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Modal Footer */}
-            <div className="border-t border-gray-200 p-4 flex justify-end">
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 bg-[#433974] text-white rounded-lg hover:bg-[#5145a3] transition"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
+
     </div>
   );
 }

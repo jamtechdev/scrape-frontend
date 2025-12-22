@@ -1,6 +1,13 @@
 "use client";
+import { useState, useEffect } from "react";
 
 export default function AdCard({ ad }) {
+  const [videoError, setVideoError] = useState(false);
+  
+  // Reset video error when ad changes
+  useEffect(() => {
+    setVideoError(false);
+  }, [ad.video_url]);
   const getClassificationBadge = (classification) => {
     const config = {
       YES: { bg: "bg-green-100", text: "text-green-700", label: "YES" },
@@ -64,15 +71,38 @@ export default function AdCard({ ad }) {
         </p>
       )}
       {(ad.video_url || ad.thumbnail_url) && (
-        <div className="mt-3">
-          {ad.thumbnail_url && (
+        <div className="mt-3 relative">
+          {/* Priority 1: Show video if video_url exists and hasn't errored */}
+          {ad.video_url && !videoError ? (
+            <video 
+              key={ad.video_url}
+              src={ad.video_url} 
+              poster={ad.thumbnail_url || undefined}
+              controls
+              className="w-full h-auto rounded border border-gray-200 max-h-96 object-contain bg-black"
+              preload="metadata"
+              playsInline
+              muted={false}
+              onError={() => {
+                console.log('Video failed to load, falling back to thumbnail:', ad.video_url);
+                setVideoError(true);
+              }}
+            >
+              Your browser does not support the video tag.
+            </video>
+          ) : null}
+          
+          {/* Priority 2: Show thumbnail if no video_url OR video failed to load */}
+          {(!ad.video_url || videoError) && ad.thumbnail_url ? (
             <img 
               src={ad.thumbnail_url} 
               alt="Ad thumbnail" 
-              className="w-full h-auto rounded border border-gray-200"
-              onError={(e) => { e.target.style.display = 'none'; }}
+              className="w-full h-auto rounded border border-gray-200 max-h-96 object-contain"
+              onError={(e) => { 
+                e.target.style.display = 'none'; 
+              }}
             />
-          )}
+          ) : null}
         </div>
       )}
     </div>
