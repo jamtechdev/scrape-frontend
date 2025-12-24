@@ -6,7 +6,6 @@ import { useAdSearch } from "@/hooks/useAdSearch";
 import SearchForm from "@/components/dashboard/SearchForm";
 import ScrapingProgress from "@/components/dashboard/ScrapingProgress";
 import CoverageInfo from "@/components/dashboard/CoverageInfo";
-import AdsList from "@/components/dashboard/AdsList";
 import RecentJobs from "@/components/dashboard/RecentJobs";
 import Alert from "@/components/ui/Alert";
 
@@ -102,11 +101,32 @@ export default function Dashboard() {
       {/* Coverage Info */}
       <CoverageInfo coverage={coverage} />
 
-      {/* Results */}
-      <AdsList ads={ads} />
+      {/* Info Message - Ads are only in Google Sheets */}
+      {coverage && coverage.isComplete && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-2">
+            📊 Ads Analysis Available in Google Sheets
+          </h3>
+          <p className="text-blue-700">
+            All analyzed ads have been exported to your Google Sheet. Each search creates a new tab in your sheet with the following information:
+          </p>
+          <ul className="list-disc list-inside text-blue-700 mt-2 space-y-1">
+            <li>Clothing classification (sure/unsure)</li>
+            <li>Facebook Ad Link</li>
+            <li>Product Link</li>
+            <li>Date Started Running</li>
+            <li>How Many Days Live</li>
+            <li>Total Reach When Found</li>
+            <li>Estimated Daily Reach</li>
+          </ul>
+          <p className="text-blue-700 mt-3">
+            Visit the <strong>Sheets</strong> page to view and access your Google Sheets.
+          </p>
+        </div>
+      )}
 
       {/* Empty State */}
-      {!loading && !isScraping && ads.length === 0 && coverage && coverage.isComplete && (
+      {!loading && !isScraping && coverage && coverage.isComplete && coverage.totalAds === 0 && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
           <p className="text-gray-500">No ads found for this keyword and date range.</p>
         </div>
