@@ -64,7 +64,7 @@ export function useAuthForm() {
         setSuccess(response.message || "OTP sent to your email! Redirecting...");
         setTimeout(() => {
           router.push(`/reset-password?email=${encodeURIComponent(email)}`);
-        }, 1500);
+        }, 1000);
       }
     } catch (err) {
       setError(err.message || "An error occurred. Please try again.");

@@ -12,10 +12,9 @@ export default function RecentJobs() {
 
   useEffect(() => {
     fetchRecentJobs();
-    // Refresh every 5 seconds to get latest jobs
     const interval = setInterval(() => {
       fetchRecentJobs();
-    }, 5000);
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
 

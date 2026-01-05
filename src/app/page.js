@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import TabSwitcher from "@/components/auth/TabSwitcher";
@@ -111,6 +112,16 @@ export default function Home() {
               </p>
             </div>
           )}
+
+          {/* Privacy Policy Link */}
+          <div className="mt-6 text-center">
+            <Link 
+              href="/privacy-policy" 
+              className="text-xs text-gray-500 hover:text-[#433974] transition-colors duration-200"
+            >
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </div>

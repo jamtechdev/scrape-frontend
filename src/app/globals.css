@@ -45,3 +45,23 @@ body{
 .ad-description-scroll::-webkit-scrollbar-thumb:hover {
   background: #a0aec0;
 }
+
+/* Auto-hide message animation */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+  90% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.message-auto-hide {
+  animation: fadeOut 3s forwards;
+}

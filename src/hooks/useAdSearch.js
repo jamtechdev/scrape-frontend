@@ -121,9 +121,8 @@ export function useAdSearch() {
       }
     };
 
-    // Poll immediately, then every 1 second for real-time updates
     pollJobStatus();
-    const pollInterval = setInterval(pollJobStatus, 1000);
+    const pollInterval = setInterval(pollJobStatus, 5000);
 
     return () => clearInterval(pollInterval);
   }, [jobId, isScraping]);

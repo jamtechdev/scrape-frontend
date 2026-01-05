@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { getMe } from "@/services/auth.service";
 import { get, put } from "@/services/api";
@@ -60,7 +61,6 @@ export default function Setting() {
       setMessage({ type: "error", text: err.message || "Failed to update profile" });
     } finally {
       setSaving(false);
-      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
     }
   };
 
@@ -97,7 +97,6 @@ export default function Setting() {
       setMessage({ type: "error", text: err.message || "Failed to update password" });
     } finally {
       setSaving(false);
-      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
     }
   };
 
@@ -126,7 +125,7 @@ export default function Setting() {
 
       {/* Message Alert */}
       {message.text && (
-        <div className={`mb-6 px-4 py-3 rounded-lg ${
+        <div className={`mb-6 px-4 py-3 rounded-lg message-auto-hide ${
           message.type === "success" 
             ? "bg-green-50 border border-green-200 text-green-700" 
             : "bg-red-50 border border-red-200 text-red-700"
@@ -244,6 +243,22 @@ export default function Setting() {
             {saving ? "Updating..." : "Update Password"}
           </button>
         </form>
+      </div>
+
+      {/* Privacy Policy Link */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Legal & Privacy
+        </h2>
+        <div className="flex items-center gap-4">
+          <Link 
+            href="/privacy-policy" 
+            className="text-[#433974] hover:text-[#5145a3] font-medium transition-colors duration-200 flex items-center gap-2"
+          >
+            <i className="ri-file-shield-line"></i>
+            Privacy Policy
+          </Link>
+        </div>
       </div>
     </div>
   );
