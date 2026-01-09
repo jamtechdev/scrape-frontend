@@ -2,11 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { getMe } from "@/services/auth.service";
 import { get, put } from "@/services/api";
+import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 export default function Setting() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { user: authUser } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,9 +22,36 @@ export default function Setting() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
+  // Google OAuth state
+  const [oauthLoading, setOauthLoading] = useState(false);
+  const [oauthConnected, setOauthConnected] = useState(false);
+  const [checkingOAuth, setCheckingOAuth] = useState(true);
+
+  // Environment variables state
+  const [envLoading, setEnvLoading] = useState(false);
+  const [envSaving, setEnvSaving] = useState(false);
+  const [envVariables, setEnvVariables] = useState({});
+  const [envCategories, setEnvCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [envChanges, setEnvChanges] = useState({});
+
   // Load user data
   useEffect(() => {
     loadUserData();
+    loadEnvVariables();
+    checkOAuthStatus();
+    
+    // Check for OAuth callback messages
+    const oauthParam = searchParams?.get("oauth");
+    if (oauthParam === "success") {
+      setMessage({ type: "success", text: "Google account connected successfully! You can now create Google Sheets automatically." });
+      // Clear the URL parameter
+      router.replace("/dashboard/setting", { scroll: false });
+      checkOAuthStatus();
+    } else if (oauthParam === "error") {
+      setMessage({ type: "error", text: "Failed to connect Google account. Please try again." });
+      router.replace("/dashboard/setting", { scroll: false });
+    }
   }, []);
 
   const loadUserData = async () => {
@@ -33,8 +64,8 @@ export default function Setting() {
         setEmail(userData.email || "");
       }
     } catch (err) {
-      console.error('Error loading user data:', err);
-      setMessage({ type: "error", text: "Failed to load user data" });
+      const errorInfo = handleApiError(err);
+      setMessage({ type: "error", text: errorInfo.message || "Failed to load user data" });
     } finally {
       setLoading(false);
     }
@@ -57,8 +88,8 @@ export default function Setting() {
         }
       }
     } catch (err) {
-      console.error('Error updating profile:', err);
-      setMessage({ type: "error", text: err.message || "Failed to update profile" });
+      const errorInfo = handleApiError(err);
+      setMessage({ type: "error", text: errorInfo.message || "Failed to update profile" });
     } finally {
       setSaving(false);
     }
@@ -93,10 +124,105 @@ export default function Setting() {
         setConfirmPassword("");
       }
     } catch (err) {
-      console.error('Error updating password:', err);
-      setMessage({ type: "error", text: err.message || "Failed to update password" });
+      const errorInfo = handleApiError(err);
+      setMessage({ type: "error", text: errorInfo.message || "Failed to update password" });
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Environment Variables Functions
+  const loadEnvVariables = async () => {
+    try {
+      setEnvLoading(true);
+      const response = await get('/env');
+      if (response && response.code === 200 && response.data) {
+        setEnvVariables(response.data.variables || {});
+        setEnvCategories(['All', ...(response.data.categories || [])]);
+      }
+    } catch (err) {
+      const errorInfo = handleApiError(err);
+      setMessage({ type: "error", text: errorInfo.message || "Failed to load environment variables" });
+    } finally {
+      setEnvLoading(false);
+    }
+  };
+
+  const handleEnvChange = (key, value) => {
+    setEnvChanges(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
+  const handleSaveEnvVariables = async (e) => {
+    e.preventDefault();
+    try {
+      setEnvSaving(true);
+      setMessage({ type: "", text: "" });
+
+      const response = await put('/env', { variables: envChanges });
+
+      if (response && response.code === 200) {
+        setMessage({ type: "success", text: "Environment variables updated successfully! Please restart the server for changes to take full effect." });
+        setEnvChanges({});
+        // Reload environment variables to get updated values
+        await loadEnvVariables();
+      }
+    } catch (err) {
+      const errorInfo = handleApiError(err);
+      setMessage({ type: "error", text: errorInfo.message || "Failed to update environment variables" });
+    } finally {
+      setEnvSaving(false);
+    }
+  };
+
+  const getFilteredEnvVariables = () => {
+    const vars = Object.entries(envVariables);
+    if (selectedCategory === "All") {
+      return vars;
+    }
+    return vars.filter(([key, data]) => data.category === selectedCategory);
+  };
+
+  // Google OAuth Functions
+  const checkOAuthStatus = async () => {
+    try {
+      setCheckingOAuth(true);
+      const response = await get("/ads/google-sheets/oauth-status");
+      if (response && response.code === 200) {
+        setOauthConnected(response.data?.hasToken || false);
+      }
+    } catch (err) {
+      // If endpoint doesn't exist or error, assume not connected
+      setOauthConnected(false);
+    } finally {
+      setCheckingOAuth(false);
+    }
+  };
+
+  const handleConnectGoogle = async () => {
+    try {
+      setOauthLoading(true);
+      setMessage({ type: "", text: "" });
+      
+      // Get the frontend base URL for redirect
+      const frontendUrl = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+      const redirectUri = `${frontendUrl}/google-oauth-callback`;
+      
+      // Get OAuth URL with custom redirect URI
+      const response = await get(`/ads/google-sheets/oauth-url?redirect_uri=${encodeURIComponent(redirectUri)}`);
+      
+      if (response && response.code === 200 && response.data?.authUrl) {
+        // Open OAuth URL in same window
+        window.location.href = response.data.authUrl;
+      } else {
+        throw new Error(response?.message || "Failed to get OAuth URL");
+      }
+    } catch (err) {
+      const errorInfo = handleApiError(err);
+      setMessage({ type: "error", text: errorInfo.message || "Failed to initiate Google connection. Please try again." });
+      setOauthLoading(false);
     }
   };
 
@@ -245,8 +371,76 @@ export default function Setting() {
         </form>
       </div>
 
+      {/* Google OAuth Integration */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Google Sheets Integration
+        </h2>
+        <p className="text-gray-500 text-sm mb-6">
+          Connect your Google account to automatically create and update Google Sheets with your ad data.
+        </p>
+
+        {checkingOAuth ? (
+          <div className="flex items-center justify-center py-4">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#433974]"></div>
+              <p className="mt-2 text-sm text-gray-500">Checking connection status...</p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <div className={`w-3 h-3 rounded-full ${oauthConnected ? "bg-green-500" : "bg-gray-400"}`}></div>
+                <div>
+                  <p className="font-medium text-gray-800">
+                    {oauthConnected ? "Connected" : "Not Connected"}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {oauthConnected
+                      ? "Your Google account is connected and ready to use."
+                      : "Connect your Google account to enable automatic sheet creation."}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {oauthConnected ? (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-700">
+                  ✅ Google Sheets integration is active. Your ads will be automatically saved to Google Sheets.
+                </p>
+              </div>
+            ) : (
+              <button
+                onClick={handleConnectGoogle}
+                disabled={oauthLoading}
+                className="w-full px-5 py-3 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {oauthLoading ? (
+                  <>
+                    <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Connecting...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    <span>Connect Google Account</span>
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Privacy Policy Link */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Legal & Privacy
         </h2>
@@ -259,6 +453,137 @@ export default function Setting() {
             Privacy Policy
           </Link>
         </div>
+      </div>
+
+      {/* Environment Variables Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Environment Variables
+        </h2>
+        <p className="text-gray-500 text-sm mb-6">
+          Manage application configuration. Changes require server restart to take effect.
+        </p>
+
+        {envLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+              <p className="mt-4 text-gray-500">Loading environment variables...</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Category Filter */}
+            {envCategories.length > 1 && (
+              <div className="mb-6">
+                <label className="block text-gray-600 mb-2 font-medium">
+                  Filter by Category
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-[#433974] outline-none"
+                >
+                  {envCategories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <form onSubmit={handleSaveEnvVariables}>
+              <div className="space-y-6">
+                {getFilteredEnvVariables().map(([key, data]) => {
+                  const currentValue = envChanges.hasOwnProperty(key) ? envChanges[key] : (data.value || '');
+                  const isSensitive = data.sensitive;
+                  const inputType = isSensitive ? 'password' : (data.type === 'number' ? 'number' : 'text');
+
+                  return (
+                    <div key={key} className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <label className="block text-gray-700 font-medium mb-1">
+                            {key}
+                            {data.category && (
+                              <span className="ml-2 text-xs text-gray-500 font-normal">
+                                ({data.category})
+                              </span>
+                            )}
+                          </label>
+                          {data.description && (
+                            <p className="text-xs text-gray-500 mb-2">{data.description}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {data.options ? (
+                        <select
+                          value={currentValue}
+                          onChange={(e) => handleEnvChange(key, e.target.value)}
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-[#433974] outline-none"
+                        >
+                          <option value="">-- Select --</option>
+                          {data.options.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type={inputType}
+                          value={isSensitive && currentValue === '***' ? '' : currentValue}
+                          onChange={(e) => handleEnvChange(key, e.target.value)}
+                          placeholder={isSensitive && currentValue === '***' ? 'Enter new value to update' : data.description || ''}
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#433974] outline-none"
+                        />
+                      )}
+
+                      {data.type && (
+                        <p className="text-xs text-gray-400 mt-1">
+                          Type: {data.type}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {Object.keys(envChanges).length > 0 && (
+                <div className="mt-6 flex items-center gap-4">
+                  <button
+                    type="submit"
+                    disabled={envSaving}
+                    className="px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {envSaving ? "Saving..." : "Save Environment Variables"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEnvChanges({});
+                      loadEnvVariables();
+                    }}
+                    className="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition"
+                  >
+                    Cancel
+                  </button>
+                  <span className="text-sm text-gray-500">
+                    {Object.keys(envChanges).length} variable(s) modified
+                  </span>
+                </div>
+              )}
+
+              {Object.keys(envChanges).length === 0 && (
+                <div className="mt-6 text-sm text-gray-500 text-center">
+                  No changes made. Modify values above to save.
+                </div>
+              )}
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

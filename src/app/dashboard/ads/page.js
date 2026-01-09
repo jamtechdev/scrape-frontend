@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getAdsByCoverage } from "@/services/ads.service";
 import { formatRelativeTime } from "@/utils/format";
+import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 function AdsFeedContent() {
   const router = useRouter();
@@ -72,8 +73,8 @@ function AdsFeedContent() {
         setError('Failed to load ads');
       }
     } catch (err) {
-      console.error('Error fetching ads:', err);
-      setError(err.message || 'Failed to load ads');
+      const errorInfo = handleApiError(err);
+      setError(errorInfo.message || 'Failed to load ads');
     } finally {
       setLoading(false);
     }

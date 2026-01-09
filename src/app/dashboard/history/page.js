@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { get } from "@/services/api";
 import { formatRelativeTime } from "@/utils/format";
 import { getAdsByCoverage } from "@/services/ads.service";
+import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 export default function History() {
   const router = useRouter();
@@ -40,15 +41,8 @@ export default function History() {
         setJobs([]);
       }
     } catch (err) {
-      console.error('Error fetching jobs:', err);
-      // More detailed error message
-      if (err.status === 0) {
-        setError('Network error: Could not connect to server. Please check if the backend is running.');
-      } else if (err.status === 401) {
-        setError('Authentication required. Please log in again.');
-      } else {
-        setError(err.message || `Failed to load job history (${err.status || 'Unknown error'})`);
-      }
+      const errorInfo = handleApiError(err);
+      setError(errorInfo.message || 'Failed to load job history');
     } finally {
       setLoading(false);
     }
@@ -96,7 +90,7 @@ export default function History() {
             };
           }
         } catch (err) {
-          console.error(`Error fetching thumbnail for job ${job.id}:`, err);
+          // Silently handle thumbnail errors - not critical for functionality
         }
         return { coverageId: job.coverage.id, thumbnail: null };
       });

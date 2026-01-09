@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logout } from "@/services/auth.service";
+import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 export default function Sidebar({ open, setOpen }) {
   const pathname = usePathname();
@@ -126,8 +127,8 @@ export default function Sidebar({ open, setOpen }) {
                 // Redirect to login page after successful logout
                 router.push('/');
               } catch (error) {
-                console.error('Logout error:', error);
                 // Even if logout fails, redirect to login page
+                // Silently handle logout errors - user will be logged out anyway
                 router.push('/');
               } finally {
                 setIsLoggingOut(false);

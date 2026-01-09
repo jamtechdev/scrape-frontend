@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { countries } from "@/data/countries";
 import { useAdSearch } from "@/hooks/useAdSearch";
@@ -10,6 +11,8 @@ import RecentJobs from "@/components/dashboard/RecentJobs";
 import Alert from "@/components/ui/Alert";
 
 export default function Dashboard() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
   
   const {
@@ -30,6 +33,27 @@ export default function Dashboard() {
     scrapingProgress,
     handleSearch
   } = useAdSearch();
+
+  // Handle OAuth success/error messages and auto-search after OAuth
+  useEffect(() => {
+    const oauthStatus = searchParams?.get("oauth");
+    const searchStarted = searchParams?.get("search");
+    
+    if (oauthStatus === "success") {
+      // Show success message (will be handled by Alert component if needed)
+      // Clear URL parameter
+      router.replace("/dashboard", { scroll: false });
+    } else if (oauthStatus === "error") {
+      // Error already handled, just clear URL
+      router.replace("/dashboard", { scroll: false });
+    }
+    
+    // If search was started from OAuth callback, the search is already running
+    // The polling mechanism in useAdSearch will automatically pick it up
+    if (searchStarted === "started") {
+      router.replace("/dashboard", { scroll: false });
+    }
+  }, [searchParams, router]);
 
   // Warn user before refreshing when scraping is in progress
   useEffect(() => {
@@ -115,7 +139,7 @@ export default function Dashboard() {
             <li>Facebook Ad Link</li>
             <li>Product Link</li>
             <li>Date Started Running</li>
-            <li>How Many Days Live</li>
+            <li>Number of Days Live</li>
             <li>Total Reach When Found</li>
             <li>Estimated Daily Reach</li>
           </ul>

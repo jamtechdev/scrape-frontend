@@ -73,10 +73,20 @@ export async function getAdsByCoverage(coverageId, options = {}) {
   return response;
 }
 
+/**
+ * Check Google OAuth connection status
+ * @returns {Promise<Object>} OAuth status
+ */
+export async function checkOAuthStatus() {
+  const response = await get('/ads/google-sheets/oauth-status');
+  return response;
+}
+
 export default {
   searchAds,
   checkCoverage,
   getJobStatus,
   getAdsByCoverage,
+  checkOAuthStatus,
 };
 

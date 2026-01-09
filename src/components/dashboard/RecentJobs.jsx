@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { get } from "@/services/api";
 import { formatRelativeTime } from "@/utils/format";
+import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 export default function RecentJobs() {
   const router = useRouter();
@@ -39,7 +40,8 @@ export default function RecentJobs() {
         setRecentJobs([]);
       }
     } catch (err) {
-      console.error('Error fetching recent jobs:', err);
+      const errorInfo = handleApiError(err);
+      // Silently handle errors for background polling - don't show to user
       setRecentJobs([]);
     } finally {
       setLoading(false);

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { get } from "@/services/api";
 import { formatRelativeTime } from "@/utils/format";
+import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 export default function Sheets() {
   const [search, setSearch] = useState("");
@@ -39,17 +40,10 @@ export default function Sheets() {
       } else {
         setAllSheets([]);
         setTotalCount(0);
-        console.warn('⚠️ No sheets data in response:', response);
       }
     } catch (err) {
-      console.error('Error fetching sheets:', err);
-      if (err.status === 0) {
-        setError('Network error: Could not connect to server. Please check if the backend is running.');
-      } else if (err.status === 401) {
-        setError('Authentication required. Please log in again.');
-      } else {
-        setError(err.message || `Failed to load sheets (${err.status || 'Unknown error'})`);
-      }
+      const errorInfo = handleApiError(err);
+      setError(errorInfo.message || 'Failed to load sheets');
       setAllSheets([]);
       setTotalCount(0);
     } finally {

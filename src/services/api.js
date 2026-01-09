@@ -60,6 +60,10 @@ async function apiRequest(endpoint, options = {}) {
         message: data.message || data.error || 'An error occurred',
         status: response.status,
         details: data.details || null,
+        // Preserve Facebook/Meta API error details
+        facebookError: data.facebookError || null,
+        // Preserve full error response for detailed error extraction
+        fullError: data,
       };
       throw error;
     }

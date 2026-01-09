@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { getAdsByCoverage } from "@/services/ads.service";
 import { formatRelativeTime } from "@/utils/format";
+import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
   const [ads, setAds] = useState([]);
@@ -45,8 +46,8 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
         setError('Failed to load ads');
       }
     } catch (err) {
-      console.error('Error fetching ads:', err);
-      setError(err.message || 'Failed to load ads');
+      const errorInfo = handleApiError(err);
+      setError(errorInfo.message || 'Failed to load ads');
     } finally {
       setLoading(false);
     }
@@ -201,7 +202,7 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
                             className="w-full h-auto max-h-96"
                             poster={ad.thumbnail_url || undefined}
                             onError={(e) => {
-                              console.error('Video load error:', e);
+                              // Silently handle video load errors - fallback UI handles it
                               e.target.style.display = 'none';
                             }}
                           >
@@ -214,7 +215,7 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
                             alt="Ad thumbnail"
                             className="w-full h-auto max-h-96 object-contain"
                             onError={(e) => {
-                              console.error('Image load error:', e);
+                              // Silently handle image load errors - fallback UI handles it
                               e.target.style.display = 'none';
                             }}
                           />
