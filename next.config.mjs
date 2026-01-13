@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Removed static export for PM2 server deployment
   images: {
     unoptimized: true,
   },
-  // Ensure proper routing for static export
   trailingSlash: false,
 };
 
