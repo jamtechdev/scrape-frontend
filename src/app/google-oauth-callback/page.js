@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { post } from "@/services/api";
 import { searchAds } from "@/services/ads.service";
 import { handleApiError } from "@/utils/errorHandler";
 
-export default function GoogleOAuthCallback() {
+function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState("processing");
@@ -193,5 +193,25 @@ export default function GoogleOAuthCallback() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function GoogleOAuthCallback() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#433974] to-[#5145a3]">
+        <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-4 border-[#433974] border-t-transparent mb-4"></div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              Loading...
+            </h2>
+            <p className="text-gray-600">Processing Google authorization...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <CallbackContent />
+    </Suspense>
   );
 }
