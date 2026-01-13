@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function PrivacyPolicy() {
   useEffect(() => {
@@ -329,9 +330,23 @@ export default function PrivacyPolicy() {
 
             {/* Footer */}
             <div className="mt-12 pt-8 border-t border-gray-200">
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-sm mb-4">
                 This Privacy Policy is effective as of the "Last Updated" date and applies to all users of our Service.
               </p>
+              <div className="flex gap-4">
+                <Link 
+                  href="/terms-and-conditions" 
+                  className="text-[#433974] hover:underline text-sm"
+                >
+                  View Terms and Conditions
+                </Link>
+                <Link 
+                  href="/" 
+                  className="text-[#433974] hover:underline text-sm"
+                >
+                  Back to Home
+                </Link>
+              </div>
             </div>
           </div>
         </div>

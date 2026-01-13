@@ -3,13 +3,44 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-export default function HomePage() {
+export default function LandingPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="text-2xl font-bold text-[#433974]">
+              Meta Ads Scraper
+            </div>
+            <nav className="flex gap-6 items-center">
+              <Link 
+                href="/" 
+                className="text-gray-700 hover:text-[#433974] transition-colors"
+              >
+                Login
+              </Link>
+              <Link 
+                href="/terms-and-conditions" 
+                className="text-gray-700 hover:text-[#433974] transition-colors"
+              >
+                Terms
+              </Link>
+              <Link 
+                href="/privacy-policy" 
+                className="text-gray-700 hover:text-[#433974] transition-colors"
+              >
+                Privacy
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center">
@@ -23,7 +54,7 @@ export default function HomePage() {
           </p>
           <div className="flex gap-4 justify-center">
             <Link
-              href="/login"
+              href="/"
               className="bg-[#433974] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#5145a3] transition-colors shadow-lg"
             >
               Get Started
@@ -147,13 +178,51 @@ export default function HomePage() {
             Join thousands of marketers and researchers using our platform to analyze Facebook ads
           </p>
           <Link
-            href="/login"
+            href="/"
             className="bg-white text-[#433974] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg inline-block"
           >
             Start Free Trial
           </Link>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-300 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            <div>
+              <h3 className="text-white font-semibold text-lg mb-4">Meta Ads Scraper</h3>
+              <p className="text-sm">
+                Powerful tool for analyzing and tracking Facebook and Instagram ads from the Meta Ads Library.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold text-lg mb-4">Legal</h3>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="/terms-and-conditions" className="hover:text-white transition-colors">
+                    Terms and Conditions
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy-policy" className="hover:text-white transition-colors">
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold text-lg mb-4">Contact</h3>
+              <p className="text-sm">
+                For support and inquiries, please contact us through your account dashboard.
+              </p>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 text-center text-sm">
+            <p>&copy; {new Date().getFullYear()} Meta Ads Scraper. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -1,17 +1,23 @@
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export const metadata = {
-  title: "Scrape Frontend",
-  description: "Authentication and Dashboard App",
+  title: "Meta Ads Scraper - Discover Facebook Ads Like Never Before",
+  description: "Powerful tool to search, analyze, and track Facebook and Instagram ads from the Meta Ads Library",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex flex-col min-h-screen">
         <AuthProvider>
-          {children}
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
         </AuthProvider>
       </body>
     </html>
