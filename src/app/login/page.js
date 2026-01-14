@@ -90,7 +90,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => handleTabChange("register")}
-                  className="font-semibold text-[#433974] hover:text-[#5145a3] transition-colors duration-200"
+                  className="font-semibold text-[#142952] hover:text-[#142952] transition-colors duration-200"
                 >
                   Sign up
                 </button>
@@ -105,7 +105,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => handleTabChange("login")}
-                  className="font-semibold text-[#433974] hover:text-[#5145a3] transition-colors duration-200"
+                  className="font-semibold text-[#142952] hover:text-[#142952] transition-colors duration-200"
                 >
                   Sign in
                 </button>
@@ -117,7 +117,7 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <Link 
               href="/privacy-policy" 
-              className="text-xs text-gray-500 hover:text-[#433974] transition-colors duration-200"
+              className="text-xs text-gray-500 hover:text-[#142952] transition-colors duration-200"
             >
               Privacy Policy
             </Link>

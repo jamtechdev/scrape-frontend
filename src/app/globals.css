@@ -65,3 +65,5 @@ body{
 .message-auto-hide {
   animation: fadeOut 3s forwards;
 }
+
+.hero-gradient { background: radial-gradient(circle at center, #1e3a8a 0%, #020617 100%); }

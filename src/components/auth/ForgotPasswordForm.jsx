@@ -35,7 +35,7 @@ export default function ForgotPasswordForm({ onSubmit, loading, onBack }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-5 py-2.5 bg-[#142952] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Sending..." : "Send Reset Link"}
         </button>
@@ -45,7 +45,7 @@ export default function ForgotPasswordForm({ onSubmit, loading, onBack }) {
         <button
           type="button"
           onClick={onBack}
-          className="text-sm text-[#433974] font-semibold hover:text-[#5145a3] transition-colors duration-200 underline"
+          className="text-sm text-[#433974] font-semibold hover:text-[#142952] transition-colors duration-200 underline"
         >
           Back to Sign In
         </button>

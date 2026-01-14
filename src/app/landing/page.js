@@ -55,7 +55,7 @@ export default function LandingPage() {
           <div className="flex gap-4 justify-center">
             <Link
               href="/"
-              className="bg-[#433974] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#5145a3] transition-colors shadow-lg"
+              className="bg-[#142952] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#5145a3] transition-colors shadow-lg"
             >
               Get Started
             </Link>
@@ -130,7 +130,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="text-center">
-              <div className="bg-[#433974] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="bg-[#142952] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 1
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -142,7 +142,7 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <div className="bg-[#433974] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="bg-[#142952] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 2
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -154,7 +154,7 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <div className="bg-[#433974] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="bg-[#142952] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 3
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
