@@ -230,7 +230,7 @@ export default function Setting() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#142952]"></div>
           <p className="mt-4 text-gray-500">Loading settings...</p>
         </div>
       </div>
@@ -276,7 +276,7 @@ export default function Setting() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#433974] outline-none"
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] outline-none transition-all"
             />
           </div>
 
@@ -289,7 +289,7 @@ export default function Setting() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#433974] outline-none"
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] outline-none transition-all"
             />
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function Setting() {
         <button 
           onClick={handleSaveProfile}
           disabled={saving}
-          className="mt-6 px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-6 px-5 py-2.5 bg-[#142952] text-white rounded-lg font-semibold hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>
@@ -323,7 +323,7 @@ export default function Setting() {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#433974] outline-none"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] outline-none transition-all"
               />
             </div>
 
@@ -339,7 +339,7 @@ export default function Setting() {
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#433974] outline-none"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] outline-none transition-all"
               />
             </div>
           </div>
@@ -356,7 +356,7 @@ export default function Setting() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#433974] outline-none"
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] outline-none transition-all"
             />
           </div>
 
@@ -364,7 +364,7 @@ export default function Setting() {
           <button 
             type="submit"
             disabled={saving}
-            className="mt-6 px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-6 px-5 py-2.5 bg-[#142952] text-white rounded-lg font-semibold hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           >
             {saving ? "Updating..." : "Update Password"}
           </button>
@@ -383,7 +383,7 @@ export default function Setting() {
         {checkingOAuth ? (
           <div className="flex items-center justify-center py-4">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#433974]"></div>
+              <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#142952]"></div>
               <p className="mt-2 text-sm text-gray-500">Checking connection status...</p>
             </div>
           </div>
@@ -415,7 +415,7 @@ export default function Setting() {
               <button
                 onClick={handleConnectGoogle}
                 disabled={oauthLoading}
-                className="w-full px-5 py-3 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full px-5 py-3 bg-[#142952] text-white rounded-lg font-semibold hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
               >
                 {oauthLoading ? (
                   <>
@@ -447,7 +447,7 @@ export default function Setting() {
         <div className="flex items-center gap-4">
           <Link 
             href="/privacy-policy" 
-            className="text-[#433974] hover:text-[#5145a3] font-medium transition-colors duration-200 flex items-center gap-2"
+            className="text-[#142952] hover:text-[#5145a3] font-medium transition-colors duration-200 flex items-center gap-2"
           >
             <i className="ri-file-shield-line"></i>
             Privacy Policy
@@ -467,7 +467,7 @@ export default function Setting() {
         {envLoading ? (
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#142952]"></div>
               <p className="mt-4 text-gray-500">Loading environment variables...</p>
             </div>
           </div>
@@ -482,7 +482,7 @@ export default function Setting() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-[#433974] outline-none"
+                  className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] outline-none transition-all"
                 >
                   {envCategories.map((cat) => (
                     <option key={cat} value={cat}>
@@ -522,7 +522,7 @@ export default function Setting() {
                         <select
                           value={currentValue}
                           onChange={(e) => handleEnvChange(key, e.target.value)}
-                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-[#433974] outline-none"
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] outline-none transition-all"
                         >
                           <option value="">-- Select --</option>
                           {data.options.map((opt) => (
@@ -537,7 +537,7 @@ export default function Setting() {
                           value={isSensitive && currentValue === '***' ? '' : currentValue}
                           onChange={(e) => handleEnvChange(key, e.target.value)}
                           placeholder={isSensitive && currentValue === '***' ? 'Enter new value to update' : data.description || ''}
-                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#433974] outline-none"
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] outline-none transition-all"
                         />
                       )}
 
@@ -556,7 +556,7 @@ export default function Setting() {
                   <button
                     type="submit"
                     disabled={envSaving}
-                    className="px-5 py-2.5 bg-[#433974] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-5 py-2.5 bg-[#142952] text-white rounded-lg font-semibold hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                   >
                     {envSaving ? "Saving..." : "Save Environment Variables"}
                   </button>

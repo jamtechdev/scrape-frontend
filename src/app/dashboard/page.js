@@ -83,9 +83,9 @@ export default function Dashboard() {
       {/* Welcome Section */}
       <div>
         <h2 className="text-3xl font-bold text-gray-900">
-          Welcome, <span className="text-[#433974]">{user?.name || 'User'}</span>!
+          Welcome, <span className="text-[#142952]">{user?.name || 'User'}</span>!
         </h2>
-        <p className="text-gray-500 mt-1">
+        <p className="text-gray-600 mt-1">
           Search Facebook ads by keyword with intelligent coverage tracking.
         </p>
       </div>

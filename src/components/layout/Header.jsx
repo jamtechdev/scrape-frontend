@@ -9,7 +9,7 @@ export default function Header() {
   const { isAuthenticated } = useAuth();
 
   // Don't show header on login/auth pages and dashboard
-  const hideHeader = pathname === '/login' || pathname === '/auth' || pathname?.startsWith('/dashboard');
+  const hideHeader = pathname === '/login' || pathname === '/signup' || pathname === '/auth' || pathname?.startsWith('/dashboard');
 
   if (hideHeader) {
     return null;
@@ -33,6 +33,26 @@ export default function Header() {
             >
               Home
             </Link>
+            <Link 
+              href="/about-us" 
+              className={`transition-colors ${
+                pathname === '/about-us' 
+                  ? 'text-[#fff] font-semibold' 
+                  : 'text-[#fff] hover:text-[#fff]'
+              }`}
+            >
+              About
+            </Link>
+            <Link 
+              href="/info" 
+              className={`transition-colors ${
+                pathname === '/info' 
+                  ? 'text-[#fff] font-semibold' 
+                  : 'text-[#fff] hover:text-[#fff]'
+              }`}
+            >
+              Info
+            </Link>
             {isAuthenticated ? (
               <Link 
                 href="/dashboard" 
@@ -41,12 +61,24 @@ export default function Header() {
                 Dashboard
               </Link>
             ) : (
-              <Link 
-                href="/login" 
-                className="text-sm font-medium text-[#fff] hover:text-[#fff] transition-colors"
-              >
-                Login
-              </Link>
+              <>
+                <Link 
+                  href="/payment" 
+                  className={`transition-colors ${
+                    pathname === '/payment' 
+                      ? 'text-[#fff] font-semibold' 
+                      : 'text-[#fff] hover:text-[#fff]'
+                  }`}
+                >
+                  Pricing
+                </Link>
+                <Link 
+                  href="/login" 
+                  className="text-sm font-medium text-[#fff] hover:text-[#fff] transition-colors"
+                >
+                  Login
+                </Link>
+              </>
             )}
             <Link 
               href="/terms-and-conditions" 

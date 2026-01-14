@@ -24,11 +24,11 @@ export default function Topbar({ open, setOpen }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   return (
-    <header className="flex justify-between items-center h-16 px-6 border-b bg-white">
+    <header className="flex justify-between items-center h-16 px-6 border-b border-gray-200 bg-white shadow-sm">
       <div className="flex items-center gap-3 w-full">
         {/* Hamburger (always visible) */}
         <button
-          className="flex h-10 w-10 min-w-10 items-center justify-center rounded-lg border bg-[#433974] text-white md:hidden"
+          className="flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#142952] text-white md:hidden hover:bg-[#5145a3] transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Open sidebar"
         >
@@ -37,7 +37,7 @@ export default function Topbar({ open, setOpen }) {
 
         {/* Desktop expand/collapse button (visible on md+) */}
         <button
-          className="hidden md:flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#433974] text-white"
+          className="hidden md:flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#142952] text-white hover:bg-[#5145a3] transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle sidebar"
         >
@@ -47,7 +47,7 @@ export default function Topbar({ open, setOpen }) {
         <div className="relative w-full xl:max-w-[430px]">
           <span className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2">
             <svg
-              className="fill-gray-500 dark:fill-gray-400"
+              className="fill-gray-400"
               width={20}
               height={20}
               viewBox="0 0 20 20"
@@ -66,7 +66,7 @@ export default function Topbar({ open, setOpen }) {
             id="search-input"
             type="text"
             placeholder="Search or type command..."
-            className="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pr-14 pl-12 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden"
+            className="h-11 w-full rounded-lg border border-gray-200 bg-white py-2.5 pr-14 pl-12 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] focus:outline-none transition-all"
           />
         </div>
       </div>
@@ -77,7 +77,7 @@ export default function Topbar({ open, setOpen }) {
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
         >
-          <div className="w-8 h-8 bg-[#433974] rounded-full flex items-center justify-center text-white text-sm font-medium">
+          <div className="w-8 h-8 bg-[#142952] rounded-full flex items-center justify-center text-white text-sm font-medium">
             {user?.name?.charAt(0)?.toUpperCase() || 'U'}
           </div>
           <span className="hidden md:block text-sm font-medium text-gray-700">
@@ -87,7 +87,7 @@ export default function Topbar({ open, setOpen }) {
         </button>
 
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
             <div className="px-4 py-2 border-b border-gray-100">
               <p className="text-sm font-medium text-gray-900">{user?.name}</p>
               <p className="text-xs text-gray-500">{user?.email}</p>

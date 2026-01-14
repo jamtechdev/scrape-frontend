@@ -33,26 +33,27 @@ export default function Layout({ children }) {
   // Show loading or nothing while checking auth
   if (loading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0f1d]">
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="text-black bg-[url('/auth-bg.jpg')] bg-no-repeat bg-cover bg-center">
+    <div className="min-h-screen bg-[#0a0f1d]">
       <div className="flex min-h-screen">
         {/* Sidebar (desktop & mobile drawer) */}
         <Sidebar open={open} setOpen={setOpen} />
 
         {/* MAIN CONTENT */}
-        <div
-          className={`w-full transition-all duration-300 md:mt-5 md:h-[calc(100vh-20px)] md:rounded-tl-2xl overflow-hidden`}
-          // if you want content shift when desktop sidebar collapsed, keep padding left logic here
-        >
+        <div className={`flex-1 flex flex-col min-h-screen ${open ? 'md:ml-60' : 'md:ml-20'} transition-all duration-300`}>
           <Topbar open={open} setOpen={setOpen} />
 
-          <div className="p-6 md:h-[calc(100vh-84px)] h-[calc(100vh-64px)] overflow-y-auto bg-white">{children}</div>
+          <div className="flex-1 p-6 overflow-y-auto bg-gray-50">
+            <div className="max-w-7xl mx-auto">
+              {children}
+            </div>
+          </div>
         </div>
       </div>
     </div>

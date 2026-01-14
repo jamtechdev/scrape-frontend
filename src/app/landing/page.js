@@ -22,19 +22,25 @@ export default function LandingPage() {
                 href="/" 
                 className="text-gray-700 hover:text-[#433974] transition-colors"
               >
+                Home
+              </Link>
+              <Link 
+                href="/about-us" 
+                className="text-gray-700 hover:text-[#433974] transition-colors"
+              >
+                About
+              </Link>
+              <Link 
+                href="/payment" 
+                className="text-gray-700 hover:text-[#433974] transition-colors"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/login"
+                className="text-gray-700 hover:text-[#433974] transition-colors"
+              >
                 Login
-              </Link>
-              <Link 
-                href="/terms-and-conditions" 
-                className="text-gray-700 hover:text-[#433974] transition-colors"
-              >
-                Terms
-              </Link>
-              <Link 
-                href="/privacy-policy" 
-                className="text-gray-700 hover:text-[#433974] transition-colors"
-              >
-                Privacy
               </Link>
             </nav>
           </div>

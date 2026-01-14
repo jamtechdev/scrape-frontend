@@ -41,7 +41,7 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-5">
-            <Link href="/login" className="group bg-blue-600 hover:bg-[#142952]0 px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:scale-105 flex items-center gap-2">
+            <Link href="/signup" className="group bg-blue-600 hover:bg-[#142952]0 px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:scale-105 flex items-center gap-2">
                Get Started
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -181,7 +181,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
-            href="/login"
+            href="/signup"
             className="bg-blue-600 hover:bg-[#142952]0 text-white px-12 py-5 rounded-2xl font-bold text-xl transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
           >
             Start Free Trial

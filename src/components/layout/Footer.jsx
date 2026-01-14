@@ -7,7 +7,7 @@ export default function Footer() {
   const pathname = usePathname();
 
   // Don't show footer on login/auth pages and dashboard
-  const hideFooter = pathname === '/login' || pathname === '/auth' || pathname?.startsWith('/dashboard');
+  const hideFooter = pathname === '/login' || pathname === '/signup' || pathname === '/auth' || pathname?.startsWith('/dashboard');
 
   if (hideFooter) {
     return null;
@@ -16,12 +16,32 @@ export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300 py-12 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-3 gap-8 mb-8">
+        <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Meta Ads Scraper</h3>
             <p className="text-sm">
               Powerful tool for analyzing and tracking Facebook and Instagram ads from the Meta Ads Library.
             </p>
+          </div>
+          <div>
+            <h3 className="text-white font-semibold text-lg mb-4">Company</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/about-us" className="hover:text-white transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/info" className="hover:text-white transition-colors">
+                  Information
+                </Link>
+              </li>
+              <li>
+                <Link href="/payment" className="hover:text-white transition-colors">
+                  Pricing
+                </Link>
+              </li>
+            </ul>
           </div>
           <div>
             <h3 className="text-white font-semibold text-lg mb-4">Legal</h3>

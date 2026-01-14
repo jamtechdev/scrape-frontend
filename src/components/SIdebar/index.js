@@ -42,8 +42,8 @@ export default function Sidebar({ open, setOpen }) {
       <aside
         className={`fixed top-0 w-60 h-screen overflow-y-auto overflow-x-hidden left-0 z-50 transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}
-          md:relative md:translate-x-0 ${open ? "md:w-60" : "md:w-20"}
-          md:bg-transparent bg-[#433974] flex flex-col justify-between`}
+          md:fixed md:translate-x-0 ${open ? "md:w-60" : "md:w-20"}
+          bg-[#142952] flex flex-col justify-between shadow-xl`}
         // note: md:w-XX controlled via template string above
       >
         {/* TOP MENU */}
@@ -79,12 +79,9 @@ export default function Sidebar({ open, setOpen }) {
                     if (window.innerWidth < 768) setOpen(false);
                   }}
                   className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all duration-300 min-h-[48px]
-                    ${isActive ? "bg-[#f1eeff] text-[#6052a9]" : "text-white"}`}
+                    ${isActive ? "bg-white/20 text-white" : "text-gray-300 hover:bg-white/10 hover:text-white"}`}
                 >
-                  <span
-                    className={`transition-all duration-300 
-                      ${isActive ? "text-[#6052a9]" : "text-white"}`}
-                  >
+                  <span className="text-white">
                     {item.icon}
                   </span>
 
@@ -117,7 +114,7 @@ export default function Sidebar({ open, setOpen }) {
 
           {/* LOGOUT */}
           <button
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-red-500 text-white transition-all duration-300 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-lg bg-red-600 text-white transition-all duration-300 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             onClick={async () => {
               if (isLoggingOut) return;
               
