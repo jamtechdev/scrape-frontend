@@ -15,7 +15,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="text-2xl font-bold text-[#433974]">
-              Meta Ads Scraper
+              Adtrova
             </div>
             <nav className="flex gap-6 items-center">
               <Link 
@@ -197,7 +197,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8 mb-8">
             <div>
-              <h3 className="text-white font-semibold text-lg mb-4">Meta Ads Scraper</h3>
+              <h3 className="text-white font-semibold text-lg mb-4">Adtrova</h3>
               <p className="text-sm">
                 Powerful tool for analyzing and tracking Facebook and Instagram ads from the Meta Ads Library.
               </p>
@@ -225,7 +225,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>&copy; {new Date().getFullYear()} Meta Ads Scraper. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Adtrova. All rights reserved.</p>
           </div>
         </div>
       </footer>

@@ -41,17 +41,16 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0a0f1d] py-12 px-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#fff] py-12 px-4 relative overflow-hidden">
       {/* Background Gradients */}
-      <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute top-1/2 -right-24 w-80 h-80 bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none"></div>
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#26996f]/50 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-1/2 -right-24 w-80 h-80 bg-[#26996f]/50 rounded-full blur-[100px] pointer-events-none"></div>
       
       <div className="w-full max-w-md relative z-10">
         {/* Back to Home Link */}
         <Link 
           href="/"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8 group"
+          className="inline-flex items-center gap-2 text-[#000]  transition-colors mb-8 group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span>Back to Home</span>
@@ -60,17 +59,17 @@ export default function SignupPage() {
         {/* Logo/Brand */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <h1 className="text-4xl font-bold text-white mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-300">
+            <h1 className="text-4xl font-bold text-[#26996f] mb-2">
               Create Account
             </h1>
           </Link>
-          <p className="text-gray-400">
-            Start your journey with Meta Ads Scraper
+          <p className="text-gray-600">
+            Start your journey with Adtrova
           </p>
         </div>
 
         {/* Auth Card */}
-        <div className="bg-white/5 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/10">
+        <div className="bg-white/5 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/10 z-[1000]">
           <MessageDisplay error={error} success={success} />
 
           <RegisterForm
@@ -80,7 +79,7 @@ export default function SignupPage() {
 
           {/* Benefits List */}
           <div className="mt-8 pt-6 border-t border-white/10">
-            <p className="text-gray-300 text-sm font-medium mb-4">What you'll get:</p>
+            <p className="text-[#000] text-sm font-medium mb-4">What you'll get:</p>
             <div className="space-y-3">
               {[
                 'Unlimited ad searches',
@@ -88,8 +87,8 @@ export default function SignupPage() {
                 'Export to Google Sheets',
                 'Priority support'
               ].map((benefit, idx) => (
-                <div key={idx} className="flex items-center gap-3 text-sm text-gray-400">
-                  <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
+                <div key={idx} className="flex items-center gap-3 text-sm text-gray-700">
+                  <CheckCircle className="w-4 h-4 text-[#26996f] flex-shrink-0" />
                   <span>{benefit}</span>
                 </div>
               ))}
@@ -97,11 +96,11 @@ export default function SignupPage() {
           </div>
 
           <div className="mt-8 text-center pt-6 border-t border-white/10">
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-600 text-sm">
               Already have an account?{" "}
               <Link
                 href="/login"
-                className="font-semibold text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                className="font-semibold text-[#26996f] hover:text-green-600 transition-colors duration-200"
               >
                 Sign in
               </Link>

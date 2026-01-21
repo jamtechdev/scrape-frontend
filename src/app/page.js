@@ -10,158 +10,159 @@ export default function HomePage() {
 
   return (
 
-     <div className="min-h-screen bg-white font-sans selection:bg-blue-100 selection:text-blue-900">
-      
+    <div className="min-h-screen bg-white font-sans selection:bg-[#26996f]/20 selection:text-[#000000]">
+
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-[#0a0f1d] text-white pt-40 pb-32 px-4">
-        {/* Animated Background Gradients */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none"></div>
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"></div>
-        <div className="absolute top-1/2 -right-24 w-80 h-80 bg-indigo-600/10 rounded-full blur-[100px]"></div>
+      <section className="relative overflow-hidden bg-white text-[#000000] py-4 md:pt-40 md:pb-32 px-4 border-b border-slate-100">
+        {/* Subtle Decorative Elements */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#26996f4a] rounded-full blur-[120px]"></div>
+        <div className="absolute top-1/2 -right-24 w-80 h-80 bg-[#26996f4a] rounded-full blur-[100px]"></div>
 
         <div className="max-w-6xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-md rounded-full px-4 py-1.5 text-sm font-medium text-blue-300 mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full px-4 py-1.5 text-xs md:text-sm font-medium text-[#26996f] mb-8 animate-fade-in">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#142952]0"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#26996f] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#26996f]"></span>
             </span>
-            Trusted by 5,000+ top-tier marketers
+            Trusted by top-tier marketers, brands and coaching groups
           </div>
-          
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.1] tracking-tight">
-            Discover Facebook Ads <br/>
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-300">
-              Like Never Before
+
+          <h1 className="text-3xl md:text-7xl font-black mb-8 leading-[1.1] tracking-tight text-[#000000]">
+            Find Winning Ads & Products <br />
+            <span className="text-[#26996f]">
+              Without Hours of Research
             </span>
           </h1>
-          
-          <p className="text-slate-400 text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
-            Powerful tool to search, analyze, and track Facebook and Instagram ads from the Meta Ads Library. 
-            Get insights into competitor strategies, ad performance, and creative trends.
+
+          <p className="text-[#000] text-sm md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
+            Automatically pull proven Meta ads by country and
+            keyword into Google Sheets, complete with reach
+            and advertiser insights. So you can spot winning
+            products without the hours in manual research.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-5">
-            <Link href="/signup" className="group bg-blue-600 hover:bg-[#142952]0 px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:scale-105 flex items-center gap-2">
-               Get Started
+          <div className="flex flex-row justify-center items-center gap-5">
+            <Link href="/signup" className="group bg-[#26996f] hover:opacity-90 text-white p-3 md:px-10 md:py-4 rounded-xl font-bold text-sm md:text-lg transition-all shadow-lg shadow-[#26996f]/20 hover:scale-105 flex items-center gap-2">
+              Start Now
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link href="/privacy-policy" className="bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 px-10 py-4 rounded-xl font-bold text-lg transition-all">
-              Learn More
+            <Link href="/privacy-policy" className="bg-white hover:bg-slate-50 border border-slate-200 text-[#000000] p-3 md:px-10 md:py-4 rounded-xl font-bold text-sm md:text-lg transition-all">
+              Sign In
             </Link>
           </div>
         </div>
       </section>
 
-      {/* FEATURES BENTO GRID */}
-      <section className="py-32 px-4 bg-white">
+      {/* FEATURES SECTION */}
+      <section className="py-8 md:py-32 px-4 bg-[#26996f14]">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-            <div className="max-w-2xl">
-              <span className="text-[#fff] font-bold text-sm uppercase tracking-widest bg-[#142952] px-3 py-1 rounded-md">
+            <div className="max-w-3xl">
+              <span className="text-white font-bold text-sm uppercase tracking-widest bg-[#26996f] px-3 py-1 rounded-md 
+             border-b-4 border-[#1e7a58] shadow-lg active:translate-y-1 active:border-b-0">
                 Features
               </span>
-              <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mt-4 mb-3">
-                Powerful Features
+              <h2 className="text-3xl md:text-5xl font-extrabold text-[#000000] tracking-tight mt-4 mb-3">
+                Your All-in One Research tool
               </h2>
-                <p className="text-slate-600 leading-relaxed">
-                Everything you need to analyze and track Facebook ads effectively.
+              <p className="text-[#000] leading-relaxed">
+                Everything you need to track and find winning ads or products.
               </p>
             </div>
           </div>
 
-          {/* Features Grid */}
-       <div className="grid md:grid-cols-3 gap-8">
-          
-          {/* Advanced Search */}
-          <div className="group bg-white p-10 rounded-[2rem] border border-[#ccddff] shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 transition-all duration-500">
-            <div className="w-16 h-16 bg-[#142952] text-[#fff] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-              <Search className="w-8 h-8" />
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Advanced Search */}
+            <div className="group bg-white p-5 md:p-10 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#26996f]/30 transition-all duration-500">
+              <div className="w-16 h-16 bg-[#26996f] text-white rounded-2xl flex items-center justify-center mb-8 transition-transform group-hover:scale-110">
+                <Search className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg md:text-2xl font-bold text-[#000000] mb-4 tracking-tight">
+                Advanced Search
+              </h3>
+              <p className="text-[#000] leading-relaxed text-sm md:text-lg">
+                Search Meta ads by keywords, countries, date ranges,
+                and more. Find exactly what you're looking for with
+                powerful filtering options.
+              </p>
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">
-              Advanced Search
-            </h3>
-            <p className="text-slate-600 leading-relaxed text-lg">
-              Search Facebook ads by keywords, countries, date ranges, and more. 
-              Find exactly what you're looking for with powerful filtering options.
-            </p>
-          </div>
 
-          {/* Analytics & Insights */}
-          <div className="group bg-white p-10 rounded-[2rem] border border-[#ccddff] shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 transition-all duration-500">
-            <div className="w-16 h-16 bg-[#142952] text-[#fff] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
-              <BarChart3 className="w-8 h-8" />
+            {/* Auto-Refreshing Data */}
+            <div className="group bg-white p-5 md:p-10 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#26996f]/30 transition-all duration-500">
+              <div className="w-16 h-16 bg-[#26996f] text-white rounded-2xl flex items-center justify-center mb-8 transition-transform group-hover:scale-110">
+                <BarChart3 className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg md:text-2xl font-bold text-[#000000] mb-4 tracking-tight">
+                Auto-Refreshing Data
+              </h3>
+              <p className="text-[#000] leading-relaxed text-sm md:text-lg">
+                Your Google Sheets update in real time with reach,
+                advertiser details, ad links, and key ad data, completely
+                automatically.
+              </p>
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">
-              Analytics & Insights
-            </h3>
-            <p className="text-slate-600 leading-relaxed text-lg">
-              Get detailed analytics on ad performance, delivery information, 
-              and creative trends. Make data-driven decisions.
-            </p>
-          </div>
 
-          {/* Export & Integrate */}
-          <div className="group bg-white p-10 rounded-[2rem] border border-[#ccddff] shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 transition-all duration-500">
-            <div className="w-16 h-16 bg-[#142952] text-[#fff] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
-              <CloudDownload className="w-8 h-8" />
+            {/* Analytics & Insights */}
+            <div className="group bg-white p-5 md:p-10 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#26996f]/30 transition-all duration-500">
+              <div className="w-16 h-16 bg-[#26996f] text-white rounded-2xl flex items-center justify-center mb-8 transition-transform group-hover:scale-110">
+                <CloudDownload className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg md:text-2xl font-bold text-[#000000] mb-4 tracking-tight">
+                Analytics & Insights
+              </h3>
+              <p className="text-[#000] leading-relaxed text-sm md:text-lg">
+                Get detailed analytics on ad performance, delivery
+                information, and creative trends. Make data-driven
+                decisions.
+              </p>
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">
-              Export & Integrate
-            </h3>
-            <p className="text-slate-600 leading-relaxed text-lg">
-              Export your findings to Google Sheets, download media files, 
-              and integrate with your workflow seamlessly.
-            </p>
           </div>
-
-        </div>
-
         </div>
       </section>
 
-      {/* HOW IT WORKS WITH CONNECTORS */}
-      <section className="py-24 bg-slate-50 relative overflow-hidden">
+      {/* HOW IT WORKS */}
+      <section className="py-8 md:py-24 bg-slate-50/50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <div className="text-center mb-20">
-          <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-3"> How It Works</h2>
-           <p className="text-slate-600 leading-relaxed">
-               Simple steps to start analyzing Facebook ads.
-           </p>
+          <div className="text-center mb-8 md:mb-20">
+            <h2 className="text-3xl md:text-5xl font-bold text-[#000000] mb-3">How It Works</h2>
+            <p className="text-[#000] leading-relaxed">
+              Simple steps to start analyzing Facebook ads.
+            </p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-12">
+
+          <div className="grid md:grid-cols-3 gap-5 md:gap-12">
             {[
-              { 
-                step: "01", 
-                title: "Create Account", 
-                desc: "Sign up in seconds. No credit card required to start your discovery journey.",
-                icon: <Zap className="w-6 h-6 text-[#fff]" />
+              {
+                step: "01",
+                title: "Search your market",
+                desc: "Enter your keyword, select a country, and choose how many days back you want to analyze. Instantly pull relevant Meta ads from your niche with precise targeting.",
+                icon: <Zap className="w-6 h-6 text-white" />
               },
-              { 
-                step: "02", 
-                title: "Apply Filters", 
-                desc: "Search by industry, landing page URL, or specific brand names to narrow down results.",
-                icon: <Search className="w-6 h-6 text-[#fff]" />
+              {
+                step: "02",
+                title: "Get your auto-updating spreadsheet",
+                desc: "Receive everything neatly organized inside Google Sheets — including reach, advertiser info, creatives, and direct ad links. Your sheet updates automatically so your data is always fresh.",
+                icon: <Search className="w-6 h-6 text-white" />
               },
-              { 
-                step: "03", 
-                title: "Scale Success", 
-                desc: "Analyze the engagement metrics and copy the frameworks to your own ad account.",
-                icon: <CheckCircle className="w-6 h-6 text-[#fff]" />
+              {
+                step: "03",
+                title: "Analyze & find winners",
+                desc: "Review performance metrics, spot trends, and uncover winning products or ad frameworks you can model for your own campaigns.",
+                icon: <CheckCircle className="w-6 h-6 text-white" />
               }
             ].map((item, idx) => (
               <div key={idx} className="relative group">
-                <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-blue-100 hover:shadow-xl transition-all duration-500 relative z-10 h-full">
+                <div className="bg-white p-10 rounded-[2rem] shadow-sm border border-slate-300 hover:shadow-xl transition-all duration-500 relative z-10 h-full">
                   <div className="flex justify-between items-start mb-8">
-                    <div className="w-12 h-12 bg-[#142952] rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#26996f] rounded-xl flex items-center justify-center">
                       {item.icon}
                     </div>
-                    <span className="text-5xl font-black text-[#142952] group-hover:text-[#142952] transition-colors">
+                    <span className="text-5xl font-black text-[#000]  transition-colors">
                       {item.step}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">{item.title}</h3>
-                  <p className="text-slate-500 leading-relaxed text-lg">{item.desc}</p>
+                  <h3 className="text-lg md:text-2xl font-bold text-[#000000] mb-4">{item.title}</h3>
+                  <p className="text-[#000] leading-relaxed text-base">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -170,26 +171,30 @@ export default function HomePage() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="bg-[#0a0f1d] py-32 px-4 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-600/10 blur-[120px]"></div>
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tight">
-            Ready to build <br/>Started?
+      <section className="bg-white py-8 md:py-32 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[#26996f1a]"></div>
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <h2 className="text-3xl md:text-6xl font-black text-[#000000] mb-8 tracking-tight">
+            Ready to Scale?
           </h2>
-          <p className="text-slate-400 text-xl mb-12 max-w-xl mx-auto">
-            Join thousands of marketers and researchers using our platform to analyze Facebook ads.
+          <p className="text-[#000] text-sm md:text-xl mb-12 max-w-xl mx-auto">
+            Join thousands of marketers and researchers using our
+            platform to analyze Meta ads, uncover winning
+            products, and stay ahead of the competition.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <Link
-            href="/signup"
-            className="bg-blue-600 hover:bg-[#142952]0 text-white px-12 py-5 rounded-2xl font-bold text-xl transition-all hover:scale-105 shadow-lg shadow-blue-600/20"
-          >
-            Start Free Trial
-          </Link>
+              href="/signup"
+              className="bg-[#26996f] hover:opacity-90 text-white p-3 md:px-10 md:py-4 rounded-lg md:rounded-2xl font-bold text-sm md:text-xl transition-all hover:scale-105 shadow-lg shadow-[#26996f]/20 flex items-center gap-2"
+            >
+              Start Free Trial
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </div>
       </section>
     </div>
+
 
   );
 }

@@ -11,7 +11,7 @@ export default function ForgotPasswordForm({ onSubmit, loading, onBack }) {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-center text-white mb-8">
+      <h2 className="text-2xl font-bold text-center text-[#26996f] mb-2">
         Reset Password
       </h2>
       <p className="text-center text-gray-400 mb-8 text-sm">
@@ -19,14 +19,14 @@ export default function ForgotPasswordForm({ onSubmit, loading, onBack }) {
       </p>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Email Address
           </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
             placeholder="you@example.com"
             required
           />
@@ -35,7 +35,7 @@ export default function ForgotPasswordForm({ onSubmit, loading, onBack }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20"
+          className="w-full px-5 py-3 bg-[#26996f] hover:bg-[#26996f] text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20"
         >
           {loading ? "Sending..." : "Send Reset Link"}
         </button>
@@ -45,7 +45,7 @@ export default function ForgotPasswordForm({ onSubmit, loading, onBack }) {
         <button
           type="button"
           onClick={onBack}
-          className="text-sm text-blue-400 font-semibold hover:text-blue-300 transition-colors duration-200 underline"
+          className="text-sm text-[#26996f] font-semibold hover:text-[#26996f] transition-colors duration-200 underline"
         >
           Back to Sign In
         </button>
