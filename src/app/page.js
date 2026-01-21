@@ -1,12 +1,38 @@
 "use client";
 
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 import { Search, BarChart3, CloudDownload, ArrowRight, Zap, CheckCircle } from 'lucide-react';
 export default function HomePage() {
+  const router = useRouter();
+  const { isAuthenticated, loading } = useAuth();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Redirect to dashboard if authenticated
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, loading, router]);
+
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0f1d]">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Don't render homepage if authenticated (will redirect)
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
 
