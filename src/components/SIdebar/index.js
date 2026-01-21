@@ -49,28 +49,25 @@ export default function Sidebar({ open, setOpen }) {
         {/* TOP MENU */}
         <div>
           <div className="flex items-center justify-center px-4 py-4 bg-white">
-
-             <Link href="/" className="text-2xl font-black tracking-tight text-[#000000] hover:text-[#26996f] transition-colors">
-             <Image
-              src="/logo.jpeg"  
-              alt="Meta Ads Library Logo"
-              width={250}
-              height={100}
-              className="object-contain"
-            />
-
-          </Link>
-
             <Link href="/" className="text-2xl font-black tracking-tight text-[#000000] hover:text-[#26996f] transition-colors">
-             <Image
-              src="/logo-s.jpeg"  
-              alt="..."
-              width={30}
-              height={30}
-              className="object-contain"
-            />
-
-          </Link>
+              {open ? (
+                <Image
+                  src="/logo.jpeg"
+                  alt="Meta Ads Library Logo"
+                  width={250}
+                  height={100}
+                  className="object-contain"
+                />
+              ) : (
+                <Image
+                  src="/logo-s.jpeg"
+                  alt="Meta Ads Library Logo"
+                  width={30}
+                  height={30}
+                  className="object-contain"
+                />
+              )}
+            </Link>
 
             {/* <h1
               className={`font-semibold text-xl transition-all duration-300 text-white overflow-hidden
