@@ -154,6 +154,20 @@ export function useAdSearch() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+
+    // TEMPORARY: Override for design purposes - just redirect to dashboard
+    // TODO: Remove this override and restore original search functionality
+    setSuccess("Design mode: Redirecting to dashboard...");
+
+    // Redirect to dashboard (already on dashboard, but this ensures page refresh)
+    if (typeof window !== "undefined") {
+      window.location.href = "/dashboard";
+    }
+
+    return;
+
+    // Original code (commented out for design mode):
+    /*
     setError("");
     setSuccess("");
     setLoading(true);
@@ -255,6 +269,7 @@ export function useAdSearch() {
     } finally {
       setLoading(false);
     }
+    */
   };
 
   return {

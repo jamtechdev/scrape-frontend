@@ -8,19 +8,34 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on app start
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
+    // TEMPORARY: Auto-login bypass for testing
+    // TODO: Remove this and restore proper authentication check
+    const dummyUser = {
+      id: 1,
+      email: 'test@example.com',
+      name: 'Test User',
+      token: 'dummy-token-for-bypass'
+    };
     
-    if (token && userData) {
-      try {
-        setUser(JSON.parse(userData));
-      } catch (error) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-      }
-    }
+    // Set dummy user to bypass login
+    setUser(dummyUser);
+    localStorage.setItem('token', dummyUser.token);
+    localStorage.setItem('user', JSON.stringify(dummyUser));
     setLoading(false);
+    
+    // Original code (commented out for bypass):
+    // const token = localStorage.getItem('token');
+    // const userData = localStorage.getItem('user');
+    // 
+    // if (token && userData) {
+    //   try {
+    //     setUser(JSON.parse(userData));
+    //   } catch (error) {
+    //     localStorage.removeItem('token');
+    //     localStorage.removeItem('user');
+    //   }
+    // }
+    // setLoading(false);
   }, []);
 
   const login = (userData) => {
