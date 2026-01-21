@@ -53,28 +53,32 @@ export default function Header() {
 
   return (
   <header className="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-[999999]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-5 md:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-3 sm:py-4 md:py-5">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0">
              <Image
                src="/logo.jpeg"  
                alt="Adtrova.com Logo"
                width={150}
                height={40}
                className="object-contain h-auto"
-               style={{ width: "auto", maxHeight: "40px" }}
+               style={{ 
+                 width: "auto", 
+                 maxHeight: "35px",
+                 maxWidth: "130px"
+               }}
                priority
              />
           </Link>
           
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-8 items-center">
+          {/* Desktop/Tablet Navigation - Show from 768px, but adjust gap for tablets */}
+          <nav className="hidden md:flex md:gap-4 lg:gap-8 items-center">
             {navLinks.map((link) => (
               <Link 
                 key={link.href}
                 href={link.href} 
-                className={`transition-all duration-200 text-sm font-bold uppercase tracking-wide ${
+                className={`transition-all duration-200 text-xs md:text-xs lg:text-sm font-bold uppercase tracking-wide whitespace-nowrap ${
                   pathname === link.href 
                     ? 'text-[#26996f]' 
                     : 'text-[#000000] hover:text-[#26996f]'
@@ -86,7 +90,7 @@ export default function Header() {
             {/* CTA in Nav */}
             <Link 
               href="/signup" 
-              className="bg-[#26996f] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:opacity-90 transition-all shadow-md shadow-[#26996f]/20"
+              className="bg-[#26996f] text-white px-3 md:px-4 lg:px-5 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-xs lg:text-sm hover:opacity-90 transition-all shadow-md shadow-[#26996f]/20 whitespace-nowrap"
             >
               Get Started
             </Link>
@@ -94,7 +98,7 @@ export default function Header() {
 
           {/* Mobile Hamburger Button */}
           <button
-            className="md:hidden flex items-center justify-center w-10 h-10 text-[#000000] hover:bg-slate-100 rounded-lg transition-colors"
+            className="md:hidden flex items-center justify-center w-10 h-10 text-[#000000] hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >

@@ -22,15 +22,15 @@ export default function AboutUsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#26996f] to-[#005939] text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
-            <Users className="w-10 h-10" />
+      <section className="bg-gradient-to-r from-[#26996f] to-[#005939] text-white py-12 sm:py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-5 md:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white/10 rounded-full mb-4 sm:mb-6">
+            <Users className="w-8 h-8 sm:w-10 sm:h-10" />
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
             About Adtrova
           </h1>
-          <p className="text-lg md:text-xl text-green-100 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-green-100 max-w-3xl mx-auto px-2">
             Empowering marketers, brands, and researchers with
             powerful tools to discover, analyze, and understand
             Meta advertising.
@@ -39,13 +39,13 @@ export default function AboutUsPage() {
       </section>
 
       {/* Our Story */}
-      <section className="py-5 md:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-12 md:py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-5 md:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-6 text-center">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-5 md:mb-6 text-center">
               Our Story
             </h2>
-            <div className="text-sm md:text-lg text-gray-700 space-y-4">
+            <div className="text-sm sm:text-base md:text-lg text-gray-700 space-y-4">
               <p>
                 Adtrova was built from real marketer frustration.
               </p>

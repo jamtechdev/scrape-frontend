@@ -96,32 +96,32 @@ export default function PaymentPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#26996f] to-[#005939] text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
-            <CreditCard className="w-10 h-10" />
+      <section className="bg-gradient-to-r from-[#26996f] to-[#005939] text-white py-12 sm:py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-5 md:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white/10 rounded-full mb-4 sm:mb-6">
+            <CreditCard className="w-8 h-8 sm:w-10 sm:h-10" />
           </div>
-          <h1 className="text-3xl md:text-5xl  font-bold mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
             Choose Your Plan
           </h1>
-          <p className="text-lg md:text-xl text-green-100 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-green-100 max-w-3xl mx-auto px-2">
             Select the perfect plan for your needs. All plans include a free trial period.
           </p>
         </div>
       </section>
 
       {/* Pricing Cards */}
-      <section className="py-16 -mt-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8">
+      <section className="py-12 sm:py-14 md:py-16 -mt-8 sm:-mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-5 md:px-6 lg:px-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-7 md:gap-8">
             {plans.map((plan) => {
               const IconComponent = plan.icon;
               return (
                 <div
                   key={plan.id}
-                  className={`relative bg-white rounded-2xl shadow-xl p-8 border-2 transition-all ${
+                  className={`relative bg-white rounded-2xl shadow-xl p-6 sm:p-7 md:p-8 border-2 transition-all ${
                     plan.popular
-                      ? 'border-[#26996f] scale-105 md:scale-110'
+                      ? 'border-[#26996f] sm:scale-105 md:scale-110'
                       : 'border-gray-200 hover:border-[#26996f]'
                   }`}
                 >
@@ -184,16 +184,16 @@ export default function PaymentPage() {
       {/* Features Comparison */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
               All Plans Include
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-sm sm:text-base md:text-lg text-gray-600">
               Core features available with every subscription
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-7 md:gap-8">
             {[
               {
                 icon: Shield,
@@ -236,7 +236,7 @@ export default function PaymentPage() {
             </h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-7 md:gap-8">
             {[
               {
                 quote: 'Adtrova has revolutionized how we analyze competitor strategies.',

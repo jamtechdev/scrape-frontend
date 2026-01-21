@@ -116,26 +116,26 @@ export default function History() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+      <div className="mb-4 sm:mb-5 md:mb-6">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
           Scrape History
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-xs sm:text-sm text-gray-500 mt-1">
           View all your scraping jobs, statuses, and extracted row counts.
         </p>
       </div>
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-5 md:mb-6">
         <input
           type="text"
           placeholder="Search by Job ID, Keyword, or Country..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-80 px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] transition"
+          className="w-full sm:flex-1 md:w-80 px-3 sm:px-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] transition"
         />
         <select 
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#26996f]"
+          className="w-full sm:w-auto px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 rounded-lg bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#26996f]"
         >
           <option value="">All Status</option>
           <option value="completed">Completed</option>
@@ -169,10 +169,10 @@ export default function History() {
           ) : (
             <>
               {/* Desktop Table View - Hidden on mobile */}
-              <div className="hidden md:block bg-white rounded-xl border border-gray-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
+              <div className="hidden md:block bg-white rounded-xl border border-gray-200 overflow-hidden w-full" style={{ maxHeight: 'calc(100vh - 280px)' }}>
+                <div className="overflow-x-auto overflow-y-auto w-full h-full" style={{ scrollbarWidth: 'thin' }}>
+                  <table className="w-full min-w-[900px]">
+                    <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
                       <tr>
                         <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                           Thumbnail

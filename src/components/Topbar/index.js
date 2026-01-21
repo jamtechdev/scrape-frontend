@@ -2,32 +2,32 @@
 
 export default function Topbar({ open, setOpen }) {
   return (
-    <header className="flex justify-between items-center h-16 px-4 sm:px-6 border-b border-gray-200 bg-white shadow-sm">
-      <div className="flex items-center gap-3 w-full">
-        {/* Hamburger (always visible) */}
+    <header className="flex-shrink-0 z-30 flex justify-between items-center h-14 sm:h-16 px-3 sm:px-4 md:px-5 lg:px-6 border-b border-gray-200 bg-white shadow-sm">
+      <div className="flex items-center gap-2 sm:gap-3 w-full">
+        {/* Hamburger (always visible on mobile) */}
         <button
-          className="flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#26996f] text-white md:hidden hover:bg-[#26996f] transition-colors"
+          className="flex h-9 w-9 sm:h-10 sm:w-10 min-w-9 sm:min-w-10 items-center justify-center rounded-lg bg-[#26996f] text-white md:hidden hover:bg-[#26996f] transition-colors flex-shrink-0"
           onClick={() => setOpen(!open)}
           aria-label="Open sidebar"
         >
           <i className="ri-menu-2-line ri-lg"></i>
         </button>
 
-        {/* Desktop expand/collapse button (visible on md+) */}
+        {/* Desktop/Tablet expand/collapse button (visible on md+) */}
         <button
-          className="hidden md:flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#26996f] text-white hover:bg-[#26996f] transition-colors"
+          className="hidden md:flex h-9 w-9 lg:h-10 lg:w-10 min-w-9 lg:min-w-10 items-center justify-center rounded-lg bg-[#26996f] text-white hover:bg-[#26996f] transition-colors flex-shrink-0"
           onClick={() => setOpen(!open)}
           aria-label="Toggle sidebar"
         >
           <i className="ri-menu-2-line ri-lg"></i>
         </button>
 
-        <div className="relative w-full xl:max-w-[430px]">
-          <span className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2">
+        <div className="relative w-full md:max-w-sm lg:max-w-md xl:max-w-[430px]">
+          <span className="pointer-events-none absolute top-1/2 left-3 sm:left-4 -translate-y-1/2">
             <svg
               className="fill-gray-400"
-              width={20}
-              height={20}
+              width={18}
+              height={18}
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@ export default function Topbar({ open, setOpen }) {
             id="search-input"
             type="text"
             placeholder="Search or type command..."
-            className="h-11 w-full rounded-lg border border-gray-200 bg-white py-2.5 pr-14 pl-12 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] focus:outline-none transition-all"
+            className="h-9 sm:h-10 md:h-11 w-full rounded-lg border border-gray-200 bg-white py-2 sm:py-2.5 pr-12 sm:pr-14 pl-10 sm:pl-12 text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] focus:outline-none transition-all"
           />
         </div>
       </div>

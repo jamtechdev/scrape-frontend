@@ -98,11 +98,11 @@ export default function Sheets() {
   return (
     <div>
       {/* Page Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+      <div className="mb-4 sm:mb-5 md:mb-6">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
           Generated Google Sheets
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-xs sm:text-sm text-gray-500 mt-1">
           View all exported scraping results saved as Google Sheets.
           {!loading && totalCount > 0 && (
             <span className="ml-2 text-[#26996f] font-semibold">
@@ -113,19 +113,19 @@ export default function Sheets() {
       </div>
 
       {/* Search + Filter */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-5 md:mb-6">
         <input
           type="text"
           placeholder="Search by Sheet name or Job ID..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-80 px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] transition"
+          className="w-full sm:flex-1 md:w-80 px-3 sm:px-4 py-2.5 sm:py-3 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] transition"
         />
 
         <select 
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#26996f]"
+          className="w-full sm:w-auto px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 rounded-lg bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#26996f]"
         >
           <option value="">All Sheets</option>
           <option value="recent">Recently Created</option>
@@ -160,10 +160,11 @@ export default function Sheets() {
           ) : (
             <>
               {/* Desktop Table View - Hidden on mobile */}
-              <div className="hidden md:block overflow-x-auto rounded-xl shadow-sm border border-gray-200 bg-white">
-                <table className="min-w-full text-md">
-                  <thead>
-                    <tr className="bg-[#26996f] text-white">
+              <div className="hidden md:block overflow-hidden rounded-xl shadow-sm border border-gray-200 bg-white w-full" style={{ maxHeight: 'calc(100vh - 280px)' }}>
+                <div className="overflow-x-auto overflow-y-auto w-full h-full" style={{ scrollbarWidth: 'thin' }}>
+                  <table className="min-w-full text-md" style={{ minWidth: '600px' }}>
+                    <thead>
+                      <tr className="bg-[#26996f] text-white sticky top-0 z-10">
                       <th className="py-4 px-4 text-left font-semibold">Sheet Name</th>
                       <th className="py-4 px-4 text-left font-semibold">Job ID</th>
                       <th className="py-4 px-4 text-left font-semibold">Rows</th>
@@ -209,6 +210,7 @@ export default function Sheets() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
 
               {/* Mobile Card View - Visible on mobile */}
@@ -284,7 +286,7 @@ export default function Sheets() {
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                         disabled={currentPage === 1}
-                        className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-lg text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
                       >
                         Previous
                       </button>
@@ -304,7 +306,7 @@ export default function Sheets() {
                             <button
                               key={pageNum}
                               onClick={() => setCurrentPage(pageNum)}
-                              className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
+                              className={`px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition ${
                                 currentPage === pageNum
                                   ? 'bg-[#26996f] text-white'
                                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
@@ -318,7 +320,7 @@ export default function Sheets() {
                       <button
                         onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                         disabled={currentPage === totalPages}
-                        className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        className="px-3 sm:px-4 py-1.5 sm:py-2 border border-gray-300 rounded-lg text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
                       >
                         Next
                       </button>

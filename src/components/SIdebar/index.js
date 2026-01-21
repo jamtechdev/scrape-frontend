@@ -43,7 +43,7 @@ export default function Sidebar({ open, setOpen }) {
       />
 
       <aside
-        className={`fixed top-0 w-60 h-screen overflow-y-auto overflow-x-hidden left-0 z-50 transform transition-transform duration-300
+        className={`fixed top-0 w-60 sm:w-60 h-screen overflow-y-auto overflow-x-hidden left-0 z-50 transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}
           md:fixed md:translate-x-0 ${open ? "md:w-60" : "md:w-20"}
           bg-[#26996f] flex flex-col justify-between shadow-xl`}
@@ -56,16 +56,19 @@ export default function Sidebar({ open, setOpen }) {
               {open ? (
                 <Image
                   src="/logo.jpeg"
-                  alt="Meta Ads Library Logo"
+                  alt="Adtrova.com Logo"
                   width={250}
                   height={100}
-                  className="object-contain w-auto h-auto max-w-full"
-                  style={{ maxHeight: "100px" }}
+                  className="object-contain h-auto w-full"
+                  style={{ 
+                    maxWidth: "220px",
+                    maxHeight: "80px"
+                  }}
                 />
               ) : (
                 <Image
                   src="/logo-s.jpeg"
-                  alt="Meta Ads Library Logo"
+                  alt="Adtrova.com Logo"
                   width={30}
                   height={30}
                   className="object-contain"
@@ -101,7 +104,7 @@ export default function Sidebar({ open, setOpen }) {
                   href={item.href}
                   onClick={() => {
                     // on mobile close after click
-                    if (window.innerWidth < 768) setOpen(false);
+                    if (typeof window !== 'undefined' && window.innerWidth < 768) setOpen(false);
                   }}
                   className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all duration-300 min-h-[48px]
                     ${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 hover:text-white"}`}

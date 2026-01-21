@@ -15,14 +15,14 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-white text-[#000000] py-16 border-t border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
+    <footer className="bg-white text-[#000000] py-12 sm:py-14 md:py-16 border-t border-slate-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-5 md:px-6 lg:px-8">
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-10 sm:mb-12">
 
           {/* Brand Column */}
-          <div className="col-span-1">
-            <h3 className="text-[#000000] font-black text-xl mb-4 sm:mb-6 tracking-tight">
-              <div className="w-[120px] sm:w-[150px] md:w-[180px]">
+          <div className="sm:col-span-2 md:col-span-1">
+            <h3 className="text-[#000000] font-black text-xl mb-4 sm:mb-5 md:mb-6 tracking-tight">
+              <div className="w-[120px] sm:w-[140px] md:w-[160px] lg:w-[180px]">
                 <Image
                   src="/logo.jpeg"
                   alt="Adtrova.com Logo"
@@ -36,7 +36,7 @@ export default function Footer() {
                 />
               </div>
             </h3>
-            <p className="text-[#000] text-sm leading-relaxed">
+            <p className="text-[#000] text-xs sm:text-sm leading-relaxed max-w-sm sm:max-w-none">
               Powerful tool for analyzing and tracking Facebook and Instagram ads from the Meta Ads Library. Stay ahead of the competition with data-driven insights.
             </p>
           </div>
