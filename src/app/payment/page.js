@@ -12,7 +12,8 @@ import {
   Shield,
   Clock,
   Users,
-  Star
+  Star,
+  ChevronDown
 } from 'lucide-react';
 
 export default function PaymentPage() {
@@ -95,15 +96,15 @@ export default function PaymentPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#142952] to-[#5145a3] text-white py-20">
+      <section className="bg-gradient-to-r from-[#26996f] to-[#005939] text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6">
             <CreditCard className="w-10 h-10" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-3xl md:text-5xl  font-bold mb-4">
             Choose Your Plan
           </h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-green-100 max-w-3xl mx-auto">
             Select the perfect plan for your needs. All plans include a free trial period.
           </p>
         </div>
@@ -120,13 +121,13 @@ export default function PaymentPage() {
                   key={plan.id}
                   className={`relative bg-white rounded-2xl shadow-xl p-8 border-2 transition-all ${
                     plan.popular
-                      ? 'border-[#142952] scale-105 md:scale-110'
-                      : 'border-gray-200 hover:border-[#142952]'
+                      ? 'border-[#26996f] scale-105 md:scale-110'
+                      : 'border-gray-200 hover:border-[#26996f]'
                   }`}
                 >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <span className="bg-[#142952] text-white px-4 py-1 rounded-full text-sm font-semibold">
+                      <span className="bg-[#26996f] text-white px-2 lg:px-4 py-1 rounded-full text-xs lg:text-sm font-semibold">
                         Most Popular
                       </span>
                     </div>
@@ -134,7 +135,7 @@ export default function PaymentPage() {
                   
                   <div className="text-center mb-8">
                     <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl mb-4 ${
-                      plan.popular ? 'bg-[#142952] text-white' : 'bg-gray-100 text-[#142952]'
+                      plan.popular ? 'bg-[#26996f] text-white' : 'bg-gray-100 text-[#26996f]'
                     }`}>
                       <IconComponent className="w-8 h-8" />
                     </div>
@@ -157,7 +158,7 @@ export default function PaymentPage() {
                   <ul className="space-y-4 mb-8">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3">
-                        <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <Check className="w-5 h-5 text-[#26996f] flex-shrink-0 mt-0.5" />
                         <span className="text-gray-700">{feature}</span>
                       </li>
                     ))}
@@ -167,8 +168,8 @@ export default function PaymentPage() {
                     onClick={() => handleSelectPlan(plan.id)}
                     className={`w-full py-3 rounded-lg font-semibold transition-all ${
                       plan.popular
-                        ? 'bg-[#142952] text-white hover:bg-[#5145a3] shadow-lg'
-                        : 'bg-gray-100 text-[#142952] hover:bg-gray-200'
+                        ? 'bg-[#26996f] text-white hover:bg-[#005939] shadow-lg'
+                        : 'bg-gray-100 text-[#26996f] hover:bg-gray-200'
                     }`}
                   >
                     {plan.id === 'enterprise' ? 'Contact Sales' : 'Get Started'}
@@ -184,7 +185,7 @@ export default function PaymentPage() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-4">
               All Plans Include
             </h2>
             <p className="text-lg text-gray-600">
@@ -211,7 +212,7 @@ export default function PaymentPage() {
               }
             ].map((feature, idx) => (
               <div key={idx} className="text-center p-6">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-[#142952] text-white rounded-lg mb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-[#26996f] text-white rounded-lg mb-4">
                   <feature.icon className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -238,7 +239,7 @@ export default function PaymentPage() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                quote: 'Meta Ads Scraper has revolutionized how we analyze competitor strategies.',
+                quote: 'Adtrova has revolutionized how we analyze competitor strategies.',
                 author: 'Sarah Johnson',
                 role: 'Marketing Director'
               },
@@ -272,8 +273,9 @@ export default function PaymentPage() {
         </div>
       </section>
 
+  
       {/* FAQ Section */}
-      <section className="py-16 bg-white">
+      <section className="py-10 md:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -281,7 +283,7 @@ export default function PaymentPage() {
             </h2>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             {[
               {
                 q: 'Can I change plans later?',
@@ -299,32 +301,50 @@ export default function PaymentPage() {
                 q: 'Can I cancel anytime?',
                 a: 'Yes, you can cancel your subscription at any time. Your access will continue until the end of your billing period.'
               }
-            ].map((faq, idx) => (
-              <div key={idx} className="border-l-4 border-[#142952] pl-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {faq.q}
-                </h3>
-                <p className="text-gray-600">
-                  {faq.a}
-                </p>
-              </div>
-            ))}
+            ].map((faq, idx) => {
+              // Use a local state check to see if this specific index is open
+              const [isOpen, setIsOpen] = useState(false);
+
+              return (
+                <div key={idx} className="border border-[#26996f80] rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="w-full flex items-center justify-between p-4 text-left bg-white hover:bg-gray-50 transition-colors rounded-lg"
+                  >
+                    <span className="text-base font-semibold text-gray-900">{faq.q}</span>
+                    <span className={`transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+                      <ChevronDown className="w-5 h-5 text-[#26996f]" />
+                    </span>
+                  </button>
+                  
+                  <div 
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                      isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <div className="p-6 pt-0 text-gray-600 border-t border-gray-50">
+                      {faq.a}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-[#142952] to-[#5145a3] text-white">
+      <section className="py-16 bg-gradient-to-r from-[#26996f] to-[#005939] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">
+          <h2 className="text-xl md:text-3xl font-bold mb-4">
             Ready to Get Started?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-sm md:text-xl text-green-100 mb-8">
             Choose your plan and start analyzing Facebook ads today
           </p>
           <Link
             href="/signup"
-            className="inline-flex items-center gap-2 bg-white text-[#142952] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+            className="inline-flex items-center gap-2 bg-white text-[#26996f] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
           >
             Sign Up Now
             <ArrowRight className="w-5 h-5" />

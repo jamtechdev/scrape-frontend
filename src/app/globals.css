@@ -1,12 +1,34 @@
-@import 'https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap';
+/* @import 'https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap'; */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
 @import url("https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.5.0/remixicon.min.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body{
+/* body{
      font-family: "Manrope", sans-serif;
+} */
+
+body {
+    font-family: "Poppins", sans-serif;
+    font-weight: 500; 
 }
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600; 
+}
+
+
+.sub-text,
+small,
+.subtitle {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400; 
+}
+
 
 /* Custom animations for scraping progress loader */
 @keyframes shimmer {

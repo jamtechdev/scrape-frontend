@@ -4,7 +4,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata = {
-  title: "Meta Ads Scraper - Discover Facebook Ads Like Never Before",
+  title: "Adtrova - Discover Facebook Ads Like Never Before",
   description: "Powerful tool to search, analyze, and track Facebook and Instagram ads from the Meta Ads Library",
 };
 
