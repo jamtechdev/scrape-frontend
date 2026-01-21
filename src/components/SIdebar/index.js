@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logout } from "@/services/auth.service";
 import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
-
+import Image from "next/image";
 export default function Sidebar({ open, setOpen }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -43,18 +43,42 @@ export default function Sidebar({ open, setOpen }) {
         className={`fixed top-0 w-60 h-screen overflow-y-auto overflow-x-hidden left-0 z-50 transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}
           md:fixed md:translate-x-0 ${open ? "md:w-60" : "md:w-20"}
-          bg-[#142952] flex flex-col justify-between shadow-xl`}
+          bg-[#26996f] flex flex-col justify-between shadow-xl`}
         // note: md:w-XX controlled via template string above
       >
         {/* TOP MENU */}
         <div>
-          <div className="flex items-center justify-between px-4 py-4">
-            <h1
+          <div className="flex items-center justify-center px-4 py-4 bg-white">
+
+             <Link href="/" className="text-2xl font-black tracking-tight text-[#000000] hover:text-[#26996f] transition-colors">
+             <Image
+              src="/logo.jpeg"  
+              alt="Meta Ads Library Logo"
+              width={250}
+              height={100}
+              className="object-contain"
+            />
+
+          </Link>
+
+            <Link href="/" className="text-2xl font-black tracking-tight text-[#000000] hover:text-[#26996f] transition-colors">
+             <Image
+              src="/logo-s.jpeg"  
+              alt="..."
+              width={30}
+              height={30}
+              className="object-contain"
+            />
+
+          </Link>
+
+            {/* <h1
               className={`font-semibold text-xl transition-all duration-300 text-white overflow-hidden
                 ${!open ? "opacity-0 translate-x-5" : "opacity-100 translate-x-0"}`}
             >
               Search
-            </h1>
+            </h1> */}
+
 
             {/* Small close button visible only on mobile */}
             <button
@@ -79,7 +103,7 @@ export default function Sidebar({ open, setOpen }) {
                     if (window.innerWidth < 768) setOpen(false);
                   }}
                   className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-all duration-300 min-h-[48px]
-                    ${isActive ? "bg-white/20 text-white" : "text-gray-300 hover:bg-white/10 hover:text-white"}`}
+                    ${isActive ? "bg-white/20 text-white" : "text-white hover:bg-white/10 hover:text-white"}`}
                 >
                   <span className="text-white">
                     {item.icon}

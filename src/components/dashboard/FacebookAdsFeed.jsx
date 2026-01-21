@@ -107,7 +107,7 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
         <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
           {loading && currentPage === 1 && (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
               <p className="mt-4 text-gray-500">Loading ads...</p>
             </div>
           )}
@@ -156,7 +156,7 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
                           href={ad.ad_snapshot_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-[#433974] hover:underline"
+                          className="text-sm text-[#26996f] hover:underline"
                         >
                           View on Facebook →
                         </a>
@@ -181,7 +181,7 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
                     {ad.ad_creative_body && ad.ad_creative_body.length > 150 && (
                       <button
                         onClick={() => setExpandedAd(expandedAd === ad.id ? null : ad.id)}
-                        className="text-sm text-[#433974] hover:underline mb-3"
+                        className="text-sm text-[#26996f] hover:underline mb-3"
                       >
                         {expandedAd === ad.id ? 'Show less' : 'See more'}
                       </button>
@@ -230,7 +230,7 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
                           href={ad.landing_page_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-[#433974] hover:underline flex items-center gap-1"
+                          className="text-sm text-[#26996f] hover:underline flex items-center gap-1"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

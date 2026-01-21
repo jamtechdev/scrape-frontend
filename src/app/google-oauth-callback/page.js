@@ -124,12 +124,12 @@ function CallbackContent() {
   }, [searchParams, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#433974] to-[#5145a3]">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#26996f] to-[#26996f]">
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
         <div className="text-center">
           {status === "processing" && (
             <>
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-4 border-[#433974] border-t-transparent mb-4"></div>
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-4 border-[#26996f] border-t-transparent mb-4"></div>
               <h2 className="text-xl font-semibold text-gray-800 mb-2">
                 Connecting Google Account
               </h2>
@@ -184,7 +184,7 @@ function CallbackContent() {
               <p className="text-gray-600 mb-4">{message}</p>
               <button
                 onClick={() => router.push("/dashboard/setting")}
-                className="px-4 py-2 bg-[#433974] text-white rounded-lg hover:bg-[#5145a3] transition"
+                className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition"
               >
                 Go to Settings
               </button>
@@ -199,10 +199,10 @@ function CallbackContent() {
 export default function GoogleOAuthCallback() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#433974] to-[#5145a3]">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#26996f] to-[#26996f]">
         <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-4 border-[#433974] border-t-transparent mb-4"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-4 border-[#26996f] border-t-transparent mb-4"></div>
             <h2 className="text-xl font-semibold text-gray-800 mb-2">
               Loading...
             </h2>

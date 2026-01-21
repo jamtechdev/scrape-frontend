@@ -14,31 +14,31 @@ export default function LandingPage() {
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="text-2xl font-bold text-[#433974]">
+            <div className="text-2xl font-bold text-[#26996f]">
               Adtrova
             </div>
             <nav className="flex gap-6 items-center">
               <Link 
                 href="/" 
-                className="text-gray-700 hover:text-[#433974] transition-colors"
+                className="text-gray-700 hover:text-[#26996f] transition-colors"
               >
                 Home
               </Link>
               <Link 
                 href="/about-us" 
-                className="text-gray-700 hover:text-[#433974] transition-colors"
+                className="text-gray-700 hover:text-[#26996f] transition-colors"
               >
                 About
               </Link>
               <Link 
                 href="/payment" 
-                className="text-gray-700 hover:text-[#433974] transition-colors"
+                className="text-gray-700 hover:text-[#26996f] transition-colors"
               >
                 Pricing
               </Link>
               <Link
                 href="/login"
-                className="text-gray-700 hover:text-[#433974] transition-colors"
+                className="text-gray-700 hover:text-[#26996f] transition-colors"
               >
                 Login
               </Link>
@@ -52,7 +52,7 @@ export default function LandingPage() {
         <div className="text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             Discover Facebook Ads
-            <span className="block text-[#433974] mt-2">Like Never Before</span>
+            <span className="block text-[#26996f] mt-2">Like Never Before</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
             Powerful tool to search, analyze, and track Facebook and Instagram ads from the Meta Ads Library. 
@@ -61,13 +61,13 @@ export default function LandingPage() {
           <div className="flex gap-4 justify-center">
             <Link
               href="/"
-              className="bg-[#142952] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#5145a3] transition-colors shadow-lg"
+              className="bg-[#26996f] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#26996f] transition-colors shadow-lg"
             >
               Get Started
             </Link>
             <Link
               href="/privacy-policy"
-              className="bg-white text-[#433974] px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg border border-gray-200"
+              className="bg-white text-[#26996f] px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg border border-gray-200"
             >
               Learn More
             </Link>
@@ -136,7 +136,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="text-center">
-              <div className="bg-[#142952] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="bg-[#26996f] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 1
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -148,7 +148,7 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <div className="bg-[#142952] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="bg-[#26996f] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 2
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -160,7 +160,7 @@ export default function LandingPage() {
             </div>
 
             <div className="text-center">
-              <div className="bg-[#142952] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div className="bg-[#26996f] text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 3
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
@@ -176,7 +176,7 @@ export default function LandingPage() {
 
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="bg-gradient-to-r from-[#433974] to-[#5145a3] rounded-2xl p-12 text-center text-white">
+        <div className="bg-gradient-to-r from-[#26996f] to-[#26996f] rounded-2xl p-12 text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Get Started?
           </h2>
@@ -185,7 +185,7 @@ export default function LandingPage() {
           </p>
           <Link
             href="/"
-            className="bg-white text-[#433974] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg inline-block"
+            className="bg-white text-[#26996f] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg inline-block"
           >
             Start Free Trial
           </Link>

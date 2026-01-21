@@ -28,7 +28,7 @@ export default function Topbar({ open, setOpen }) {
       <div className="flex items-center gap-3 w-full">
         {/* Hamburger (always visible) */}
         <button
-          className="flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#142952] text-white md:hidden hover:bg-[#5145a3] transition-colors"
+          className="flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#26996f] text-white md:hidden hover:bg-[#26996f] transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Open sidebar"
         >
@@ -37,7 +37,7 @@ export default function Topbar({ open, setOpen }) {
 
         {/* Desktop expand/collapse button (visible on md+) */}
         <button
-          className="hidden md:flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#142952] text-white hover:bg-[#5145a3] transition-colors"
+          className="hidden md:flex h-10 w-10 min-w-10 items-center justify-center rounded-lg bg-[#26996f] text-white hover:bg-[#26996f] transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle sidebar"
         >
@@ -66,7 +66,7 @@ export default function Topbar({ open, setOpen }) {
             id="search-input"
             type="text"
             placeholder="Search or type command..."
-            className="h-11 w-full rounded-lg border border-gray-200 bg-white py-2.5 pr-14 pl-12 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-[#142952] focus:border-[#142952] focus:outline-none transition-all"
+            className="h-11 w-full rounded-lg border border-gray-200 bg-white py-2.5 pr-14 pl-12 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] focus:outline-none transition-all"
           />
         </div>
       </div>
@@ -77,7 +77,7 @@ export default function Topbar({ open, setOpen }) {
           onClick={() => setShowDropdown(!showDropdown)}
           className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
         >
-          <div className="w-8 h-8 bg-[#142952] rounded-full flex items-center justify-center text-white text-sm font-medium">
+          <div className="w-8 h-8 bg-[#26996f] rounded-full flex items-center justify-center text-white text-sm font-medium">
             {user?.name?.charAt(0)?.toUpperCase() || 'U'}
           </div>
           <span className="hidden md:block text-sm font-medium text-gray-700">

@@ -111,7 +111,7 @@ function AdsFeedContent() {
           <p className="text-lg text-gray-600 mb-4">Coverage ID is required</p>
           <button
             onClick={() => router.push('/dashboard/history')}
-            className="px-4 py-2 bg-[#433974] text-white rounded-lg hover:bg-[#5145a3] transition"
+            className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition"
           >
             Back to History
           </button>
@@ -156,7 +156,7 @@ function AdsFeedContent() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         {loading && currentPage === 1 && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
             <p className="mt-4 text-gray-500">Loading ads...</p>
           </div>
         )}
@@ -288,7 +288,7 @@ function AdsFeedContent() {
                       {ad.ad_creative_body.length > 100 && (
                         <button
                           onClick={() => setExpandedAd(expandedAd === ad.id ? null : ad.id)}
-                          className="text-xs text-[#433974] hover:underline mt-1 self-start"
+                          className="text-xs text-[#26996f] hover:underline mt-1 self-start"
                         >
                           {expandedAd === ad.id ? 'Show less' : 'See more'}
                         </button>
@@ -310,7 +310,7 @@ function AdsFeedContent() {
                         href={ad.ad_snapshot_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block w-full text-center text-xs text-[#433974] hover:underline py-1"
+                        className="block w-full text-center text-xs text-[#26996f] hover:underline py-1"
                       >
                         View on Facebook →
                       </a>
@@ -320,7 +320,7 @@ function AdsFeedContent() {
                         href={ad.landing_page_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block w-full text-center text-xs text-gray-600 hover:text-[#433974] py-1"
+                        className="block w-full text-center text-xs text-gray-600 hover:text-[#26996f] py-1"
                       >
                         Visit Landing Page
                       </a>
@@ -376,7 +376,7 @@ export default function AdsFeedPage() {
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
           <p className="mt-4 text-gray-500">Loading...</p>
         </div>
       </div>

@@ -134,7 +134,7 @@ function ResetPasswordForm() {
                 type="email"
                 value={formEmail}
                 onChange={(e) => setFormEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
                 placeholder="you@example.com"
                 required
               />
@@ -143,7 +143,7 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-5 py-2.5 bg-[#142952] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-medium hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Sending OTP..." : "Send OTP"}
             </button>
@@ -176,7 +176,7 @@ function ResetPasswordForm() {
                   const value = e.target.value.replace(/\D/g, "").slice(0, 6);
                   setOtp(value);
                 }}
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300 text-center text-2xl tracking-widest font-mono"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300 text-center text-2xl tracking-widest font-mono"
                 placeholder="000000"
                 maxLength={6}
                 required
@@ -189,7 +189,7 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={loading || otp.length !== 6}
-              className="w-full px-5 py-2.5 bg-[#142952] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-medium hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
@@ -203,7 +203,7 @@ function ResetPasswordForm() {
                   setError("");
                   setSuccess("");
                 }}
-                className="text-sm text-[#433974] font-semibold hover:text-[#142952] transition-colors duration-200 underline"
+                className="text-sm text-[#26996f] font-semibold hover:text-[#26996f] transition-colors duration-200 underline"
               >
                 Change Email
               </button>
@@ -222,7 +222,7 @@ function ResetPasswordForm() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
                 placeholder="••••••••"
                 required
                 minLength={6}
@@ -240,7 +240,7 @@ function ResetPasswordForm() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974] transition-all duration-300"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
                 placeholder="••••••••"
                 required
                 minLength={6}
@@ -250,7 +250,7 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={loading || password !== confirmPassword || password.length < 6}
-              className="w-full px-5 py-2.5 bg-[#142952] text-white rounded-lg font-medium hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-medium hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Resetting Password..." : "Reset Password"}
             </button>
@@ -261,7 +261,7 @@ function ResetPasswordForm() {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="text-sm text-[#433974] font-semibold hover:text-[#142952] transition-colors duration-200 underline"
+            className="text-sm text-[#26996f] font-semibold hover:text-[#26996f] transition-colors duration-200 underline"
           >
             Back to Sign In
           </button>

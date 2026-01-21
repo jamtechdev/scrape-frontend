@@ -431,7 +431,7 @@ npm run lint
 
 - Utility-first CSS framework
 - Custom colors defined in `tailwind.config.js`
-- Primary color: `#433974`
+- Primary color: `#26996f`
 - Responsive breakpoints: `md:` (768px+)
 
 ### Component Styling

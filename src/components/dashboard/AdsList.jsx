@@ -19,7 +19,7 @@ export default function AdsList({ ads }) {
         {hasMore && !showAll && (
           <button
             onClick={() => setShowAll(true)}
-            className="text-sm text-[#433974] hover:underline font-medium"
+            className="text-sm text-[#26996f] hover:underline font-medium"
           >
             Show All ({ads.length})
           </button>
@@ -27,7 +27,7 @@ export default function AdsList({ ads }) {
         {hasMore && showAll && (
           <button
             onClick={() => setShowAll(false)}
-            className="text-sm text-[#433974] hover:underline font-medium"
+            className="text-sm text-[#26996f] hover:underline font-medium"
           >
             Show Less
           </button>

@@ -76,12 +76,12 @@ export default function RecentJobs() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <i className="ri-history-line text-[#433974]"></i>
+            <i className="ri-history-line text-[#26996f]"></i>
             Recent Jobs
           </h3>
         </div>
         <div className="flex items-center justify-center py-8">
-          <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#433974]"></div>
+          <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#26996f]"></div>
         </div>
       </div>
     );
@@ -93,12 +93,12 @@ export default function RecentJobs() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <i className="ri-history-line text-[#433974]"></i>
+            <i className="ri-history-line text-[#26996f]"></i>
             Recent Jobs
           </h3>
           <button
             onClick={() => router.push('/dashboard/history')}
-            className="text-sm text-[#433974] hover:underline font-medium"
+            className="text-sm text-[#26996f] hover:underline font-medium"
           >
             View All
           </button>
@@ -114,12 +114,12 @@ export default function RecentJobs() {
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-          <i className="ri-history-line text-[#433974]"></i>
+          <i className="ri-history-line text-[#26996f]"></i>
           Recent Jobs
         </h3>
         <button
           onClick={() => router.push('/dashboard/history')}
-          className="text-sm text-[#433974] hover:underline font-medium"
+          className="text-sm text-[#26996f] hover:underline font-medium"
         >
           View All
         </button>
@@ -175,7 +175,7 @@ export default function RecentJobs() {
               <button
                 onClick={() => handleViewJob(job)}
                 disabled={!job.coverage?.id || adsCount === 0}
-                className="ml-4 px-4 py-2 bg-[#433974] text-white rounded-lg hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium whitespace-nowrap"
+                className="ml-4 px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium whitespace-nowrap"
               >
                 View Ads
               </button>

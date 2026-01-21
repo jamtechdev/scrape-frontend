@@ -105,7 +105,7 @@ export default function Sheets() {
         <p className="text-gray-500 mt-1">
           View all exported scraping results saved as Google Sheets.
           {!loading && totalCount > 0 && (
-            <span className="ml-2 text-[#433974] font-semibold">
+            <span className="ml-2 text-[#26996f] font-semibold">
               ({totalCount} {totalCount === 1 ? 'sheet' : 'sheets'})
             </span>
           )}
@@ -119,13 +119,13 @@ export default function Sheets() {
           placeholder="Search by Sheet name or Job ID..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-80 px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#433974] transition"
+          className="w-full md:w-80 px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] transition"
         />
 
         <select 
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#433974]"
+          className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#26996f]"
         >
           <option value="">All Sheets</option>
           <option value="recent">Recently Created</option>
@@ -135,7 +135,7 @@ export default function Sheets() {
 
       {loading && (
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
           <p className="mt-4 text-gray-500">Loading sheets...</p>
         </div>
       )}
@@ -162,7 +162,7 @@ export default function Sheets() {
               <>
                 <table className="min-w-full text-md">
                   <thead>
-                    <tr className="bg-[#433974] text-white">
+                    <tr className="bg-[#26996f] text-white">
                       <th className="py-4 px-4 text-left font-semibold">Sheet Name</th>
                       <th className="py-4 px-4 text-left font-semibold">Job ID</th>
                       <th className="py-4 px-4 text-left font-semibold">Rows</th>
@@ -174,7 +174,7 @@ export default function Sheets() {
                   <tbody className="divide-y divide-gray-200">
                     {paginatedSheets.map((sheet) => (
                       <tr key={sheet.id} className="hover:bg-gray-50 transition">
-                        <td className="py-4 px-4 text-[#6052a9] font-medium truncate max-w-[220px]" title={sheet.title}>
+                        <td className="py-4 px-4 text-[#000] font-medium truncate max-w-[220px]" title={sheet.title}>
                           {sheet.title || 'Untitled Sheet'}
                         </td>
                         <td className="py-4 px-4 text-gray-800 font-mono text-sm">
@@ -190,7 +190,7 @@ export default function Sheets() {
                               href={sheet.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-3 py-1 bg-[#433974] text-white rounded-lg text-sm font-medium hover:bg-[#5145a3] transition inline-flex items-center gap-2"
+                              className="px-3 py-1 bg-[#26996f] text-white rounded-lg text-sm font-medium hover:bg-[#26996f] transition inline-flex items-center gap-2"
                             >
                               <span>Open Sheet</span>
                               <i className="ri-external-link-line text-xs"></i>
@@ -241,7 +241,7 @@ export default function Sheets() {
                               onClick={() => setCurrentPage(pageNum)}
                               className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
                                 currentPage === pageNum
-                                  ? 'bg-[#433974] text-white'
+                                  ? 'bg-[#26996f] text-white'
                                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                               }`}
                             >

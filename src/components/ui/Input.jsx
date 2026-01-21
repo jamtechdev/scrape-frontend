@@ -15,7 +15,7 @@ export default function Input({
 }) {
   const inputClasses = `
     w-full px-4 py-3 bg-white border rounded-lg text-gray-900 placeholder-gray-500
-    focus:outline-none focus:ring-2 focus:ring-[#433974] focus:border-[#433974]
+    focus:outline-none focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f]
     transition-all duration-300
     ${error ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-200'}
     ${className}

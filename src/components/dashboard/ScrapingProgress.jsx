@@ -19,7 +19,7 @@ export default function ScrapingProgress({ progress }) {
       : `Page ${currentPage}`;
 
   return (
-    <div className="mt-6 bg-gradient-to-br from-[#433974] to-[#5145a3] rounded-xl shadow-lg border border-purple-300 overflow-hidden">
+    <div className="mt-6 bg-gradient-to-br from-[#26996f] to-[#26996f] rounded-xl shadow-lg border border-purple-300 overflow-hidden">
       {/* Animated Header */}
       <div className="p-6 pb-4">
         <div className="flex items-center justify-between mb-4">

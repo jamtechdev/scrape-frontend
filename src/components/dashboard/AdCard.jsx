@@ -41,7 +41,7 @@ export default function AdCard({ ad }) {
             href={ad.ad_snapshot_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-[#433974] hover:underline ml-2 whitespace-nowrap"
+            className="text-sm text-[#26996f] hover:underline ml-2 whitespace-nowrap"
           >
             View Ad →
           </a>
@@ -64,7 +64,7 @@ export default function AdCard({ ad }) {
             href={ad.landing_page_url} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-[#433974] hover:underline"
+            className="text-[#26996f] hover:underline"
           >
             {ad.landing_page_url}
           </a>

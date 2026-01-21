@@ -17,9 +17,9 @@ export const ROUTES = {
 
 // UI Constants
 export const COLORS = {
-  PRIMARY: '#433974',
-  PRIMARY_HOVER: '#5145a3',
-  SECONDARY: '#6052a9',
+  PRIMARY: '#26996f',
+  PRIMARY_HOVER: '#26996f',
+  SECONDARY: '#26996f',
   BACKGROUND: '#f1eeff',
 };
 

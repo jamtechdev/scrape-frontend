@@ -130,12 +130,12 @@ export default function History() {
           placeholder="Search by Job ID, Keyword, or Country..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-80 px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#433974] transition"
+          className="w-full md:w-80 px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] transition"
         />
         <select 
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#433974]"
+          className="px-4 py-3 border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#26996f]"
         >
           <option value="">All Status</option>
           <option value="completed">Completed</option>
@@ -148,7 +148,7 @@ export default function History() {
 
       {loading && (
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#433974]"></div>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
           <p className="mt-4 text-gray-500">Loading job history...</p>
         </div>
       )}
@@ -295,7 +295,7 @@ export default function History() {
                                   </div>
                                   <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                                     <div
-                                      className="bg-[#433974] h-2 rounded-full transition-all duration-300"
+                                      className="bg-[#26996f] h-2 rounded-full transition-all duration-300"
                                       style={{
                                         width: `${job.coverage?.coveragePercentage || 0}%`,
                                         minWidth: job.coverage?.coveragePercentage > 0 ? '2px' : '0'
@@ -328,7 +328,7 @@ export default function History() {
                               <button
                                 onClick={() => handleViewAds(job)}
                                 disabled={!job.coverage?.id || job.adsScraped === 0}
-                                className="px-4 py-2 bg-[#433974] text-white rounded-lg hover:bg-[#5145a3] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                                className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
                               >
                                 View Ads
                               </button>
