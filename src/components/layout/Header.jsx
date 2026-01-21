@@ -55,16 +55,17 @@ export default function Header() {
   <header className="bg-white border-b border-slate-100 shadow-sm sticky top-0 z-[999999]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-5">
-          {/* Logo - Removed "Scraper" */}
-          <Link href="/" className="text-2xl font-black tracking-tight text-[#000000] hover:text-[#26996f] transition-colors">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
              <Image
-              src="/logo.jpeg"  
-              alt="Meta Ads Library Logo"
-              width={250}
-              height={100}
-              className="object-contain"
-            />
-
+               src="/logo.jpeg"  
+               alt="Adtrova.com Logo"
+               width={150}
+               height={40}
+               className="object-contain h-auto"
+               style={{ width: "auto", maxHeight: "40px" }}
+               priority
+             />
           </Link>
           
           {/* Desktop Navigation */}

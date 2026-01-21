@@ -1,30 +1,8 @@
 "use client";
-import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
 
 export default function Topbar({ open, setOpen }) {
-  const { user, logout } = useAuth();
-  const router = useRouter();
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
-
-  const handleLogout = () => {
-    logout();
-    router.push("/");
-  };
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
   return (
-    <header className="flex justify-between items-center h-16 px-6 border-b border-gray-200 bg-white shadow-sm">
+    <header className="flex justify-between items-center h-16 px-4 sm:px-6 border-b border-gray-200 bg-white shadow-sm">
       <div className="flex items-center gap-3 w-full">
         {/* Hamburger (always visible) */}
         <button
@@ -69,38 +47,6 @@ export default function Topbar({ open, setOpen }) {
             className="h-11 w-full rounded-lg border border-gray-200 bg-white py-2.5 pr-14 pl-12 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] focus:outline-none transition-all"
           />
         </div>
-      </div>
-
-      {/* User Profile */}
-      <div className="relative" ref={dropdownRef}>
-        <button
-          onClick={() => setShowDropdown(!showDropdown)}
-          className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
-        >
-          <div className="w-8 h-8 bg-[#26996f] rounded-full flex items-center justify-center text-white text-sm font-medium">
-            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-          </div>
-          <span className="hidden md:block text-sm font-medium text-gray-700">
-            {user?.name || 'User'}
-          </span>
-          <i className="ri-arrow-down-s-line text-gray-500"></i>
-        </button>
-
-        {showDropdown && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
-            <div className="px-4 py-2 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-              <p className="text-xs text-gray-500">{user?.email}</p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-            >
-              <i className="ri-logout-box-line mr-2"></i>
-              Logout
-            </button>
-          </div>
-        )}
       </div>
     </header>
   );

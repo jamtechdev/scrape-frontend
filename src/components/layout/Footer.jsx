@@ -21,14 +21,20 @@ export default function Footer() {
 
           {/* Brand Column */}
           <div className="col-span-1">
-            <h3 className="text-[#000000] font-black text-xl mb-6 tracking-tight">
-              <Image
-                src="/logo.jpeg"
-                alt="Meta Ads Library Logo"
-                width={200}
-                height={100}
-                className="object-contain"
-              />
+            <h3 className="text-[#000000] font-black text-xl mb-4 sm:mb-6 tracking-tight">
+              <div className="w-[120px] sm:w-[150px] md:w-[180px]">
+                <Image
+                  src="/logo.jpeg"
+                  alt="Adtrova.com Logo"
+                  width={180}
+                  height={90}
+                  className="object-contain h-auto w-full"
+                  style={{ 
+                    height: "auto",
+                    maxHeight: "45px"
+                  }}
+                />
+              </div>
             </h3>
             <p className="text-[#000] text-sm leading-relaxed">
               Powerful tool for analyzing and tracking Facebook and Instagram ads from the Meta Ads Library. Stay ahead of the competition with data-driven insights.

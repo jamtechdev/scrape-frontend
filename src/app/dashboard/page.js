@@ -82,10 +82,10 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
           Welcome, <span className="text-[#26996f]">{user?.name || 'User'}</span>!
         </h2>
-        <p className="text-gray-600 mt-1">
+        <p className="text-sm sm:text-base text-gray-600 mt-1">
           Search Facebook ads by keyword with intelligent coverage tracking.
         </p>
       </div>
@@ -127,14 +127,14 @@ export default function Dashboard() {
 
       {/* Info Message - Ads are only in Google Sheets */}
       {coverage && coverage.isComplete && (
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-blue-900 mb-2">
             📊 Ads Analysis Available in Google Sheets
           </h3>
-          <p className="text-blue-700">
+          <p className="text-sm sm:text-base text-blue-700">
             All analyzed ads have been exported to your Google Sheet. Each search creates a new tab in your sheet with the following information:
           </p>
-          <ul className="list-disc list-inside text-blue-700 mt-2 space-y-1">
+          <ul className="list-disc list-inside text-sm sm:text-base text-blue-700 mt-2 space-y-1">
             <li>Clothing classification (sure/unsure)</li>
             <li>Facebook Ad Link</li>
             <li>Product Link</li>
@@ -143,7 +143,7 @@ export default function Dashboard() {
             <li>Total Reach When Found</li>
             <li>Estimated Daily Reach</li>
           </ul>
-          <p className="text-blue-700 mt-3">
+          <p className="text-sm sm:text-base text-blue-700 mt-3">
             Visit the <strong>Sheets</strong> page to view and access your Google Sheets.
           </p>
         </div>

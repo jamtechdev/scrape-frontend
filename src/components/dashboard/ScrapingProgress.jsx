@@ -22,29 +22,30 @@ export default function ScrapingProgress({ progress }) {
     <div className="mt-6 bg-gradient-to-br from-[#26996f] to-[#26996f] rounded-xl shadow-lg border border-purple-300 overflow-hidden">
       {/* Animated Header */}
       <div className="p-6 pb-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
             {/* Animated Spinner */}
-            <div className="relative">
-              <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+            <div className="relative flex-shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <i className="ri-search-line text-white text-lg"></i>
+                <i className="ri-search-line text-white text-base sm:text-lg"></i>
               </div>
             </div>
-            <div>
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                Scraping in Progress
+            <div className="min-w-0 flex-1">
+              <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <span className="hidden sm:inline">Scraping in Progress</span>
+                <span className="sm:hidden">Scraping...</span>
                 <span className="inline-flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></span>
                 </span>
               </h3>
-              <p className="text-sm text-white/80 mt-0.5">Actively scraping and classifying ads...</p>
+              <p className="text-xs sm:text-sm text-white/80 mt-0.5">Actively scraping and classifying ads...</p>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold text-white">
+          <div className="text-left sm:text-right flex-shrink-0">
+            <div className="text-xl sm:text-2xl font-bold text-white">
               {coveragePercentage.toFixed(1)}%
             </div>
             <div className="text-xs text-white/70">Complete</div>
@@ -75,8 +76,8 @@ export default function ScrapingProgress({ progress }) {
       </div>
 
       {/* Stats Section */}
-      <div className="px-6 pb-4">
-        <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="px-4 sm:px-6 pb-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
             <div className="text-xs text-white/70 mb-1">Current Page</div>
             <div className="text-lg font-bold text-white">{currentPage}</div>

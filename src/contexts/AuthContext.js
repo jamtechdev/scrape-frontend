@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from 'react';
+import { setLogoutHandler } from '@/services/api';
 
 const AuthContext = createContext();
 
@@ -34,6 +35,11 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   };
+
+  // Register logout handler with API client for automatic logout
+  useEffect(() => {
+    setLogoutHandler(logout);
+  }, []);
 
   const value = {
     user,

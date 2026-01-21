@@ -111,15 +111,15 @@ export default function RecentJobs() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+        <h3 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
           <i className="ri-history-line text-[#26996f]"></i>
           Recent Jobs
         </h3>
         <button
           onClick={() => router.push('/dashboard/history')}
-          className="text-sm text-[#26996f] hover:underline font-medium"
+          className="text-xs sm:text-sm text-[#26996f] hover:underline font-medium"
         >
           View All
         </button>
@@ -134,7 +134,7 @@ export default function RecentJobs() {
           return (
             <div
               key={job.id}
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-2">
@@ -146,11 +146,12 @@ export default function RecentJobs() {
                       {job.coverage?.keyword || "N/A"}
                     </h4>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      {job.coverage?.country || "N/A"} • {job.coverage?.dateStart || "—"} to {job.coverage?.dateEnd || "—"}
+                      <span className="hidden sm:inline">{job.coverage?.country || "N/A"} • {job.coverage?.dateStart || "—"} to {job.coverage?.dateEnd || "—"}</span>
+                      <span className="sm:hidden">{job.coverage?.country || "N/A"} • {job.coverage?.dateStart || "—"}</span>
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 text-xs text-gray-600">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-600">
                   <span className="flex items-center gap-1">
                     <i className="ri-file-list-3-line"></i>
                     {adsCount} ads
@@ -175,7 +176,7 @@ export default function RecentJobs() {
               <button
                 onClick={() => handleViewJob(job)}
                 disabled={!job.coverage?.id || adsCount === 0}
-                className="ml-4 px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium whitespace-nowrap"
+                className="w-full sm:w-auto sm:ml-4 px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium whitespace-nowrap"
               >
                 View Ads
               </button>

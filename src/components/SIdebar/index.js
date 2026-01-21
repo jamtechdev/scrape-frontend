@@ -3,12 +3,15 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import { logout } from "@/services/auth.service";
 import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 import Image from "next/image";
+
 export default function Sidebar({ open, setOpen }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { user, logout: logoutAuth } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const menu = [
@@ -49,14 +52,15 @@ export default function Sidebar({ open, setOpen }) {
         {/* TOP MENU */}
         <div>
           <div className="flex items-center justify-center px-4 py-4 bg-white">
-            <Link href="/" className="text-2xl font-black tracking-tight text-[#000000] hover:text-[#26996f] transition-colors">
+            <Link href="/" className="text-2xl font-black tracking-tight text-[#000000] hover:text-[#26996f] transition-colors flex items-center justify-center">
               {open ? (
                 <Image
                   src="/logo.jpeg"
                   alt="Meta Ads Library Logo"
                   width={250}
                   height={100}
-                  className="object-contain"
+                  className="object-contain w-auto h-auto max-w-full"
+                  style={{ maxHeight: "100px" }}
                 />
               ) : (
                 <Image
@@ -121,17 +125,21 @@ export default function Sidebar({ open, setOpen }) {
         {/* BOTTOM SECTION */}
         <div className="px-3 pb-4 pt-4">
           {/* USER PROFILE */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-gray-300" />
+          {user && (
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+              </div>
 
-            <div
-              className={`transition-all duration-300 overflow-hidden whitespace-nowrap
-                ${!open && "opacity-0 translate-x-5 fixed"}`}
-            >
-              <p className="font-semibold text-white">John Doe</p>
-              <p className="text-xs text-white/70">john@example.com</p>
+              <div
+                className={`transition-all duration-300 overflow-hidden whitespace-nowrap min-w-0 flex-1
+                  ${!open && "opacity-0 translate-x-5 fixed"}`}
+              >
+                <p className="font-semibold text-white truncate">{user?.name || 'User'}</p>
+                <p className="text-xs text-white/70 truncate">{user?.email || ''}</p>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* LOGOUT */}
           <button
@@ -142,11 +150,12 @@ export default function Sidebar({ open, setOpen }) {
               setIsLoggingOut(true);
               try {
                 await logout();
+                logoutAuth(); // Clear auth context
                 // Redirect to login page after successful logout
                 router.push('/');
               } catch (error) {
-                // Even if logout fails, redirect to login page
-                // Silently handle logout errors - user will be logged out anyway
+                // Even if logout fails, clear local state and redirect
+                logoutAuth(); // Clear auth context
                 router.push('/');
               } finally {
                 setIsLoggingOut(false);

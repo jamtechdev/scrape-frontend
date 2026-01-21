@@ -148,18 +148,19 @@ export default function Sheets() {
 
       {!loading && !error && (
         <>
-          <div className="overflow-x-auto rounded-xl shadow-sm border border-gray-200 bg-white">
-            {filteredSheets.length === 0 ? (
-              <div className="text-center py-12 text-gray-500">
-                <p className="text-lg">No sheets found</p>
-                <p className="text-sm mt-2">
-                  {allSheets.length === 0 
-                    ? 'Create a Google Sheet from a completed scraping job to see it here'
-                    : 'No sheets match your search or filter criteria'}
-                </p>
-              </div>
-            ) : (
-              <>
+          {filteredSheets.length === 0 ? (
+            <div className="text-center py-12 text-gray-500 bg-white rounded-xl border border-gray-200">
+              <p className="text-lg">No sheets found</p>
+              <p className="text-sm mt-2">
+                {allSheets.length === 0 
+                  ? 'Create a Google Sheet from a completed scraping job to see it here'
+                  : 'No sheets match your search or filter criteria'}
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Desktop Table View - Hidden on mobile */}
+              <div className="hidden md:block overflow-x-auto rounded-xl shadow-sm border border-gray-200 bg-white">
                 <table className="min-w-full text-md">
                   <thead>
                     <tr className="bg-[#26996f] text-white">
@@ -208,14 +209,78 @@ export default function Sheets() {
                     ))}
                   </tbody>
                 </table>
+              </div>
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-between px-4 py-4 border-t border-gray-200 bg-gray-50">
-                    <div className="text-sm text-gray-700">
+              {/* Mobile Card View - Visible on mobile */}
+              <div className="md:hidden space-y-4">
+                {paginatedSheets.map((sheet) => (
+                  <div
+                    key={sheet.id}
+                    className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm"
+                  >
+                    <div className="p-4 space-y-3">
+                      {/* Sheet Name */}
+                      <div>
+                        <h3 className="text-base font-semibold text-gray-900 mb-1">
+                          {sheet.title || 'Untitled Sheet'}
+                        </h3>
+                        <p className="text-xs text-gray-500 font-mono">
+                          {formatJobId(sheet.jobId)}
+                        </p>
+                      </div>
+
+                      {/* Details Grid */}
+                      <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-100">
+                        <div>
+                          <span className="text-xs text-gray-500 font-medium">Rows</span>
+                          <p className="text-sm font-semibold text-gray-900 mt-0.5">
+                            {sheet.rows || 0}
+                          </p>
+                        </div>
+                        <div>
+                          <span className="text-xs text-gray-500 font-medium">Created</span>
+                          <p className="text-sm text-gray-900 mt-0.5">
+                            {formatRelativeTime(sheet.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Action Button */}
+                      <div className="pt-2">
+                        {sheet.url ? (
+                          <a
+                            href={sheet.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full block text-center px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition text-sm font-medium inline-flex items-center justify-center gap-2"
+                          >
+                            <span>Open Sheet</span>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        ) : (
+                          <button
+                            disabled
+                            className="w-full px-4 py-2.5 bg-gray-300 text-gray-600 rounded-lg text-sm font-medium cursor-not-allowed"
+                          >
+                            No URL Available
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-4 bg-white rounded-xl border border-gray-200 overflow-hidden">
+                  <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-4 gap-4">
+                    <div className="text-sm text-gray-700 text-center sm:text-left">
                       Showing {startIndex + 1} to {Math.min(endIndex, filteredSheets.length)} of {filteredSheets.length} sheets
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center justify-center gap-2">
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                         disabled={currentPage === 1}
@@ -259,10 +324,10 @@ export default function Sheets() {
                       </button>
                     </div>
                   </div>
-                )}
-              </>
-            )}
-          </div>
+                </div>
+              )}
+            </>
+          )}
         </>
       )}
     </div>

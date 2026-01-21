@@ -125,26 +125,28 @@ function AdsFeedContent() {
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex-1 min-w-0">
               <button
                 onClick={() => router.push('/dashboard/history')}
-                className="text-gray-600 hover:text-gray-900 mb-2 flex items-center gap-2"
+                className="text-gray-600 hover:text-gray-900 mb-2 flex items-center gap-2 text-sm sm:text-base"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-                Back to History
+                <span className="hidden sm:inline">Back to History</span>
+                <span className="sm:hidden">Back</span>
               </button>
-              <h1 className="text-2xl font-bold text-gray-900">Ads Feed</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Ads Feed</h1>
               {jobInfo && (
-                <p className="text-sm text-gray-500 mt-1">
-                  {jobInfo.keyword} • {jobInfo.country} • {jobInfo.dateStart} to {jobInfo.dateEnd}
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 truncate">
+                  <span className="hidden sm:inline">{jobInfo.keyword} • {jobInfo.country} • {jobInfo.dateStart} to {jobInfo.dateEnd}</span>
+                  <span className="sm:hidden">{jobInfo.keyword} • {jobInfo.country}</span>
                 </p>
               )}
             </div>
             {!loading && ads.length > 0 && (
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 whitespace-nowrap">
                 {totalAds} {totalAds === 1 ? 'ad' : 'ads'} total
               </div>
             )}
@@ -340,25 +342,25 @@ function AdsFeedContent() {
         {/* Pagination */}
         {!loading && ads.length > 0 && (
           <div className="mt-6 bg-white border border-gray-200 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-600">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
                 Showing {((currentPage - 1) * adsPerPage) + 1} - {Math.min(currentPage * adsPerPage, totalAds)} of {totalAds} ads
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
-                <span className="text-sm text-gray-600">
+                <span className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
                   Page {currentPage} of {totalPages}
                 </span>
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>

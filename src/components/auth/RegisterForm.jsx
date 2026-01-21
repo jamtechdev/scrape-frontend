@@ -24,6 +24,7 @@ export default function RegisterForm({ onSubmit, loading }) {
             onChange={(e) => setName(e.target.value)}
             className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
             placeholder="Enter your name"
+            autoComplete="name"
             required
           />
         </div>
@@ -38,6 +39,7 @@ export default function RegisterForm({ onSubmit, loading }) {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
             placeholder="you@example.com"
+            autoComplete="email"
             required
           />
         </div>
@@ -52,6 +54,7 @@ export default function RegisterForm({ onSubmit, loading }) {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
             placeholder="••••••••"
+            autoComplete="new-password"
             required
           />
         </div>

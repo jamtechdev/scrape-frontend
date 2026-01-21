@@ -18,8 +18,8 @@ export default function SearchForm({
   onSubmit
 }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">Search Ads</h3>
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+      <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Search Ads</h3>
       
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -167,7 +167,9 @@ export default function History() {
               <p className="text-sm mt-2">Start a search to see job history here</p>
             </div>
           ) : (
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            <>
+              {/* Desktop Table View - Hidden on mobile */}
+              <div className="hidden md:block bg-white rounded-xl border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50 border-b border-gray-200">
@@ -340,6 +342,159 @@ export default function History() {
                   </table>
                 </div>
               </div>
+
+              {/* Mobile Card View - Visible on mobile */}
+              <div className="md:hidden space-y-4">
+                {filteredJobs.map((job) => {
+                  const thumbnail = job.coverage?.id ? thumbnails[job.coverage.id] : null;
+                  const adsCount = job.coverage?.isComplete
+                    ? (job.adsScraped || job.coverage?.totalAds || 0)
+                    : (job.adsScraped || 0);
+
+                  return (
+                    <div
+                      key={job.id}
+                      className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm"
+                    >
+                      {/* Card Header */}
+                      <div className="p-4 border-b border-gray-100">
+                        <div className="flex items-start gap-3">
+                          {/* Thumbnail */}
+                          <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                            {thumbnail ? (
+                              <img
+                                src={thumbnail}
+                                alt={job.coverage?.keyword || "Ad thumbnail"}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
+                            ) : null}
+                            <div
+                              className={`w-full h-full flex items-center justify-center ${thumbnail ? 'hidden' : 'flex'}`}
+                              style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}
+                            >
+                              <div className="text-white text-xl font-bold">
+                                {job.coverage?.keyword?.charAt(0)?.toUpperCase() || 'A'}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Title and Status */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <h3 className="text-base font-semibold text-gray-900 truncate">
+                                {job.coverage?.keyword || "N/A"}
+                              </h3>
+                              {getStatusBadge(job.status)}
+                            </div>
+                            <p className="text-xs text-gray-500 truncate mb-2">
+                              {job.id}
+                            </p>
+                            <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600">
+                              <span className="flex items-center gap-1">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                {job.coverage?.country || "N/A"}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                {formatRelativeTime(job.createdAt)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card Body */}
+                      <div className="p-4 space-y-3">
+                        {/* Date Range */}
+                        <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                          <span className="text-xs text-gray-500 font-medium">Date Range</span>
+                          <div className="text-right">
+                            <div className="text-sm text-gray-900">
+                              {job.coverage?.dateStart || "—"}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              to {job.coverage?.dateEnd || "—"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Ads Found */}
+                        <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                          <span className="text-xs text-gray-500 font-medium">Ads Found</span>
+                          <div className="text-sm font-semibold text-gray-900">
+                            {job.coverage?.isComplete ? (
+                              adsCount
+                            ) : (
+                              <span className="text-gray-400">{adsCount}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Progress */}
+                        <div className="py-2">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs text-gray-500 font-medium">Progress</span>
+                            {job.status === 'running' && (
+                              <span className="text-xs text-gray-600">
+                                Page {job.currentPage || 0}
+                              </span>
+                            )}
+                          </div>
+                          {job.status === 'running' ? (
+                            <div>
+                              <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                                <span>Processing...</span>
+                                <span className="font-medium">
+                                  {job.coverage?.coveragePercentage !== undefined
+                                    ? `${job.coverage.coveragePercentage}%`
+                                    : '0%'}
+                                </span>
+                              </div>
+                              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                <div
+                                  className="bg-[#26996f] h-2 rounded-full transition-all duration-300"
+                                  style={{
+                                    width: `${job.coverage?.coveragePercentage || 0}%`,
+                                    minWidth: job.coverage?.coveragePercentage > 0 ? '2px' : '0'
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                          ) : job.coverage?.isComplete ? (
+                            <div className="text-xs text-green-600 font-medium">
+                              100% Complete
+                            </div>
+                          ) : job.status === 'failed' ? (
+                            <div className="text-xs text-red-600 font-medium">
+                              Failed
+                            </div>
+                          ) : (
+                            <div className="text-xs text-gray-400">—</div>
+                          )}
+                        </div>
+
+                        {/* Action Button */}
+                        <button
+                          onClick={() => handleViewAds(job)}
+                          disabled={!job.coverage?.id || job.adsScraped === 0}
+                          className="w-full mt-4 px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                        >
+                          View Ads
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </>
       )}

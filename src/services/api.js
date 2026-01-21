@@ -5,6 +5,16 @@
 
 import { API_BASE_URL } from '@/constants';
 
+// Store logout handler for automatic logout on 401/403
+let logoutHandler = null;
+
+/**
+ * Set logout handler to be called when user is deleted/unauthorized
+ */
+export function setLogoutHandler(handler) {
+  logoutHandler = handler;
+}
+
 /**
  * Get auth token from localStorage
  */
@@ -13,6 +23,27 @@ function getAuthToken() {
     return localStorage.getItem('token');
   }
   return null;
+}
+
+/**
+ * Handle automatic logout when user is deleted from DB
+ */
+function handleUnauthorized() {
+  if (typeof window === 'undefined') return;
+  
+  // Clear local storage
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  
+  // Call logout handler if set
+  if (logoutHandler) {
+    logoutHandler();
+  }
+  
+  // Redirect to login page
+  if (window.location.pathname.startsWith('/dashboard')) {
+    window.location.href = '/';
+  }
 }
 
 /**
@@ -56,6 +87,17 @@ async function apiRequest(endpoint, options = {}) {
 
     // Handle non-OK responses
     if (!response.ok) {
+      // Auto logout if user is deleted or unauthorized (401/403)
+      if (response.status === 401 || response.status === 403) {
+        handleUnauthorized();
+        throw {
+          message: 'Your session has expired or you have been logged out. Please login again.',
+          status: response.status,
+          details: data.details || null,
+          fullError: data,
+        };
+      }
+      
       const error = {
         message: data.message || data.error || 'An error occurred',
         status: response.status,

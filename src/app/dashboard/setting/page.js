@@ -261,7 +261,7 @@ export default function Setting() {
       )}
 
       {/* Personal Information */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Personal Information
         </h2>
@@ -277,6 +277,7 @@ export default function Setting() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] outline-none transition-all"
+              autoComplete="name"
             />
           </div>
 
@@ -290,6 +291,7 @@ export default function Setting() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] outline-none transition-all"
+              autoComplete="email"
             />
           </div>
         </div>
@@ -298,14 +300,14 @@ export default function Setting() {
         <button 
           onClick={handleSaveProfile}
           disabled={saving}
-          className="mt-6 px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-semibold hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+          className="mt-6 w-full sm:w-auto px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-semibold hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>
       </div>
 
       {/* Change Password */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Change Password
         </h2>
@@ -322,6 +324,7 @@ export default function Setting() {
                 placeholder="••••••••"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
+                autoComplete="current-password"
                 required
                 className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] outline-none transition-all"
               />
@@ -337,6 +340,7 @@ export default function Setting() {
                 placeholder="••••••••"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                autoComplete="new-password"
                 required
                 minLength={6}
                 className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] outline-none transition-all"
@@ -354,6 +358,7 @@ export default function Setting() {
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="new-password"
               required
               minLength={6}
               className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] outline-none transition-all"
@@ -364,7 +369,7 @@ export default function Setting() {
           <button 
             type="submit"
             disabled={saving}
-            className="mt-6 px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-semibold hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+            className="mt-6 w-full sm:w-auto px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-semibold hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           >
             {saving ? "Updating..." : "Update Password"}
           </button>
@@ -372,7 +377,7 @@ export default function Setting() {
       </div>
 
       {/* Google OAuth Integration */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Google Sheets Integration
         </h2>
@@ -389,14 +394,14 @@ export default function Setting() {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-3">
-                <div className={`w-3 h-3 rounded-full ${oauthConnected ? "bg-green-500" : "bg-gray-400"}`}></div>
-                <div>
+                <div className={`w-3 h-3 rounded-full flex-shrink-0 ${oauthConnected ? "bg-green-500" : "bg-gray-400"}`}></div>
+                <div className="min-w-0 flex-1">
                   <p className="font-medium text-gray-800">
                     {oauthConnected ? "Connected" : "Not Connected"}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     {oauthConnected
                       ? "Your Google account is connected and ready to use."
                       : "Connect your Google account to enable automatic sheet creation."}
@@ -440,7 +445,7 @@ export default function Setting() {
       </div>
 
       {/* Privacy Policy Link */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Legal & Privacy
         </h2>
@@ -456,7 +461,7 @@ export default function Setting() {
       </div>
 
       {/* Environment Variables Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Environment Variables
         </h2>
@@ -552,11 +557,11 @@ export default function Setting() {
               </div>
 
               {Object.keys(envChanges).length > 0 && (
-                <div className="mt-6 flex items-center gap-4">
+                <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                   <button
                     type="submit"
                     disabled={envSaving}
-                    className="px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-semibold hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                    className="w-full sm:w-auto px-5 py-2.5 bg-[#26996f] text-white rounded-lg font-semibold hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                   >
                     {envSaving ? "Saving..." : "Save Environment Variables"}
                   </button>
@@ -566,11 +571,11 @@ export default function Setting() {
                       setEnvChanges({});
                       loadEnvVariables();
                     }}
-                    className="px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition"
+                    className="w-full sm:w-auto px-5 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition"
                   >
                     Cancel
                   </button>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-gray-500 text-center sm:text-left">
                     {Object.keys(envChanges).length} variable(s) modified
                   </span>
                 </div>

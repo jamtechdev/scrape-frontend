@@ -136,6 +136,7 @@ function ResetPasswordForm() {
                 onChange={(e) => setFormEmail(e.target.value)}
                 className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
                 placeholder="you@example.com"
+                autoComplete="email"
                 required
               />
             </div>
@@ -224,6 +225,7 @@ function ResetPasswordForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
                 placeholder="••••••••"
+                autoComplete="new-password"
                 required
                 minLength={6}
               />
@@ -242,6 +244,7 @@ function ResetPasswordForm() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#26996f] focus:border-[#26996f] transition-all duration-300"
                 placeholder="••••••••"
+                autoComplete="new-password"
                 required
                 minLength={6}
               />
