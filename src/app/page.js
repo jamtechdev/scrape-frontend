@@ -72,7 +72,7 @@ export default function HomePage() {
               Start Now
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link href="/" className="bg-white hover:bg-slate-50 border border-slate-200 text-[#000000] px-4 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3.5 lg:px-10 lg:py-4 rounded-xl font-bold text-xs sm:text-sm md:text-base lg:text-lg transition-all">
+            <Link href="/login" className="bg-white hover:bg-slate-50 border border-slate-200 text-[#000000] px-4 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3.5 lg:px-10 lg:py-4 rounded-xl font-bold text-xs sm:text-sm md:text-base lg:text-lg transition-all">
               Sign In
             </Link>
           </div>
