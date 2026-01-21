@@ -60,14 +60,9 @@ export default function Header() {
              <Image
                src="/logo.jpeg"  
                alt="Adtrova.com Logo"
-               width={150}
-               height={40}
+               width={200}
+               height={200}
                className="object-contain h-auto"
-               style={{ 
-                 width: "auto", 
-                 maxHeight: "35px",
-                 maxWidth: "130px"
-               }}
                priority
              />
           </Link>
