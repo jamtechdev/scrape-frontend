@@ -162,7 +162,7 @@ export default function Sheets() {
               {/* Desktop Table View - Hidden on mobile */}
               <div className="hidden md:block overflow-hidden rounded-xl shadow-sm border border-gray-200 bg-white w-full" style={{ maxHeight: 'calc(100vh - 280px)' }}>
                 <div className="overflow-x-auto overflow-y-auto w-full h-full" style={{ scrollbarWidth: 'thin' }}>
-                  <table className="min-w-full text-md" style={{ minWidth: '600px' }}>
+                  <table className="min-w-full text-md" >
                     <thead>
                       <tr className="bg-[#26996f] text-white sticky top-0 z-10">
                       <th className="py-4 px-4 text-left font-semibold">Sheet Name</th>
