@@ -12,7 +12,6 @@ function AdsFeedContent() {
   const coverageId = searchParams?.get('coverageId');
   
   const [ads, setAds] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -27,7 +26,6 @@ function AdsFeedContent() {
       fetchAds(1);
     } else {
       setError('Coverage ID is required');
-      setLoading(false);
     }
   }, [coverageId]);
 
@@ -45,7 +43,6 @@ function AdsFeedContent() {
     }
 
     try {
-      setLoading(true);
       setError(null);
       
       const offset = (page - 1) * adsPerPage;
@@ -75,8 +72,6 @@ function AdsFeedContent() {
     } catch (err) {
       const errorInfo = handleApiError(err);
       setError(errorInfo.message || 'Failed to load ads');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -145,7 +140,7 @@ function AdsFeedContent() {
                 </p>
               )}
             </div>
-            {!loading && ads.length > 0 && (
+            {ads.length > 0 && (
               <div className="text-sm text-gray-600 whitespace-nowrap">
                 {totalAds} {totalAds === 1 ? 'ad' : 'ads'} total
               </div>
@@ -156,20 +151,13 @@ function AdsFeedContent() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-6">
-        {loading && currentPage === 1 && (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
-            <p className="mt-4 text-gray-500">Loading ads...</p>
-          </div>
-        )}
-
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
             {error}
           </div>
         )}
 
-        {!loading && !error && ads.length === 0 && (
+        {!error && ads.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             <p className="text-lg">No ads found</p>
             <p className="text-sm mt-2">This job may still be in progress or no ads were found.</p>
@@ -340,7 +328,7 @@ function AdsFeedContent() {
         )}
 
         {/* Pagination */}
-        {!loading && ads.length > 0 && (
+        {ads.length > 0 && (
           <div className="mt-6 bg-white border border-gray-200 rounded-lg p-4">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
@@ -375,14 +363,7 @@ function AdsFeedContent() {
 
 export default function AdsFeedPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
-          <p className="mt-4 text-gray-500">Loading...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={null}>
       <AdsFeedContent />
     </Suspense>
   );

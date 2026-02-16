@@ -36,13 +36,9 @@ export default function Layout({ children }) {
     }
   }, []);
 
-  // Show loading or nothing while checking auth
-  if (loading || !isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0f1d]">
-        <div className="text-white">Loading...</div>
-      </div>
-    );
+  // Redirect if not authenticated
+  if (!loading && !isAuthenticated) {
+    return null;
   }
 
   return (

@@ -6,7 +6,6 @@ import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
   const [ads, setAds] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -28,7 +27,6 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
     }
 
     try {
-      setLoading(true);
       setError(null);
       
       const offset = (page - 1) * adsPerPage;
@@ -48,8 +46,6 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
     } catch (err) {
       const errorInfo = handleApiError(err);
       setError(errorInfo.message || 'Failed to load ads');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -105,27 +101,20 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-          {loading && currentPage === 1 && (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
-              <p className="mt-4 text-gray-500">Loading ads...</p>
-            </div>
-          )}
-
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
               {error}
             </div>
           )}
 
-          {!loading && !error && ads.length === 0 && (
+          {!error && ads.length === 0 && (
             <div className="text-center py-12 text-gray-500">
               <p className="text-lg">No ads found</p>
               <p className="text-sm mt-2">This job may still be in progress or no ads were found.</p>
             </div>
           )}
 
-          {!loading && ads.length > 0 && (
+          {ads.length > 0 && (
             <div className="space-y-4">
               {ads.map((ad) => (
                 <div
@@ -262,7 +251,7 @@ export default function FacebookAdsFeed({ coverageId, onClose, jobInfo }) {
         </div>
 
         {/* Pagination Footer */}
-        {!loading && ads.length > 0 && (
+        {ads.length > 0 && (
           <div className="border-t border-gray-200 p-4 bg-white sticky bottom-0">
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-600">

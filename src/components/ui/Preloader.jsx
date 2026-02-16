@@ -4,56 +4,31 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 export default function Preloader() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isHiding, setIsHiding] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const pathname = usePathname();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const currentPage = pathname;
-    const lastPreloaderPage = sessionStorage.getItem("lastPreloaderPage");
-
-    if (lastPreloaderPage !== currentPage) {
-      setIsVisible(true);
-      if (document.body) {
-        document.body.classList.add("preloader-active");
-      }
-      sessionStorage.setItem("lastPreloaderPage", currentPage);
-    } else {
-      const preloaderElement = document.getElementById("preloader");
-      if (preloaderElement) {
-        preloaderElement.style.display = "none";
-      }
-      if (document.body) {
-        document.body.classList.remove("preloader-active");
-      }
+    setIsVisible(true);
+    if (document.body) {
+      document.body.classList.add("preloader-active");
     }
 
     const handleLoad = () => {
-      if (!isVisible) return;
-
       const preloaderElement = document.getElementById("preloader");
-      setTimeout(() => {
-        if (preloaderElement) {
+      if (preloaderElement) {
+        setTimeout(() => {
           preloaderElement.classList.add("hide");
+          setIsVisible(false);
 
           setTimeout(() => {
-            if (preloaderElement) {
-              preloaderElement.style.display = "none";
-            }
             if (document.body) {
               document.body.classList.remove("preloader-active");
             }
-
-            window.dispatchEvent(new CustomEvent("preloaderHidden"));
           }, 500);
-        } else {
-          if (document.body) {
-            document.body.classList.remove("preloader-active");
-          }
-        }
-      }, 500);
+        }, 500);
+      }
     };
 
     if (document.readyState === "complete") {
@@ -62,12 +37,40 @@ export default function Preloader() {
       window.addEventListener("load", handleLoad);
       return () => window.removeEventListener("load", handleLoad);
     }
-  }, [pathname, isVisible]);
+  }, []);
 
-  if (!isVisible) return null;
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    setIsVisible(true);
+    if (document.body) {
+      document.body.classList.add("preloader-active");
+    }
+
+    const preloaderElement = document.getElementById("preloader");
+    if (preloaderElement) {
+      preloaderElement.classList.remove("hide");
+    }
+
+    const timer = setTimeout(() => {
+      const preloaderElement = document.getElementById("preloader");
+      if (preloaderElement) {
+        preloaderElement.classList.add("hide");
+        setIsVisible(false);
+
+        setTimeout(() => {
+          if (document.body) {
+            document.body.classList.remove("preloader-active");
+          }
+        }, 500);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   return (
-    <div id="preloader">
+    <div id="preloader" className={isVisible ? "" : "hide"}>
       <div className="preloader">
         <div className="loader">
           <div></div>

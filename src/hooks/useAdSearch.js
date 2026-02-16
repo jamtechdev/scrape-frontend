@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { searchAds, getJobStatus, getAdsByCoverage, checkOAuthStatus } from "@/services/ads.service";
+import { searchAds, getJobStatus, getAdsByCoverage } from "@/services/ads.service";
 import { get } from "@/services/api";
 import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
@@ -163,38 +163,7 @@ export function useAdSearch() {
     setJobId(null);
 
     try {
-      // Check OAuth status before searching
-      const oauthStatus = await checkOAuthStatus();
-      const isOAuthConnected = oauthStatus?.code === 200 && oauthStatus?.data?.hasToken;
-
-      if (!isOAuthConnected) {
-        // Store search parameters for after OAuth verification
-        const searchParams = {
-          keyword,
-          country,
-          dateStart,
-          dateEnd,
-        };
-        localStorage.setItem('pendingSearchParams', JSON.stringify(searchParams));
-        
-        // Get OAuth URL and redirect
-        const frontendUrl = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
-        const redirectUri = `${frontendUrl}/google-oauth-callback?from=search`;
-        
-        const oauthUrlResponse = await get(`/ads/google-sheets/oauth-url?redirect_uri=${encodeURIComponent(redirectUri)}`);
-        
-        if (oauthUrlResponse?.code === 200 && oauthUrlResponse?.data?.authUrl) {
-          setLoading(false);
-          setSuccess("Please connect your Google account to continue. Redirecting to verification...");
-          // Redirect to OAuth
-          window.location.href = oauthUrlResponse.data.authUrl;
-          return;
-        } else {
-          throw new Error("Failed to get OAuth URL. Please connect Google account from Settings first.");
-        }
-      }
-
-      // OAuth is connected, proceed with search
+      // Service Account is used - no OAuth check needed
       const response = await searchAds({
         keyword,
         country,

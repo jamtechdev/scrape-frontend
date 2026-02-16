@@ -18,7 +18,6 @@ export default function Setting() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
@@ -43,12 +42,10 @@ export default function Setting() {
 
   const loadUserData = async () => {
     if (!authUser) {
-      setLoading(false);
       return;
     }
     
     try {
-      setLoading(true);
       const response = await getMe();
       if (response && response.data && response.data.user) {
         const userData = response.data.user;
@@ -68,8 +65,6 @@ export default function Setting() {
         setEmail(authUser.email || "");
       }
       setMessage({ type: "error", text: errorInfo.message || "Failed to load user data" });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -188,16 +183,6 @@ export default function Setting() {
   };
 
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
-          <p className="mt-4 text-gray-500">Loading settings...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="pb-20">
@@ -364,14 +349,7 @@ export default function Setting() {
           Manage application configuration. Changes require server restart to take effect.
         </p>
 
-        {envLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
-              <p className="mt-4 text-gray-500">Loading environment variables...</p>
-            </div>
-          </div>
-        ) : (
+        {(
           <>
             {/* Category Filter */}
             {envCategories.length > 1 && (

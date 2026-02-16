@@ -12,7 +12,6 @@ export default function History() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [thumbnails, setThumbnails] = useState({}); // Store thumbnails by coverageId
 
@@ -22,38 +21,12 @@ export default function History() {
 
   const fetchJobs = async () => {
     try {
-      setLoading(true);
       setError(null);
-      // ============================================================
-      // COMMENTED OUT - USING CRON JOBS FROM SERVER SETUP INSTEAD
-      // ============================================================
-      // Jobs are now managed via server-side cron jobs, not frontend polling
-      /*
-      const params = new URLSearchParams();
-      if (statusFilter) params.append('status', statusFilter);
-      params.append('limit', '100');
-      
-      const response = await get(`/ads/jobs?${params.toString()}`);
-      
-      // Handle response structure: { data: { jobs: [...] }, ... }
-      if (response && response.data) {
-        const fetchedJobs = response.data.jobs || [];
-        setJobs(fetchedJobs);
-
-        // Fetch thumbnails for completed jobs
-        fetchThumbnails(fetchedJobs);
-      } else {
-        setJobs([]);
-      }
-      */
-      
       // Jobs are managed by server cron - return empty for now
       setJobs([]);
     } catch (err) {
       const errorInfo = handleApiError(err);
       setError(errorInfo.message || 'Failed to load job history');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -155,20 +128,13 @@ export default function History() {
         </select>
       </div>
 
-      {loading && (
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
-          <p className="mt-4 text-gray-500">Loading job history...</p>
-        </div>
-      )}
-
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
           {error}
         </div>
       )}
 
-      {!loading && !error && (
+      {!error && (
         <>
           {filteredJobs.length === 0 ? (
             <div className="text-center py-12 text-gray-500 bg-white rounded-xl border border-gray-200">

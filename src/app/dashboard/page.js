@@ -34,26 +34,6 @@ export default function Dashboard() {
     handleSearch
   } = useAdSearch();
 
-  // Handle OAuth success/error messages and auto-search after OAuth
-  useEffect(() => {
-    const oauthStatus = searchParams?.get("oauth");
-    const searchStarted = searchParams?.get("search");
-    
-    if (oauthStatus === "success") {
-      // Show success message (will be handled by Alert component if needed)
-      // Clear URL parameter
-      router.replace("/dashboard", { scroll: false });
-    } else if (oauthStatus === "error") {
-      // Error already handled, just clear URL
-      router.replace("/dashboard", { scroll: false });
-    }
-    
-    // If search was started from OAuth callback, the search is already running
-    // The polling mechanism in useAdSearch will automatically pick it up
-    if (searchStarted === "started") {
-      router.replace("/dashboard", { scroll: false });
-    }
-  }, [searchParams, router]);
 
   // Warn user before refreshing when scraping is in progress
   useEffect(() => {
@@ -97,7 +77,6 @@ export default function Dashboard() {
         dateStart={dateStart}
         dateEnd={dateEnd}
         countryOptions={countryOptions}
-        loading={loading}
         isScraping={isScraping}
         onKeywordChange={(e) => setKeyword(e.target.value)}
         onCountryChange={(e) => setCountry(e.target.value)}

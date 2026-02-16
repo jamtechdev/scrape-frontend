@@ -38,14 +38,7 @@ export default function Button({
       className={classes}
       {...props}
     >
-      {loading ? (
-        <span className="flex items-center justify-center gap-2">
-          <span className="animate-spin">⏳</span>
-          <span>Loading...</span>
-        </span>
-      ) : (
-        children
-      )}
+      {children}
     </button>
   );
 }

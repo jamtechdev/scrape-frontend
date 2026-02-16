@@ -9,7 +9,6 @@ import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 export default function RecentJobs() {
   const router = useRouter();
   const [recentJobs, setRecentJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchRecentJobs();
@@ -21,39 +20,10 @@ export default function RecentJobs() {
 
   const fetchRecentJobs = async () => {
     try {
-      setLoading(true);
-      // ============================================================
-      // COMMENTED OUT - USING CRON JOBS FROM SERVER SETUP INSTEAD
-      // ============================================================
-      // Jobs are now managed via server-side cron jobs, not frontend polling
-      /*
-      // Fetch both completed and running jobs
-      const params = new URLSearchParams();
-      params.append('limit', '10'); // Get more to filter
-      
-      const response = await get(`/ads/jobs?${params.toString()}`);
-      
-      if (response && response.data) {
-        const jobs = response.data.jobs || [];
-        // Filter for completed and running jobs, sort by createdAt descending
-        const filteredJobs = jobs
-          .filter(job => job.status === 'completed' || job.status === 'running')
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 5); // Show top 5
-        setRecentJobs(filteredJobs);
-      } else {
-        setRecentJobs([]);
-      }
-      */
-      
       // Jobs are managed by server cron - return empty for now
       setRecentJobs([]);
     } catch (err) {
-      const errorInfo = handleApiError(err);
-      // Silently handle errors for background polling - don't show to user
       setRecentJobs([]);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -80,21 +50,6 @@ export default function RecentJobs() {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <i className="ri-history-line text-[#26996f]"></i>
-            Recent Jobs
-          </h3>
-        </div>
-        <div className="flex items-center justify-center py-8">
-          <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#26996f]"></div>
-        </div>
-      </div>
-    );
-  }
 
   // Show section even if no jobs, but with a message
   if (recentJobs.length === 0) {
@@ -167,7 +122,7 @@ export default function RecentJobs() {
                   </span>
                   {job.status === 'running' && job.coverage?.coveragePercentage !== undefined && (
                     <span className="flex items-center gap-1 text-purple-600 font-medium">
-                      <i className="ri-loader-4-line animate-spin"></i>
+                      <i className="ri-time-line"></i>
                       {job.coverage.coveragePercentage}% complete
                     </span>
                   )}

@@ -24,10 +24,8 @@ export default function ScrapingProgress({ progress }) {
       <div className="p-6 pb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            {/* Animated Spinner */}
             <div className="relative flex-shrink-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-white/20 rounded-full">
                 <i className="ri-search-line text-white text-base sm:text-lg"></i>
               </div>
             </div>

@@ -9,7 +9,6 @@ export default function Sheets() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const [allSheets, setAllSheets] = useState([]); // Store all fetched sheets
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +20,6 @@ export default function Sheets() {
 
   const fetchSheets = async () => {
     try {
-      setLoading(true);
       setError(null);
       
       // Fetch all sheets with a high limit to get everything
@@ -46,8 +44,6 @@ export default function Sheets() {
       setError(errorInfo.message || 'Failed to load sheets');
       setAllSheets([]);
       setTotalCount(0);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -104,7 +100,7 @@ export default function Sheets() {
         </h1>
         <p className="text-xs sm:text-sm text-gray-500 mt-1">
           View all exported scraping results saved as Google Sheets.
-          {!loading && totalCount > 0 && (
+          {totalCount > 0 && (
             <span className="ml-2 text-[#26996f] font-semibold">
               ({totalCount} {totalCount === 1 ? 'sheet' : 'sheets'})
             </span>
@@ -133,20 +129,13 @@ export default function Sheets() {
         </select>
       </div>
 
-      {loading && (
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
-          <p className="mt-4 text-gray-500">Loading sheets...</p>
-        </div>
-      )}
-
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
           {error}
         </div>
       )}
 
-      {!loading && !error && (
+      {!error && (
         <>
           {filteredSheets.length === 0 ? (
             <div className="text-center py-12 text-gray-500 bg-white rounded-xl border border-gray-200">

@@ -48,7 +48,7 @@ export default function LoginForm({ onSubmit, loading, onForgotPassword }) {
           disabled={loading}
           className="w-full px-5 py-3 bg-[#26996f] hover:bg-[#26996f] text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#26996f]/20"
         >
-          {loading ? "Signing In..." : "Sign In"}
+          Sign In
         </button>
       </form>
 
