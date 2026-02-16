@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { getMe } from "@/services/auth.service";
 import { get, put } from "@/services/api";
@@ -10,7 +10,6 @@ import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 
 export default function Setting() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user: authUser } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,7 +37,7 @@ export default function Setting() {
     
     loadUserData();
     loadEnvVariables();
-  }, [authUser, router, searchParams]);
+  }, [authUser, router]);
 
   const loadUserData = async () => {
     if (!authUser) {
