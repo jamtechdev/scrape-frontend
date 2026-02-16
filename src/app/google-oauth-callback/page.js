@@ -108,9 +108,9 @@ function CallbackContent() {
               }, 2000);
             }
           } else {
-            setMessage("Google account connected successfully! Redirecting...");
+            setMessage("Google account connected successfully! Redirecting to dashboard...");
             setTimeout(() => {
-              router.push("/dashboard/setting?oauth=success");
+              router.push("/dashboard?oauth=success");
             }, 2000);
           }
         } else {

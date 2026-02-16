@@ -42,6 +42,14 @@ export function useAuthForm() {
       const response = await register({ name, email, password });
       if (response.code === 201) {
         authLogin(response.data.user);
+        
+        // Check if OAuth setup is needed
+        if (response.data.googleOAuthUrl) {
+          // Redirect to OAuth flow
+          window.location.href = response.data.googleOAuthUrl;
+          return;
+        }
+        
         router.push("/dashboard");
       } else {
         setError(response.message || "Registration failed");

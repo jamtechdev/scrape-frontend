@@ -23,7 +23,7 @@ export default function History() {
     try {
       setError(null);
       // Jobs are managed by server cron - return empty for now
-      setJobs([]);
+        setJobs([]);
     } catch (err) {
       const errorInfo = handleApiError(err);
       setError(errorInfo.message || 'Failed to load job history');
