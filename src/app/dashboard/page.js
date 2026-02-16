@@ -1,6 +1,5 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { countries } from "@/data/countries";
 import { useAdSearch } from "@/hooks/useAdSearch";
@@ -11,8 +10,6 @@ import RecentJobs from "@/components/dashboard/RecentJobs";
 import Alert from "@/components/ui/Alert";
 
 export default function Dashboard() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const { user } = useAuth();
   
   const {
