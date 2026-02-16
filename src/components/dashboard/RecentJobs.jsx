@@ -22,6 +22,11 @@ export default function RecentJobs() {
   const fetchRecentJobs = async () => {
     try {
       setLoading(true);
+      // ============================================================
+      // COMMENTED OUT - USING CRON JOBS FROM SERVER SETUP INSTEAD
+      // ============================================================
+      // Jobs are now managed via server-side cron jobs, not frontend polling
+      /*
       // Fetch both completed and running jobs
       const params = new URLSearchParams();
       params.append('limit', '10'); // Get more to filter
@@ -39,6 +44,10 @@ export default function RecentJobs() {
       } else {
         setRecentJobs([]);
       }
+      */
+      
+      // Jobs are managed by server cron - return empty for now
+      setRecentJobs([]);
     } catch (err) {
       const errorInfo = handleApiError(err);
       // Silently handle errors for background polling - don't show to user

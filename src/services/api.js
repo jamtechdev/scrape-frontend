@@ -61,11 +61,10 @@ async function apiRequest(endpoint, options = {}) {
   
   const defaultOptions = {
     headers,
-    credentials: 'include', // Important for cookies (httpOnly tokens)
+    credentials: 'include',
     ...options,
   };
 
-  // Merge headers properly
   if (options.headers) {
     defaultOptions.headers = {
       ...defaultOptions.headers,
@@ -76,7 +75,6 @@ async function apiRequest(endpoint, options = {}) {
   try {
     const response = await fetch(url, defaultOptions);
     
-    // Parse response
     let data;
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('application/json')) {
@@ -85,13 +83,23 @@ async function apiRequest(endpoint, options = {}) {
       data = await response.text();
     }
 
-    // Handle non-OK responses
     if (!response.ok) {
-      // Auto logout if user is deleted or unauthorized (401/403)
-      if (response.status === 401 || response.status === 403) {
+      const skipAutoLogoutEndpoints = ['/auth/me', '/ads/google-sheets/oauth-status'];
+      const shouldSkipAutoLogout = skipAutoLogoutEndpoints.some(skipEndpoint => endpoint.includes(skipEndpoint));
+      
+      if ((response.status === 401 || response.status === 403) && !shouldSkipAutoLogout) {
         handleUnauthorized();
         throw {
           message: 'Your session has expired or you have been logged out. Please login again.',
+          status: response.status,
+          details: data.details || null,
+          fullError: data,
+        };
+      }
+      
+      if (response.status === 401 || response.status === 403) {
+        throw {
+          message: data.message || 'Authentication required',
           status: response.status,
           details: data.details || null,
           fullError: data,

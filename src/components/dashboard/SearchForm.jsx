@@ -1,6 +1,7 @@
 "use client";
 import Input from "@/components/ui/Input";
-import Select from "@/components/ui/Select";
+import SearchableSelect from "@/components/ui/SearchableSelect";
+import DatePicker from "@/components/ui/DatePicker";
 import Button from "@/components/ui/Button";
 
 export default function SearchForm({
@@ -32,29 +33,30 @@ export default function SearchForm({
             required
           />
 
-          <Select
+          <SearchableSelect
             label="Country"
             value={country}
             onChange={onCountryChange}
             options={countryOptions}
             required
+            placeholder="Search or select country..."
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
+          <DatePicker
             label="Start Date"
-            type="date"
             value={dateStart}
             onChange={onDateStartChange}
+            maxDate={dateEnd || undefined}
             required
           />
 
-          <Input
+          <DatePicker
             label="End Date"
-            type="date"
             value={dateEnd}
             onChange={onDateEndChange}
+            minDate={dateStart || undefined}
             required
           />
         </div>

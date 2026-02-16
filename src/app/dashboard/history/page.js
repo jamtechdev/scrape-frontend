@@ -24,6 +24,11 @@ export default function History() {
     try {
       setLoading(true);
       setError(null);
+      // ============================================================
+      // COMMENTED OUT - USING CRON JOBS FROM SERVER SETUP INSTEAD
+      // ============================================================
+      // Jobs are now managed via server-side cron jobs, not frontend polling
+      /*
       const params = new URLSearchParams();
       if (statusFilter) params.append('status', statusFilter);
       params.append('limit', '100');
@@ -40,6 +45,10 @@ export default function History() {
       } else {
         setJobs([]);
       }
+      */
+      
+      // Jobs are managed by server cron - return empty for now
+      setJobs([]);
     } catch (err) {
       const errorInfo = handleApiError(err);
       setError(errorInfo.message || 'Failed to load job history');

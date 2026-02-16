@@ -2,6 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import Preloader from "@/components/ui/Preloader";
 
 export const metadata = {
   title: "Adtrova - Discover Facebook Ads Like Never Before",
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">
+        <Preloader />
         <AuthProvider>
           <Header />
           <main className="flex-grow">
