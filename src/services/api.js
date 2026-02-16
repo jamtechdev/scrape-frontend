@@ -84,7 +84,7 @@ async function apiRequest(endpoint, options = {}) {
     }
 
     if (!response.ok) {
-      const skipAutoLogoutEndpoints = ['/auth/me', '/ads/google-sheets/oauth-status'];
+      const skipAutoLogoutEndpoints = ['/auth/me', '/ads/google-sheets/oauth-status', '/ads/google-sheets/oauth-callback'];
       const shouldSkipAutoLogout = skipAutoLogoutEndpoints.some(skipEndpoint => endpoint.includes(skipEndpoint));
       
       if ((response.status === 401 || response.status === 403) && !shouldSkipAutoLogout) {

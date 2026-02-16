@@ -15,6 +15,17 @@ function CallbackContent() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        // Check if user is logged in (has token)
+        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        if (!token) {
+          setStatus("error");
+          setMessage("You must be logged in to connect Google account. Redirecting to login...");
+          setTimeout(() => {
+            router.push("/login?redirect=/dashboard/setting");
+          }, 2000);
+          return;
+        }
+
         // Get authorization code from URL
         const code = searchParams.get("code");
         const error = searchParams.get("error");
@@ -46,7 +57,7 @@ function CallbackContent() {
           return;
         }
 
-        // Exchange code for refresh token
+        // Exchange code for access token
         setMessage("Exchanging authorization code for token...");
         // Get the redirect URI that was used (same as the one in the OAuth URL)
         const frontendUrl = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
