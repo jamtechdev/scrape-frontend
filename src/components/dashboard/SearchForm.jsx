@@ -56,6 +56,7 @@ export default function SearchForm({
             value={dateEnd}
             onChange={onDateEndChange}
             minDate={dateStart || undefined}
+            maxDate={new Date().toISOString().split('T')[0]}
             required
           />
         </div>

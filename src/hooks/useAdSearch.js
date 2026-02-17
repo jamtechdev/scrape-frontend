@@ -67,10 +67,14 @@ export function useAdSearch() {
   // Set default date range (last 30 days)
   useEffect(() => {
     const today = new Date();
+    // Set to yesterday to avoid "future date" issues with SearchAPI.io
+    // SearchAPI.io doesn't allow future dates, so we use yesterday as the default end date
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
     const thirtyDaysAgo = new Date(today);
     thirtyDaysAgo.setDate(today.getDate() - 30);
     
-    setDateEnd(today.toISOString().split('T')[0]);
+    setDateEnd(yesterday.toISOString().split('T')[0]);
     setDateStart(thirtyDaysAgo.toISOString().split('T')[0]);
   }, []);
 
