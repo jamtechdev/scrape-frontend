@@ -10,7 +10,7 @@ export default function SearchForm({
   dateStart,
   dateEnd,
   countryOptions,
-  isScraping,
+  isProcessing,
   onKeywordChange,
   onCountryChange,
   onDateStartChange,
@@ -65,10 +65,10 @@ export default function SearchForm({
           type="submit"
           variant="primary"
           size="lg"
-          disabled={isScraping}
+          disabled={isProcessing}
           className="w-full md:w-auto"
         >
-          {isScraping ? "Scraping in Progress..." : "Search Ads"}
+          {isProcessing ? "Processing in Progress..." : "Search Ads"}
         </Button>
       </form>
     </div>

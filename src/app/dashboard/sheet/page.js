@@ -99,7 +99,7 @@ export default function Sheets() {
           Generated Google Sheets
         </h1>
         <p className="text-xs sm:text-sm text-gray-500 mt-1">
-          View all exported scraping results saved as Google Sheets.
+          View all exported search results saved as Google Sheets.
           {totalCount > 0 && (
             <span className="ml-2 text-[#26996f] font-semibold">
               ({totalCount} {totalCount === 1 ? 'sheet' : 'sheets'})
@@ -142,7 +142,7 @@ export default function Sheets() {
               <p className="text-lg">No sheets found</p>
               <p className="text-sm mt-2">
                 {allSheets.length === 0 
-                  ? 'Create a Google Sheet from a completed scraping job to see it here'
+                  ? 'Create a Google Sheet from a completed search job to see it here'
                   : 'No sheets match your search or filter criteria'}
               </p>
             </div>

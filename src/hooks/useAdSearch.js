@@ -21,8 +21,8 @@ export function useAdSearch() {
   const [coverage, setCoverage] = useState(null);
   const [ads, setAds] = useState([]);
   const [jobId, setJobId] = useState(null);
-  const [isScraping, setIsScraping] = useState(false);
-  const [scrapingProgress, setScrapingProgress] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingProgress, setProcessingProgress] = useState(null);
 
   // Fetch ALL ads by coverage ID (with pagination to get everything)
   const fetchAds = async (coverageId) => {
@@ -88,7 +88,7 @@ export function useAdSearch() {
       localStorage.removeItem("pendingSearchJobId");
       // Set up polling for this job
       setJobId(pendingJobId);
-      setIsScraping(true);
+      setIsProcessing(true);
       setSuccess("Search started! Fetching results...");
     } else if (pendingCoverageId) {
       // Clear the pending coverage ID
@@ -99,11 +99,11 @@ export function useAdSearch() {
     }
   }, []);
 
-  // Poll job status if scraping is in progress (real-time updates)
+  // Poll job status if processing is in progress (real-time updates)
   useEffect(() => {
-    if (!jobId || !isScraping) return;
+    if (!jobId || !isProcessing) return;
 
-    // Poll immediately when scraping starts
+    // Poll immediately when processing starts
     const pollJobStatus = async () => {
       try {
         const response = await getJobStatus(jobId);
@@ -113,7 +113,7 @@ export function useAdSearch() {
           const coverageData = response.data.coverage;
           
           // Update progress with latest data
-          setScrapingProgress({
+          setProcessingProgress({
             status: job.status,
             currentPage: job.currentPage || 0,
             totalPages: job.totalPages || 0,
@@ -136,12 +136,12 @@ export function useAdSearch() {
           }
 
           if (job.status === 'completed' && coverageData?.isComplete) {
-            setIsScraping(false);
-            setSuccess("Scraping completed successfully!");
+            setIsProcessing(false);
+            setSuccess("Search completed successfully!");
             await fetchAds(coverageData.id);
           } else if (job.status === 'failed') {
-            setIsScraping(false);
-            setError(job.errorMessage || 'Scraping failed');
+            setIsProcessing(false);
+            setError(job.errorMessage || 'Processing failed');
           }
         }
       } catch (err) {
@@ -154,7 +154,7 @@ export function useAdSearch() {
     const pollInterval = setInterval(pollJobStatus, 5000);
 
     return () => clearInterval(pollInterval);
-  }, [jobId, isScraping]);
+  }, [jobId, isProcessing]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -163,7 +163,7 @@ export function useAdSearch() {
     setLoading(true);
     setAds([]);
     setCoverage(null);
-    setIsScraping(false);
+    setIsProcessing(false);
     setJobId(null);
 
     try {
@@ -189,8 +189,8 @@ export function useAdSearch() {
       } else if (response.code === 202) {
         setCoverage(response.data.coverage);
         setJobId(response.data.job.id);
-        setIsScraping(true);
-        setScrapingProgress({
+        setIsProcessing(true);
+        setProcessingProgress({
           status: response.data.job.status,
           currentPage: response.data.job.currentPage || 0,
           adsScraped: response.data.job.adsScraped || 0,
@@ -249,8 +249,8 @@ export function useAdSearch() {
     // Results
     coverage,
     ads,
-    isScraping,
-    scrapingProgress,
+    isProcessing,
+    processingProgress,
     
     // Actions
     handleSearch

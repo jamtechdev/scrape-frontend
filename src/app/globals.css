@@ -30,7 +30,7 @@ small,
 }
 
 
-/* Custom animations for scraping progress loader */
+/* Custom animations for processing progress loader */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }

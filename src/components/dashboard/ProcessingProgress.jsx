@@ -1,6 +1,6 @@
 "use client";
 
-export default function ScrapingProgress({ progress }) {
+export default function ProcessingProgress({ progress }) {
   if (!progress) return null;
 
   const coveragePercentage = Math.min(
@@ -9,7 +9,7 @@ export default function ScrapingProgress({ progress }) {
   );
   const currentPage = progress.currentPage || 0;
   const totalPages = progress.totalPages || 0;
-  const adsScraped = progress.adsScraped || 0;
+  const adsFound = progress.adsScraped || 0; // Keep adsScraped for API compatibility
   const status = progress.status || "running";
 
   // Calculate progress text
@@ -31,15 +31,15 @@ export default function ScrapingProgress({ progress }) {
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                <span className="hidden sm:inline">Scraping in Progress</span>
-                <span className="sm:hidden">Scraping...</span>
+                <span className="hidden sm:inline">Processing in Progress</span>
+                <span className="sm:hidden">Processing...</span>
                 <span className="inline-flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></span>
                 </span>
               </h3>
-              <p className="text-xs sm:text-sm text-white/80 mt-0.5">Actively scraping and classifying ads...</p>
+              <p className="text-xs sm:text-sm text-white/80 mt-0.5">Actively collecting and analyzing ads...</p>
             </div>
           </div>
           <div className="text-left sm:text-right flex-shrink-0">
@@ -84,8 +84,8 @@ export default function ScrapingProgress({ progress }) {
             )}
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
-            <div className="text-xs text-white/70 mb-1">Ads Scraped</div>
-            <div className="text-lg font-bold text-white">{adsScraped.toLocaleString()}</div>
+            <div className="text-xs text-white/70 mb-1">Ads Found</div>
+            <div className="text-lg font-bold text-white">{adsFound.toLocaleString()}</div>
             <div className="text-xs text-white/60">and counting...</div>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function ScrapingProgress({ progress }) {
           <i className="ri-information-line text-amber-300 text-lg mt-0.5"></i>
           <div className="flex-1">
             <div className="text-sm font-semibold text-amber-100">Please don't refresh this page</div>
-            <div className="text-xs text-amber-200/80 mt-0.5">Scraping will continue in the background</div>
+            <div className="text-xs text-amber-200/80 mt-0.5">Processing will continue in the background</div>
           </div>
         </div>
       </div>
@@ -105,5 +105,3 @@ export default function ScrapingProgress({ progress }) {
     </div>
   );
 }
-
-

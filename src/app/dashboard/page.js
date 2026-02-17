@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { countries } from "@/data/countries";
 import { useAdSearch } from "@/hooks/useAdSearch";
 import SearchForm from "@/components/dashboard/SearchForm";
-import ScrapingProgress from "@/components/dashboard/ScrapingProgress";
+import ProcessingProgress from "@/components/dashboard/ProcessingProgress";
 import CoverageInfo from "@/components/dashboard/CoverageInfo";
 import RecentJobs from "@/components/dashboard/RecentJobs";
 import Alert from "@/components/ui/Alert";
@@ -26,19 +26,19 @@ export default function Dashboard() {
     success,
     coverage,
     ads,
-    isScraping,
-    scrapingProgress,
+    isProcessing,
+    processingProgress,
     handleSearch
   } = useAdSearch();
 
 
-  // Warn user before refreshing when scraping is in progress
+  // Warn user before refreshing when processing is in progress
   useEffect(() => {
     const handleBeforeUnload = (e) => {
-      if (isScraping) {
+      if (isProcessing) {
         e.preventDefault();
         // Modern browsers ignore custom message, but we still need to set returnValue
-        e.returnValue = "Scraping is in progress. Are you sure you want to leave?";
+        e.returnValue = "Processing is in progress. Are you sure you want to leave?";
         return e.returnValue;
       }
     };
@@ -48,7 +48,7 @@ export default function Dashboard() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [isScraping]);
+  }, [isProcessing]);
 
   // Format country options
   const countryOptions = countries
@@ -74,7 +74,7 @@ export default function Dashboard() {
         dateStart={dateStart}
         dateEnd={dateEnd}
         countryOptions={countryOptions}
-        isScraping={isScraping}
+        isProcessing={isProcessing}
         onKeywordChange={(e) => setKeyword(e.target.value)}
         onCountryChange={(e) => setCountry(e.target.value)}
         onDateStartChange={(e) => setDateStart(e.target.value)}
@@ -95,8 +95,8 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Scraping Progress */}
-      {isScraping && <ScrapingProgress progress={scrapingProgress} />}
+        {/* Processing Progress */}
+      {isProcessing && <ProcessingProgress progress={processingProgress} />}
 
       {/* Coverage Info */}
       <CoverageInfo coverage={coverage} />
@@ -126,14 +126,14 @@ export default function Dashboard() {
       )}
 
       {/* Empty State */}
-      {!loading && !isScraping && coverage && coverage.isComplete && coverage.totalAds === 0 && (
+      {!loading && !isProcessing && coverage && coverage.isComplete && coverage.totalAds === 0 && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
           <p className="text-gray-500">No ads found for this keyword and date range.</p>
         </div>
       )}
 
-      {/* Recent Completed Jobs - Always show when not scraping */}
-      {!isScraping && <RecentJobs />}
+      {/* Recent Completed Jobs - Always show when not processing */}
+      {!isProcessing && <RecentJobs />}
     </div>
   );
 }

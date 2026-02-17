@@ -100,10 +100,10 @@ export default function History() {
     <div>
       <div className="mb-4 sm:mb-5 md:mb-6">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
-          Scrape History
+          Search History
         </h1>
         <p className="text-xs sm:text-sm text-gray-500 mt-1">
-          View all your scraping jobs, statuses, and extracted row counts.
+          View all your search jobs, statuses, and extracted row counts.
         </p>
       </div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-5 md:mb-6">
