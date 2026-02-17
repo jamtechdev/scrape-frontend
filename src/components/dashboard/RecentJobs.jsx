@@ -20,9 +20,22 @@ export default function RecentJobs() {
 
   const fetchRecentJobs = async () => {
     try {
-      // Jobs are managed by server cron - return empty for now
-      setRecentJobs([]);
+      // Fetch recent jobs (limit to 5 most recent)
+      const params = new URLSearchParams();
+      params.append('limit', '5');
+      params.append('offset', '0');
+      
+      const response = await get(`/ads/jobs?${params.toString()}`);
+      
+      // Handle response structure: { data: { jobs: [...], pagination: {...} }, ... }
+      if (response && response.data) {
+        const fetchedJobs = response.data.jobs || [];
+        setRecentJobs(fetchedJobs);
+      } else {
+        setRecentJobs([]);
+      }
     } catch (err) {
+      // Silently handle errors for recent jobs - not critical
       setRecentJobs([]);
     }
   };

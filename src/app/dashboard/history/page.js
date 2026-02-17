@@ -22,11 +22,33 @@ export default function History() {
   const fetchJobs = async () => {
     try {
       setError(null);
-      // Jobs are managed by server cron - return empty for now
+      
+      // Build query parameters
+      const params = new URLSearchParams();
+      params.append('limit', '1000'); // Get all jobs
+      params.append('offset', '0');
+      if (statusFilter) {
+        params.append('status', statusFilter);
+      }
+      
+      const response = await get(`/ads/jobs?${params.toString()}`);
+      
+      // Handle response structure: { data: { jobs: [...], pagination: {...} }, ... }
+      if (response && response.data) {
+        const fetchedJobs = response.data.jobs || [];
+        setJobs(fetchedJobs);
+        
+        // Fetch thumbnails for completed jobs
+        if (fetchedJobs.length > 0) {
+          fetchThumbnails(fetchedJobs);
+        }
+      } else {
         setJobs([]);
+      }
     } catch (err) {
       const errorInfo = handleApiError(err);
       setError(errorInfo.message || 'Failed to load job history');
+      setJobs([]);
     }
   };
 
