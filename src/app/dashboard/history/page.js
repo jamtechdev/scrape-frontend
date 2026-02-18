@@ -194,9 +194,8 @@ export default function History() {
           ) : (
             <>
               {/* Desktop Table View - Hidden on mobile */}
-              <div className="hidden md:block bg-white rounded-xl border border-gray-200 overflow-hidden w-full" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-                <div className="overflow-x-auto overflow-y-auto w-full h-full" style={{ scrollbarWidth: 'thin' }}>
-                  <table className="w-full min-w-[900px]">
+              <div className="hidden md:block bg-white rounded-xl border border-gray-200 w-full overflow-x-auto overflow-y-auto" style={{ maxHeight: 'calc(100vh - 280px)', scrollbarWidth: 'thin', scrollbarColor: '#cbd5e0 #f7fafc' }}>
+                <table className="w-full min-w-[900px]">
                     <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
                       <tr>
                         <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -375,7 +374,6 @@ export default function History() {
                       })}
                     </tbody>
                   </table>
-                </div>
               </div>
 
               {/* Mobile Card View - Visible on mobile */}
