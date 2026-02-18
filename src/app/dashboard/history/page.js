@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { get } from "@/services/api";
+import { get, post } from "@/services/api";
 import { formatRelativeTime } from "@/utils/format";
 import { getAdsByCoverage } from "@/services/ads.service";
 import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
@@ -116,6 +116,34 @@ export default function History() {
       return;
     }
     router.push(`/dashboard/ads?coverageId=${job.coverage.id}`);
+  };
+
+  // Handle resume job button click
+  const handleResumeJob = async (job) => {
+    try {
+      const response = await post(`/ads/jobs/${job.id}/resume`);
+      if (response.code === 200) {
+        // Refresh jobs list
+        await fetchJobs();
+        // Show success message (you can add a toast notification here)
+        alert('Job resumed successfully! It will continue processing in the background.');
+      }
+    } catch (err) {
+      const errorInfo = handleApiError(err);
+      alert(errorInfo.message || 'Failed to resume job');
+    }
+  };
+
+  // Check if job can be resumed
+  const canResumeJob = (job) => {
+    if (job.status === 'paused') return true;
+    if (job.status === 'failed' && job.errorMessage) {
+      const errorLower = job.errorMessage.toLowerCase();
+      return errorLower.includes('timeout') || 
+             errorLower.includes('time-out') || 
+             errorLower.includes('network error');
+    }
+    return false;
   };
 
   return (
@@ -324,13 +352,23 @@ export default function History() {
 
                             {/* Actions */}
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <button
-                                onClick={() => handleViewAds(job)}
-                                disabled={!job.coverage?.id || job.adsScraped === 0}
-                                className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
-                              >
-                                View Ads
-                              </button>
+                              <div className="flex items-center gap-2">
+                                {canResumeJob(job) && (
+                                  <button
+                                    onClick={() => handleResumeJob(job)}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                                  >
+                                    Continue
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => handleViewAds(job)}
+                                  disabled={!job.coverage?.id || job.adsScraped === 0}
+                                  className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                                >
+                                  View Ads
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         );
@@ -478,14 +516,24 @@ export default function History() {
                           )}
                         </div>
 
-                        {/* Action Button */}
-                        <button
-                          onClick={() => handleViewAds(job)}
-                          disabled={!job.coverage?.id || job.adsScraped === 0}
-                          className="w-full mt-4 px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
-                        >
-                          View Ads
-                        </button>
+                        {/* Action Buttons */}
+                        <div className="mt-4 space-y-2">
+                          {canResumeJob(job) && (
+                            <button
+                              onClick={() => handleResumeJob(job)}
+                              className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                            >
+                              Continue
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleViewAds(job)}
+                            disabled={!job.coverage?.id || job.adsScraped === 0}
+                            className="w-full px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                          >
+                            View Ads
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );
