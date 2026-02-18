@@ -54,8 +54,11 @@ function AdsFeedContent() {
       });
       
       if (response.code === 200 && response.data) {
-        setAds(response.data.ads || []);
-        const total = response.data.coverage?.totalAds || 0;
+        const fetchedAds = response.data.ads || [];
+        console.log('📊 Fetched ads:', fetchedAds.length, 'Total in coverage:', response.data.coverage?.totalAds);
+        setAds(fetchedAds);
+        // Use pagination total if available, otherwise use coverage totalAds
+        const total = response.data.pagination?.total || response.data.coverage?.totalAds || fetchedAds.length;
         setTotalAds(total);
         setTotalPages(Math.ceil(total / adsPerPage));
         
