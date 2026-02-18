@@ -13,6 +13,7 @@ function AdsFeedContent() {
   
   const [ads, setAds] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalAds, setTotalAds] = useState(0);
@@ -44,6 +45,7 @@ function AdsFeedContent() {
 
     try {
       setError(null);
+      setLoading(true);
       
       const offset = (page - 1) * adsPerPage;
       const response = await getAdsByCoverage(coverageId, { 
@@ -72,6 +74,8 @@ function AdsFeedContent() {
     } catch (err) {
       const errorInfo = handleApiError(err);
       setError(errorInfo.message || 'Failed to load ads');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -157,7 +161,14 @@ function AdsFeedContent() {
           </div>
         )}
 
-        {!error && ads.length === 0 && (
+        {loading && (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#26996f]"></div>
+            <p className="text-sm text-gray-500 mt-4">Loading ads...</p>
+          </div>
+        )}
+
+        {!loading && !error && ads.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             <p className="text-lg">No ads found</p>
             <p className="text-sm mt-2">This job may still be in progress or no ads were found.</p>
@@ -293,25 +304,151 @@ function AdsFeedContent() {
                     </p>
                   )}
 
-                  {/* Raw Ad Data - Full JSON Display */}
+                  {/* Rich Ad Data Display */}
                   {ad.rawAdData && (
-                    <div className="mb-3">
+                    <div className="mb-3 space-y-3">
+                      {/* Ad Cards/Variations */}
+                      {ad.rawAdData.cards && ad.rawAdData.cards.length > 0 && (
+                        <div className="border border-gray-200 rounded-lg p-3 bg-gradient-to-br from-purple-50 to-pink-50">
+                          <div className="flex items-center justify-between mb-2">
+                            <h5 className="text-xs font-semibold text-gray-700">Ad Variations ({ad.rawAdData.cards.length})</h5>
+                            <span className="text-xs text-gray-500">DCO Format</span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
+                            {ad.rawAdData.cards.slice(0, 4).map((card, idx) => (
+                              <div key={idx} className="bg-white rounded border border-gray-200 overflow-hidden">
+                                {card.resized_image_url && (
+                                  <img 
+                                    src={card.resized_image_url} 
+                                    alt={card.title || `Card ${idx + 1}`}
+                                    className="w-full h-20 object-cover"
+                                    onError={(e) => e.target.style.display = 'none'}
+                                  />
+                                )}
+                                <div className="p-2">
+                                  {card.title && (
+                                    <p className="text-xs font-medium text-gray-900 line-clamp-1 mb-1">{card.title}</p>
+                                  )}
+                                  {card.body && (
+                                    <p className="text-xs text-gray-600 line-clamp-2">{card.body}</p>
+                                  )}
+                                  {card.cta_text && (
+                                    <span className="inline-block mt-1 text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded">
+                                      {card.cta_text}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          {ad.rawAdData.cards.length > 4 && (
+                            <p className="text-xs text-gray-500 mt-2 text-center">
+                              +{ad.rawAdData.cards.length - 4} more variations
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Reach & Transparency Data */}
+                      {ad.rawAdData.euTotalReach && (
+                        <div className="border border-gray-200 rounded-lg p-3 bg-gradient-to-br from-green-50 to-emerald-50">
+                          <h5 className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            EU Reach Data
+                          </h5>
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div className="bg-white rounded p-2">
+                              <div className="text-gray-500">Total Reach</div>
+                              <div className="text-lg font-bold text-green-700">{ad.rawAdData.euTotalReach.toLocaleString()}</div>
+                            </div>
+                            {ad.rawAdData.ageAudience && (
+                              <div className="bg-white rounded p-2">
+                                <div className="text-gray-500">Age Range</div>
+                                <div className="font-semibold text-gray-900">
+                                  {ad.rawAdData.ageAudience.min}-{ad.rawAdData.ageAudience.max}
+                                </div>
+                              </div>
+                            )}
+                            {ad.rawAdData.genderAudience && (
+                              <div className="bg-white rounded p-2">
+                                <div className="text-gray-500">Gender</div>
+                                <div className="font-semibold text-gray-900">{ad.rawAdData.genderAudience}</div>
+                              </div>
+                            )}
+                            {ad.rawAdData.locationAudience && ad.rawAdData.locationAudience.length > 0 && (
+                              <div className="bg-white rounded p-2 col-span-2">
+                                <div className="text-gray-500 mb-1">Target Countries</div>
+                                <div className="flex flex-wrap gap-1">
+                                  {ad.rawAdData.locationAudience.slice(0, 8).map((loc, idx) => (
+                                    <span key={idx} className="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded">
+                                      {loc.name}
+                                    </span>
+                                  ))}
+                                  {ad.rawAdData.locationAudience.length > 8 && (
+                                    <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
+                                      +{ad.rawAdData.locationAudience.length - 8} more
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Page Information */}
+                      {(ad.rawAdData.pageName || ad.rawAdData.pageLikeCount || ad.rawAdData.pageCategories.length > 0) && (
+                        <div className="border border-gray-200 rounded-lg p-3 bg-gradient-to-br from-blue-50 to-cyan-50">
+                          <h5 className="text-xs font-semibold text-gray-700 mb-2">Page Information</h5>
+                          <div className="space-y-1 text-xs">
+                            {ad.rawAdData.pageName && (
+                              <div className="flex items-center gap-2">
+                                {ad.rawAdData.pageProfilePictureUrl && (
+                                  <img 
+                                    src={ad.rawAdData.pageProfilePictureUrl} 
+                                    alt={ad.rawAdData.pageName}
+                                    className="w-6 h-6 rounded-full"
+                                    onError={(e) => e.target.style.display = 'none'}
+                                  />
+                                )}
+                                <span className="font-medium text-gray-900">{ad.rawAdData.pageName}</span>
+                                {ad.rawAdData.pageLikeCount && (
+                                  <span className="text-gray-500">({ad.rawAdData.pageLikeCount.toLocaleString()} likes)</span>
+                                )}
+                              </div>
+                            )}
+                            {ad.rawAdData.pageCategories.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {ad.rawAdData.pageCategories.map((cat, idx) => (
+                                  <span key={idx} className="text-xs px-2 py-0.5 bg-white text-gray-700 rounded border border-gray-200">
+                                    {cat}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Additional Metadata */}
                       <details className="group">
-                        <summary className="cursor-pointer flex items-center justify-between p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-colors">
+                        <summary className="cursor-pointer flex items-center justify-between p-2 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg border border-gray-200 hover:from-gray-100 hover:to-slate-100 transition-colors">
                           <div className="flex items-center gap-2">
-                            <svg className="w-4 h-4 text-blue-600 group-open:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 text-gray-600 group-open:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
-                            <span className="text-xs font-semibold text-blue-700">Raw Ad Data (JSON)</span>
+                            <span className="text-xs font-semibold text-gray-700">Full Raw Data (JSON)</span>
                           </div>
-                          <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
-                            {Object.keys(ad.rawAdData || {}).length} fields
+                          <span className="text-xs text-gray-600 bg-gray-200 px-2 py-0.5 rounded-full">
+                            {Object.keys(ad.rawAdData.fullRawData || {}).length} fields
                           </span>
                         </summary>
                         <div className="mt-2 p-3 bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
                           <div className="overflow-x-auto max-h-96 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#4b5563 #1f2937' }}>
                             <pre className="text-xs text-green-400 font-mono whitespace-pre-wrap break-words">
-                              {JSON.stringify(ad.rawAdData, null, 2)}
+                              {JSON.stringify(ad.rawAdData.fullRawData, null, 2)}
                             </pre>
                           </div>
                         </div>
