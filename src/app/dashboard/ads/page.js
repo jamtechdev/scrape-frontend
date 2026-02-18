@@ -165,14 +165,14 @@ function AdsFeedContent() {
         )}
 
         {!loading && ads.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {ads.map((ad) => (
               <div
                 key={ad.id}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+                className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col group"
               >
                 {/* Media - Video Priority */}
-                <div className="w-full h-48 bg-gray-100 relative overflow-hidden">
+                <div className="w-full h-64 bg-gray-100 relative overflow-hidden group-hover:scale-[1.02] transition-transform duration-300">
                   {/* Priority 1: Show video if video_url exists */}
                   {ad.video_url ? (
                     <video
@@ -293,53 +293,27 @@ function AdsFeedContent() {
                     </p>
                   )}
 
-                  {/* Raw Ad Data - Extracted Information */}
-                  {ad.extractedRawData && (
-                    <div className="mb-3 p-2 bg-gray-50 rounded border border-gray-200">
-                      <details className="text-xs">
-                        <summary className="cursor-pointer text-[#26996f] font-medium hover:underline mb-1">
-                          Raw Ad Data
+                  {/* Raw Ad Data - Full JSON Display */}
+                  {ad.rawAdData && (
+                    <div className="mb-3">
+                      <details className="group">
+                        <summary className="cursor-pointer flex items-center justify-between p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 hover:from-blue-100 hover:to-indigo-100 transition-colors">
+                          <div className="flex items-center gap-2">
+                            <svg className="w-4 h-4 text-blue-600 group-open:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                            <span className="text-xs font-semibold text-blue-700">Raw Ad Data (JSON)</span>
+                          </div>
+                          <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+                            {Object.keys(ad.rawAdData || {}).length} fields
+                          </span>
                         </summary>
-                        <div className="mt-2 space-y-1 text-gray-600">
-                          {ad.extractedRawData.rawSpend && (
-                            <div><span className="font-medium">Spend:</span> {typeof ad.extractedRawData.rawSpend === 'object' ? JSON.stringify(ad.extractedRawData.rawSpend) : ad.extractedRawData.rawSpend} {ad.extractedRawData.rawCurrency && `(${ad.extractedRawData.rawCurrency})`}</div>
-                          )}
-                          {ad.extractedRawData.rawAdFormat && (
-                            <div><span className="font-medium">Format:</span> {ad.extractedRawData.rawAdFormat}</div>
-                          )}
-                          {ad.extractedRawData.rawAdType && (
-                            <div><span className="font-medium">Type:</span> {ad.extractedRawData.rawAdType}</div>
-                          )}
-                          {ad.extractedRawData.rawCallToActionType && (
-                            <div><span className="font-medium">CTA:</span> {ad.extractedRawData.rawCallToActionType}</div>
-                          )}
-                          {ad.extractedRawData.rawPublisherPlatforms && (
-                            <div><span className="font-medium">Platforms:</span> {Array.isArray(ad.extractedRawData.rawPublisherPlatforms) ? ad.extractedRawData.rawPublisherPlatforms.join(', ') : ad.extractedRawData.rawPublisherPlatforms}</div>
-                          )}
-                          {ad.extractedRawData.rawImpressions && (
-                            <div><span className="font-medium">Impressions:</span> {typeof ad.extractedRawData.rawImpressions === 'object' ? JSON.stringify(ad.extractedRawData.rawImpressions) : ad.extractedRawData.rawImpressions}</div>
-                          )}
-                          {ad.extractedRawData.rawReach && (
-                            <div><span className="font-medium">Reach:</span> {typeof ad.extractedRawData.rawReach === 'object' ? JSON.stringify(ad.extractedRawData.rawReach) : ad.extractedRawData.rawReach}</div>
-                          )}
-                          {ad.extractedRawData.rawDemographicDistribution && (
-                            <div><span className="font-medium">Demographics:</span> {typeof ad.extractedRawData.rawDemographicDistribution === 'object' ? JSON.stringify(ad.extractedRawData.rawDemographicDistribution).substring(0, 100) + '...' : ad.extractedRawData.rawDemographicDistribution}</div>
-                          )}
-                          {ad.extractedRawData.rawRegionDistribution && (
-                            <div><span className="font-medium">Regions:</span> {typeof ad.extractedRawData.rawRegionDistribution === 'object' ? JSON.stringify(ad.extractedRawData.rawRegionDistribution).substring(0, 100) + '...' : ad.extractedRawData.rawRegionDistribution}</div>
-                          )}
-                          {ad.extractedRawData.rawAgeDistribution && (
-                            <div><span className="font-medium">Age:</span> {typeof ad.extractedRawData.rawAgeDistribution === 'object' ? JSON.stringify(ad.extractedRawData.rawAgeDistribution).substring(0, 100) + '...' : ad.extractedRawData.rawAgeDistribution}</div>
-                          )}
-                          {ad.extractedRawData.rawGenderDistribution && (
-                            <div><span className="font-medium">Gender:</span> {typeof ad.extractedRawData.rawGenderDistribution === 'object' ? JSON.stringify(ad.extractedRawData.rawGenderDistribution).substring(0, 100) + '...' : ad.extractedRawData.rawGenderDistribution}</div>
-                          )}
-                          {ad.extractedRawData.rawImages && (
-                            <div><span className="font-medium">Images:</span> {Array.isArray(ad.extractedRawData.rawImages) ? `${ad.extractedRawData.rawImages.length} image(s)` : 'Available'}</div>
-                          )}
-                          {ad.extractedRawData.rawVideos && (
-                            <div><span className="font-medium">Videos:</span> {Array.isArray(ad.extractedRawData.rawVideos) ? `${ad.extractedRawData.rawVideos.length} video(s)` : 'Available'}</div>
-                          )}
+                        <div className="mt-2 p-3 bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
+                          <div className="overflow-x-auto max-h-96 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: '#4b5563 #1f2937' }}>
+                            <pre className="text-xs text-green-400 font-mono whitespace-pre-wrap break-words">
+                              {JSON.stringify(ad.rawAdData, null, 2)}
+                            </pre>
+                          </div>
                         </div>
                       </details>
                     </div>
