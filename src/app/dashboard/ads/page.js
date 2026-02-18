@@ -56,6 +56,11 @@ function AdsFeedContent() {
       if (response.code === 200 && response.data) {
         const fetchedAds = response.data.ads || [];
         console.log('📊 Fetched ads:', fetchedAds.length, 'Total in coverage:', response.data.coverage?.totalAds);
+        console.log('📊 Response data:', { 
+          adsLength: fetchedAds.length, 
+          totalAds: response.data.coverage?.totalAds,
+          paginationTotal: response.data.pagination?.total 
+        });
         setAds(fetchedAds);
         // Use pagination total if available, otherwise use coverage totalAds
         const total = response.data.pagination?.total || response.data.coverage?.totalAds || fetchedAds.length;
@@ -71,7 +76,13 @@ function AdsFeedContent() {
             dateEnd: response.data.coverage.dateEnd
           });
         }
+        
+        // If we have a total count but no ads, log a warning
+        if (total > 0 && fetchedAds.length === 0) {
+          console.warn('⚠️ Warning: Total count shows', total, 'ads but fetched array is empty');
+        }
       } else {
+        console.error('❌ Failed to load ads - response:', response);
         setError('Failed to load ads');
       }
     } catch (err) {

@@ -40,12 +40,6 @@ export default function RecentJobs() {
     }
   };
 
-  const handleViewJob = (job) => {
-    if (job.coverage?.id) {
-      router.push(`/dashboard/ads?coverageId=${job.coverage.id}`);
-    }
-  };
-
   const getStatusBadge = (status) => {
     const statusConfig = {
       completed: { bg: "bg-green-100", text: "text-green-700", label: "Completed" },
@@ -150,13 +144,6 @@ export default function RecentJobs() {
                   </span>
                 </div>
               </div>
-              <button
-                onClick={() => handleViewJob(job)}
-                disabled={!job.coverage?.id || adsCount === 0}
-                className="w-full sm:w-auto sm:ml-4 px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium whitespace-nowrap"
-              >
-                View Ads
-              </button>
             </div>
           );
         })}

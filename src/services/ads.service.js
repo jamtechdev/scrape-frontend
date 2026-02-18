@@ -73,10 +73,30 @@ export async function getAdsByCoverage(coverageId, options = {}) {
   return response;
 }
 
+/**
+ * Get all ads with pagination
+ * @param {Object} options - Pagination options
+ * @param {number} options.limit - Number of ads per page
+ * @param {number} options.offset - Offset for pagination
+ * @returns {Promise<Object>} Ads and pagination info
+ */
+export async function getAllAds(options = {}) {
+  const params = new URLSearchParams();
+  if (options.limit) params.append('limit', options.limit);
+  if (options.offset) params.append('offset', options.offset);
+  
+  const queryString = params.toString();
+  const url = `/ads/all${queryString ? `?${queryString}` : ''}`;
+  
+  const response = await get(url);
+  return response;
+}
+
 export default {
   searchAds,
   checkCoverage,
   getJobStatus,
   getAdsByCoverage,
+  getAllAds,
 };
 

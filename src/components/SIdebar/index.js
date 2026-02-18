@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { logout } from "@/services/auth.service";
 import { handleApiError, getErrorMessage } from "@/utils/errorHandler";
 import Image from "next/image";
+import SidebarAds from "@/components/dashboard/SidebarAds";
 
 export default function Sidebar({ open, setOpen }) {
   const pathname = usePathname();
@@ -123,6 +124,9 @@ export default function Sidebar({ open, setOpen }) {
               );
             })}
           </nav>
+
+          {/* All Ads Section */}
+          <SidebarAds isOpen={open} />
         </div>
 
         {/* BOTTOM SECTION */}

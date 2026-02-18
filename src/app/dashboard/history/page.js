@@ -109,15 +109,6 @@ export default function History() {
     setThumbnails(prev => ({ ...prev, ...thumbnailMap }));
   };
 
-  // Handle view ads button click - navigate to ads page with query parameter
-  const handleViewAds = (job) => {
-    if (!job.coverage?.id) {
-      alert('Coverage ID not found for this job');
-      return;
-    }
-    router.push(`/dashboard/ads?coverageId=${job.coverage.id}`);
-  };
-
   // Handle resume job button click
   const handleResumeJob = async (job) => {
     try {
@@ -360,13 +351,6 @@ export default function History() {
                                     Continue
                                   </button>
                                 )}
-                                <button
-                                  onClick={() => handleViewAds(job)}
-                                  disabled={!job.coverage?.id || job.adsScraped === 0}
-                                  className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
-                                >
-                                  View Ads
-                                </button>
                               </div>
                             </td>
                           </tr>
@@ -524,13 +508,6 @@ export default function History() {
                               Continue
                             </button>
                           )}
-                          <button
-                            onClick={() => handleViewAds(job)}
-                            disabled={!job.coverage?.id || job.adsScraped === 0}
-                            className="w-full px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#26996f] transition disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
-                          >
-                            View Ads
-                          </button>
                         </div>
                       </div>
                     </div>
