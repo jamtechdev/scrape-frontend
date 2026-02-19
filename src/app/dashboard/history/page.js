@@ -109,6 +109,21 @@ export default function History() {
     setThumbnails(prev => ({ ...prev, ...thumbnailMap }));
   };
 
+  // Handle pause job button click
+  const handlePauseJob = async (job) => {
+    try {
+      const response = await post(`/ads/jobs/${job.id}/pause`);
+      if (response.code === 200) {
+        // Refresh jobs list
+        await fetchJobs();
+        alert('Job paused successfully!');
+      }
+    } catch (err) {
+      const errorInfo = handleApiError(err);
+      alert(errorInfo.message || 'Failed to pause job');
+    }
+  };
+
   // Handle resume job button click
   const handleResumeJob = async (job) => {
     try {
@@ -116,13 +131,17 @@ export default function History() {
       if (response.code === 200) {
         // Refresh jobs list
         await fetchJobs();
-        // Show success message (you can add a toast notification here)
         alert('Job resumed successfully! It will continue processing in the background.');
       }
     } catch (err) {
       const errorInfo = handleApiError(err);
       alert(errorInfo.message || 'Failed to resume job');
     }
+  };
+
+  // Check if job can be paused
+  const canPauseJob = (job) => {
+    return job.status === 'running' || job.status === 'pending';
   };
 
   // Check if job can be resumed
@@ -132,7 +151,8 @@ export default function History() {
       const errorLower = job.errorMessage.toLowerCase();
       return errorLower.includes('timeout') || 
              errorLower.includes('time-out') || 
-             errorLower.includes('network error');
+             errorLower.includes('network error') ||
+             errorLower.includes('canceling statement');
     }
     return false;
   };
@@ -343,6 +363,14 @@ export default function History() {
                             {/* Actions */}
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center gap-2">
+                                {canPauseJob(job) && (
+                                  <button
+                                    onClick={() => handlePauseJob(job)}
+                                    className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-sm font-medium"
+                                  >
+                                    Pause
+                                  </button>
+                                )}
                                 {canResumeJob(job) && (
                                   <button
                                     onClick={() => handleResumeJob(job)}
@@ -500,6 +528,14 @@ export default function History() {
 
                         {/* Action Buttons */}
                         <div className="mt-4 space-y-2">
+                          {canPauseJob(job) && (
+                            <button
+                              onClick={() => handlePauseJob(job)}
+                              className="w-full px-4 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-sm font-medium"
+                            >
+                              Pause
+                            </button>
+                          )}
                           {canResumeJob(job) && (
                             <button
                               onClick={() => handleResumeJob(job)}

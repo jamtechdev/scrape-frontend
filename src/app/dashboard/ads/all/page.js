@@ -215,6 +215,43 @@ export default function AllAdsPage() {
                       </p>
                     )}
 
+                    {/* Rich Ad Data Display */}
+                    {ad.rawAdData && (
+                      <div className="mb-3 space-y-3">
+                        {/* Reach Data */}
+                        {ad.rawAdData.euTotalReach && (
+                          <div className="border border-gray-200 rounded-lg p-2 bg-gradient-to-br from-green-50 to-emerald-50">
+                            <div className="text-xs font-semibold text-gray-700 mb-1">EU Total Reach</div>
+                            <div className="text-lg font-bold text-green-700">{ad.rawAdData.euTotalReach.toLocaleString()}</div>
+                          </div>
+                        )}
+
+                        {/* Ad Cards/Variations */}
+                        {ad.rawAdData.cards && ad.rawAdData.cards.length > 0 && (
+                          <div className="border border-gray-200 rounded-lg p-2 bg-gradient-to-br from-purple-50 to-pink-50">
+                            <div className="text-xs font-semibold text-gray-700 mb-2">Ad Variations ({ad.rawAdData.cards.length})</div>
+                            <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
+                              {ad.rawAdData.cards.slice(0, 2).map((card, idx) => (
+                                <div key={idx} className="bg-white rounded border border-gray-200 overflow-hidden">
+                                  {card.resized_image_url && (
+                                    <img
+                                      src={card.resized_image_url}
+                                      alt={card.title || `Card ${idx + 1}`}
+                                      className="w-full h-16 object-cover"
+                                      onError={(e) => e.target.style.display = 'none'}
+                                    />
+                                  )}
+                                  {card.title && (
+                                    <p className="text-xs font-medium text-gray-900 line-clamp-1 p-1">{card.title}</p>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {/* Link URL */}
                     {ad.ad_creative_link_url && (
                       <a
@@ -227,8 +264,32 @@ export default function AllAdsPage() {
                       </a>
                     )}
 
+                    {/* Actions */}
+                    <div className="mt-auto pt-3 border-t border-gray-100 space-y-2">
+                      {ad.ad_snapshot_url && (
+                        <a
+                          href={ad.ad_snapshot_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block w-full text-center text-xs text-[#26996f] hover:underline py-1"
+                        >
+                          View on Facebook →
+                        </a>
+                      )}
+                      {ad.landing_page_url && (
+                        <a
+                          href={ad.landing_page_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block w-full text-center text-xs text-gray-600 hover:text-[#26996f] py-1"
+                        >
+                          Visit Landing Page
+                        </a>
+                      )}
+                    </div>
+
                     {/* Metadata */}
-                    <div className="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                    <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
                       <span>
                         {ad.last_seen_at 
                           ? new Date(ad.last_seen_at).toLocaleDateString()

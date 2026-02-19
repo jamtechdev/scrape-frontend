@@ -196,41 +196,41 @@ function AdsFeedContent() {
                 key={ad.id}
                 className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col group"
               >
-                {/* Media - Video Priority */}
+                {/* Media - Enhanced with raw_ad_data images/videos */}
                 <div className="w-full h-64 bg-gray-100 relative overflow-hidden group-hover:scale-[1.02] transition-transform duration-300">
-                  {/* Priority 1: Show video if video_url exists */}
-                  {ad.video_url ? (
+                  {/* Priority 1: Show video from raw_ad_data or video_url */}
+                  {(ad.rawAdData?.primaryVideo || ad.video_url) ? (
                     <video
                       className="ad-video w-full h-full object-cover"
-                      src={ad.video_url}
-                      poster={ad.thumbnail_url || undefined}
+                      src={ad.rawAdData?.primaryVideo || ad.video_url}
+                      poster={ad.rawAdData?.primaryImage || ad.thumbnail_url || undefined}
                       controls
                       muted={false}
                       playsInline
                       preload="metadata"
                       onError={(e) => {
-                        // If video fails to load, hide video and show thumbnail or fallback
+                        // If video fails to load, hide video and show image or fallback
                         e.target.style.display = 'none';
                         const thumbnailElement = e.target.parentElement.querySelector('.ad-thumbnail');
                         const fallback = e.target.parentElement.querySelector('.fallback-gradient');
-                        if (ad.thumbnail_url && thumbnailElement) {
+                        if ((ad.rawAdData?.primaryImage || ad.thumbnail_url) && thumbnailElement) {
                           thumbnailElement.style.display = 'block';
                         } else if (fallback) {
                           fallback.style.display = 'flex';
                         }
                       }}
                     >
-                      <source src={ad.video_url} type="video/mp4" />
+                      <source src={ad.rawAdData?.primaryVideo || ad.video_url} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   ) : null}
                   
-                  {/* Priority 2: Show thumbnail if no video_url OR video failed */}
-                  {(!ad.video_url || (ad.video_url && ad.thumbnail_url)) && ad.thumbnail_url ? (
+                  {/* Priority 2: Show image from raw_ad_data or thumbnail_url */}
+                  {(!(ad.rawAdData?.primaryVideo || ad.video_url) || ((ad.rawAdData?.primaryVideo || ad.video_url) && (ad.rawAdData?.primaryImage || ad.thumbnail_url))) && (ad.rawAdData?.primaryImage || ad.thumbnail_url) ? (
                     <img
-                      className={`ad-thumbnail w-full h-full object-cover ${ad.video_url ? 'hidden' : ''}`}
-                      src={ad.thumbnail_url}
-                      alt={ad.ad_creative_link_title || "Ad thumbnail"}
+                      className={`ad-thumbnail w-full h-full object-cover ${(ad.rawAdData?.primaryVideo || ad.video_url) ? 'hidden' : ''}`}
+                      src={ad.rawAdData?.primaryImage || ad.thumbnail_url}
+                      alt={ad.ad_creative_link_title || ad.rawAdData?.snapshotTitle || "Ad thumbnail"}
                       onError={(e) => {
                         e.target.style.display = 'none';
                         const fallback = e.target.parentElement.querySelector('.fallback-gradient');
@@ -239,25 +239,38 @@ function AdsFeedContent() {
                     />
                   ) : null}
                   
-                  {/* Fallback gradient - shown when no video and no thumbnail or both fail */}
-                  {(!ad.video_url && !ad.thumbnail_url) && (
+                  {/* Fallback gradient - shown when no media available */}
+                  {!(ad.rawAdData?.primaryVideo || ad.video_url || ad.rawAdData?.primaryImage || ad.thumbnail_url) && (
                     <div 
                       className="fallback-gradient w-full h-full flex items-center justify-center"
                       style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}
                     >
                       <div className="text-white text-4xl font-bold">
-                        {ad.page_name ? ad.page_name.charAt(0).toUpperCase() : 'A'}
+                        {ad.rawAdData?.pageName || ad.page_name ? (ad.rawAdData?.pageName || ad.page_name).charAt(0).toUpperCase() : 'A'}
                       </div>
                     </div>
                   )}
                   
                   {/* Video indicator - show if video exists */}
-                  {ad.video_url && (
+                  {(ad.rawAdData?.primaryVideo || ad.video_url) && (
                     <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
                       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                       </svg>
                       Video
+                      {ad.rawAdData?.allVideos && ad.rawAdData.allVideos.length > 1 && (
+                        <span className="ml-1">({ad.rawAdData.allVideos.length})</span>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* Image count indicator - show if multiple images */}
+                  {ad.rawAdData?.allImages && ad.rawAdData.allImages.length > 1 && !(ad.rawAdData?.primaryVideo || ad.video_url) && (
+                    <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                      </svg>
+                      {ad.rawAdData.allImages.length} Images
                     </div>
                   )}
                   
