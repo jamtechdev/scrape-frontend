@@ -372,12 +372,20 @@ export default function History() {
                                   </button>
                                 )}
                                 {canResumeJob(job) && (
-                                  <button
-                                    onClick={() => handleResumeJob(job)}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
-                                  >
-                                    Continue
-                                  </button>
+                                  <>
+                                    <button
+                                      onClick={() => handleResumeJob(job)}
+                                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                                    >
+                                      Continue
+                                    </button>
+                                    <button
+                                      onClick={() => handleResumeJob(job)}
+                                      className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
+                                    >
+                                      View Ads
+                                    </button>
+                                  </>
                                 )}
                               </div>
                             </td>
@@ -537,12 +545,20 @@ export default function History() {
                             </button>
                           )}
                           {canResumeJob(job) && (
-                            <button
-                              onClick={() => handleResumeJob(job)}
-                              className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
-                            >
-                              Continue
-                            </button>
+                            <>
+                              <button
+                                onClick={() => handleResumeJob(job)}
+                                className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                              >
+                                Continue
+                              </button>
+                              <button
+                                onClick={() => handleResumeJob(job)}
+                                className="w-full px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
+                              >
+                                View Ads
+                              </button>
+                            </>
                           )}
                         </div>
                       </div>
