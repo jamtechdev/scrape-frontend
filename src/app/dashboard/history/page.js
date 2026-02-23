@@ -149,10 +149,6 @@ export default function History() {
     return job.status === 'paused' || job.status === 'failed';
   };
 
-  // Check if View Ads button should be shown (only for paused or failed jobs, not running)
-  const canViewAds = (job) => {
-    return job.status === 'paused' || job.status === 'failed' || job.status === 'completed';
-  };
 
   return (
     <div>
@@ -376,14 +372,12 @@ export default function History() {
                                     Continue
                                   </button>
                                 )}
-                                {canViewAds(job) && job.coverage?.id && (
-                                  <button
-                                    onClick={() => router.push(`/dashboard/ads?coverageId=${job.coverage.id}`)}
-                                    className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
-                                  >
-                                    View Ads
-                                  </button>
-                                )}
+                                <button
+                                  onClick={() => router.push('/dashboard/ads/all')}
+                                  className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
+                                >
+                                  All Ads
+                                </button>
                               </div>
                             </td>
                           </tr>
@@ -549,14 +543,12 @@ export default function History() {
                               Continue
                             </button>
                           )}
-                          {canViewAds(job) && job.coverage?.id && (
-                            <button
-                              onClick={() => router.push(`/dashboard/ads?coverageId=${job.coverage.id}`)}
-                              className="w-full px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
-                            >
-                              View Ads
-                            </button>
-                          )}
+                          <button
+                            onClick={() => router.push('/dashboard/ads/all')}
+                            className="w-full px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
+                          >
+                            All Ads
+                          </button>
                         </div>
                       </div>
                     </div>
