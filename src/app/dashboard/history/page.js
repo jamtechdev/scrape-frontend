@@ -112,6 +112,14 @@ export default function History() {
   // Handle pause job button click
   const handlePauseJob = async (job) => {
     try {
+      // Check if token exists before making request
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Your session has expired. Please login again.');
+        window.location.href = '/';
+        return;
+      }
+
       const response = await post(`/ads/jobs/${job.id}/pause`);
       if (response.code === 200) {
         // Refresh jobs list
@@ -121,8 +129,8 @@ export default function History() {
     } catch (err) {
       // Check if it's a 401/403 error (session expired)
       if (err.status === 401 || err.status === 403) {
-        alert('Your session has expired. Please login again.');
-        // The API client will automatically handle logout and redirect
+        // Don't show alert - API client already handles logout and redirect
+        // Just return silently
         return;
       }
       const errorInfo = handleApiError(err);
