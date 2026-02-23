@@ -66,11 +66,12 @@ export function handleApiError(error) {
   }
 
   // Handle specific status codes (only if not a Meta API error)
+  // NOTE: For pause/resume endpoints, 401/403 should NOT trigger logout
+  // These are handled in api.js with skipAutoLogoutEndpoints
   if (status === 401) {
     return {
       message: 'Your session has expired. Please log in again.',
-      shouldRedirect: true,
-      redirectTo: '/',
+      shouldRedirect: false, // Don't auto-redirect - let user decide
     };
   }
   

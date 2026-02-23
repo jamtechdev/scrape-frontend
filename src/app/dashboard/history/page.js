@@ -112,14 +112,6 @@ export default function History() {
   // Handle pause job button click
   const handlePauseJob = async (job) => {
     try {
-      // Check if token exists before making request
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Your session has expired. Please login again.');
-        window.location.href = '/';
-        return;
-      }
-
       const response = await post(`/ads/jobs/${job.id}/pause`);
       if (response.code === 200) {
         // Refresh jobs list
@@ -127,10 +119,10 @@ export default function History() {
         alert('Job paused successfully! Worker will stop processing this job immediately.');
       }
     } catch (err) {
-      // Check if it's a 401/403 error (session expired)
+      // Handle errors without logging out
       if (err.status === 401 || err.status === 403) {
-        // Don't show alert - API client already handles logout and redirect
-        // Just return silently
+        // Show error message but don't logout
+        alert(err.message || 'Authentication error. Please refresh the page and try again.');
         return;
       }
       const errorInfo = handleApiError(err);
@@ -148,6 +140,12 @@ export default function History() {
         alert('Job resumed successfully! Status set to running. Worker will continue processing.');
       }
     } catch (err) {
+      // Handle errors without logging out
+      if (err.status === 401 || err.status === 403) {
+        // Show error message but don't logout
+        alert(err.message || 'Authentication error. Please refresh the page and try again.');
+        return;
+      }
       const errorInfo = handleApiError(err);
       alert(errorInfo.message || 'Failed to resume job');
     }

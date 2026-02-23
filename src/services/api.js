@@ -84,28 +84,58 @@ async function apiRequest(endpoint, options = {}) {
     }
 
     if (!response.ok) {
-      const skipAutoLogoutEndpoints = ['/auth/me'];
+      // Endpoints that should NOT trigger auto-logout (even on 401/403)
+      // User should only logout when clicking logout button, not on API errors
+      const skipAutoLogoutEndpoints = [
+        '/auth/me',
+        '/jobs/',
+        '/pause',
+        '/resume',
+        '/ads/jobs/'
+      ];
       const shouldSkipAutoLogout = skipAutoLogoutEndpoints.some(skipEndpoint => endpoint.includes(skipEndpoint));
       
+      // For pause/resume/jobs endpoints, NEVER auto-logout - just show error
+      if ((response.status === 401 || response.status === 403) && shouldSkipAutoLogout) {
+        throw {
+          message: data.message || 'Authentication error. Please refresh the page and try again.',
+          status: response.status,
+          details: data.details || null,
+          fullError: data,
+        };
+      }
+
+      // For other endpoints, only logout if it's a real session expiry (not just any 401/403)
+      // Most 401/403 errors should not trigger logout - only explicit session expiry
       if ((response.status === 401 || response.status === 403) && !shouldSkipAutoLogout) {
-        handleUnauthorized();
-        throw {
-          message: 'Your session has expired or you have been logged out. Please login again.',
-          status: response.status,
-          details: data.details || null,
-          fullError: data,
-        };
+        // Check if it's a real session expiry or just a permission error
+        const isSessionExpired = data.message && (
+          data.message.toLowerCase().includes('session') ||
+          data.message.toLowerCase().includes('expired') ||
+          data.message.toLowerCase().includes('token')
+        );
+
+        // Only logout if it's explicitly a session expiry, not just any auth error
+        if (isSessionExpired) {
+          handleUnauthorized();
+          throw {
+            message: 'Your session has expired. Please login again.',
+            status: response.status,
+            details: data.details || null,
+            fullError: data,
+          };
+        } else {
+          // Permission error - don't logout, just show error
+          throw {
+            message: data.message || 'Authentication required',
+            status: response.status,
+            details: data.details || null,
+            fullError: data,
+          };
+        }
       }
       
-      if (response.status === 401 || response.status === 403) {
-        throw {
-          message: data.message || 'Authentication required',
-          status: response.status,
-          details: data.details || null,
-          fullError: data,
-        };
-      }
-      
+      // Handle other HTTP errors (not 401/403 - those are handled above)
       const error = {
         message: data.message || data.error || 'An error occurred',
         status: response.status,
