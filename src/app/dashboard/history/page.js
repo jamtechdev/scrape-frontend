@@ -124,7 +124,7 @@ export default function History() {
       if (response.code === 200) {
         // Refresh jobs list
         await fetchJobs();
-        alert('Job paused successfully! The scraping will stop.');
+        alert('Job paused successfully! Worker will stop processing this job immediately.');
       }
     } catch (err) {
       // Check if it's a 401/403 error (session expired)
@@ -145,7 +145,7 @@ export default function History() {
       if (response.code === 200) {
         // Refresh jobs list
         await fetchJobs();
-        alert('Job resumed successfully! It will continue processing in the background.');
+        alert('Job resumed successfully! Status set to running. Worker will continue processing.');
       }
     } catch (err) {
       const errorInfo = handleApiError(err);
