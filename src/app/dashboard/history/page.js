@@ -116,9 +116,15 @@ export default function History() {
       if (response.code === 200) {
         // Refresh jobs list
         await fetchJobs();
-        alert('Job paused successfully!');
+        alert('Job paused successfully! The scraping will stop.');
       }
     } catch (err) {
+      // Check if it's a 401/403 error (session expired)
+      if (err.status === 401 || err.status === 403) {
+        alert('Your session has expired. Please login again.');
+        // The API client will automatically handle logout and redirect
+        return;
+      }
       const errorInfo = handleApiError(err);
       alert(errorInfo.message || 'Failed to pause job');
     }
