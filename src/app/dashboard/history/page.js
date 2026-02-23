@@ -144,17 +144,14 @@ export default function History() {
     return job.status === 'running' || job.status === 'pending';
   };
 
-  // Check if job can be resumed
+  // Check if job can be resumed (ALL paused and failed jobs can be resumed)
   const canResumeJob = (job) => {
-    if (job.status === 'paused') return true;
-    if (job.status === 'failed' && job.errorMessage) {
-      const errorLower = job.errorMessage.toLowerCase();
-      return errorLower.includes('timeout') || 
-             errorLower.includes('time-out') || 
-             errorLower.includes('network error') ||
-             errorLower.includes('canceling statement');
-    }
-    return false;
+    return job.status === 'paused' || job.status === 'failed';
+  };
+
+  // Check if View Ads button should be shown (only for paused or failed jobs, not running)
+  const canViewAds = (job) => {
+    return job.status === 'paused' || job.status === 'failed' || job.status === 'completed';
   };
 
   return (
@@ -372,20 +369,20 @@ export default function History() {
                                   </button>
                                 )}
                                 {canResumeJob(job) && (
-                                  <>
-                                    <button
-                                      onClick={() => handleResumeJob(job)}
-                                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
-                                    >
-                                      Continue
-                                    </button>
-                                    <button
-                                      onClick={() => handleResumeJob(job)}
-                                      className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
-                                    >
-                                      View Ads
-                                    </button>
-                                  </>
+                                  <button
+                                    onClick={() => handleResumeJob(job)}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                                  >
+                                    Continue
+                                  </button>
+                                )}
+                                {canViewAds(job) && job.coverage?.id && (
+                                  <button
+                                    onClick={() => router.push(`/dashboard/ads?coverageId=${job.coverage.id}`)}
+                                    className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
+                                  >
+                                    View Ads
+                                  </button>
                                 )}
                               </div>
                             </td>
@@ -545,20 +542,20 @@ export default function History() {
                             </button>
                           )}
                           {canResumeJob(job) && (
-                            <>
-                              <button
-                                onClick={() => handleResumeJob(job)}
-                                className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
-                              >
-                                Continue
-                              </button>
-                              <button
-                                onClick={() => handleResumeJob(job)}
-                                className="w-full px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
-                              >
-                                View Ads
-                              </button>
-                            </>
+                            <button
+                              onClick={() => handleResumeJob(job)}
+                              className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                            >
+                              Continue
+                            </button>
+                          )}
+                          {canViewAds(job) && job.coverage?.id && (
+                            <button
+                              onClick={() => router.push(`/dashboard/ads?coverageId=${job.coverage.id}`)}
+                              className="w-full px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
+                            >
+                              View Ads
+                            </button>
                           )}
                         </div>
                       </div>

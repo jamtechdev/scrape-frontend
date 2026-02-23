@@ -68,7 +68,7 @@ export default function SearchForm({
           disabled={isProcessing}
           className="w-full md:w-auto"
         >
-          {isProcessing ? "Processing in Progress..." : "Search Ads"}
+          {isProcessing ? "In Progress..." : "Search Ads"}
         </Button>
       </form>
     </div>

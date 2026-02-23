@@ -31,8 +31,8 @@ export default function ProcessingProgress({ progress }) {
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                <span className="hidden sm:inline">Processing in Progress</span>
-                <span className="sm:hidden">Processing...</span>
+                <span className="hidden sm:inline">In Progress</span>
+                <span className="sm:hidden">In Progress...</span>
                 <span className="inline-flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
