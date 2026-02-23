@@ -100,6 +100,24 @@ export async function resetPassword(resetData) {
   return response;
 }
 
+/**
+ * Get Google OAuth URL for login
+ * @returns {Promise<Object>} Response with OAuth URL
+ */
+export async function getGoogleLoginUrl() {
+  const response = await get('/auth/google/login-url');
+  return response;
+}
+
+/**
+ * Get Google OAuth URL for signup
+ * @returns {Promise<Object>} Response with OAuth URL
+ */
+export async function getGoogleSignupUrl() {
+  const response = await get('/auth/google/signup-url');
+  return response;
+}
+
 export default {
   register,
   login,
@@ -108,5 +126,7 @@ export default {
   forgotPassword,
   verifyOTP,
   resetPassword,
+  getGoogleLoginUrl,
+  getGoogleSignupUrl,
 };
 

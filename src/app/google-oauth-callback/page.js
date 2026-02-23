@@ -2,19 +2,84 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { post } from "@/services/api";
+import { post, get } from "@/services/api";
 import { searchAds } from "@/services/ads.service";
 import { handleApiError } from "@/utils/errorHandler";
+import { useAuth } from "@/contexts/AuthContext";
 
 function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { login: authLogin } = useAuth();
   const [status, setStatus] = useState("processing");
   const [message, setMessage] = useState("Processing Google authorization...");
 
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        // Get authorization code from URL
+        const code = searchParams.get("code");
+        const error = searchParams.get("error");
+        const state = searchParams.get("state");
+        const fromSearch = searchParams.get("from") === "search";
+
+        if (error) {
+          setStatus("error");
+          setMessage(`Authorization failed: ${error}`);
+          setTimeout(() => {
+            router.push("/login?oauth=error");
+          }, 3000);
+          return;
+        }
+
+        if (!code) {
+          setStatus("error");
+          setMessage("No authorization code received from Google.");
+          setTimeout(() => {
+            router.push("/login?oauth=error");
+          }, 3000);
+          return;
+        }
+
+        // Parse state to determine if this is login/signup or Google Sheets connection
+        let stateData = { type: 'connect', userId: null };
+        try {
+          stateData = JSON.parse(state || '{}');
+        } catch {
+          // If state is not JSON, treat it as userId (backward compatibility for Google Sheets)
+          stateData.userId = state;
+          stateData.type = 'connect';
+        }
+
+        const { type } = stateData;
+
+        // If this is login/signup OAuth, handle it differently
+        if (type === 'login' || type === 'signup') {
+          setMessage("Completing login...");
+          
+          // Call the auth callback endpoint (GET request)
+          const authResponse = await get(`/auth/google/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || '')}`);
+          
+          if (authResponse && (authResponse.code === 200 || authResponse.code === 201)) {
+            // Save token and user data
+            if (authResponse.data?.token && authResponse.data?.user) {
+              authLogin(authResponse.data.user);
+            }
+            
+            setStatus("success");
+            setMessage(authResponse.data?.isNewUser 
+              ? "Account created and logged in with Google! Redirecting..." 
+              : "Successfully logged in with Google! Redirecting...");
+            setTimeout(() => {
+              router.push("/dashboard");
+            }, 1500);
+            return;
+          } else {
+            throw new Error(authResponse?.message || "Failed to complete Google login");
+          }
+        }
+
+        // Otherwise, this is Google Sheets OAuth (existing flow)
         // Check if user is logged in (has token)
         const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
         if (!token) {
@@ -26,38 +91,7 @@ function CallbackContent() {
           return;
         }
 
-        // Get authorization code from URL
-        const code = searchParams.get("code");
-        const error = searchParams.get("error");
-        const fromSearch = searchParams.get("from") === "search";
-
-        if (error) {
-          setStatus("error");
-          setMessage(`Authorization failed: ${error}`);
-          setTimeout(() => {
-            if (fromSearch) {
-              router.push("/dashboard?oauth=error");
-            } else {
-              router.push("/dashboard/setting?oauth=error");
-            }
-          }, 3000);
-          return;
-        }
-
-        if (!code) {
-          setStatus("error");
-          setMessage("No authorization code received from Google.");
-          setTimeout(() => {
-            if (fromSearch) {
-              router.push("/dashboard?oauth=error");
-            } else {
-              router.push("/dashboard/setting?oauth=error");
-            }
-          }, 3000);
-          return;
-        }
-
-        // Exchange code for access token
+        // Exchange code for access token (Google Sheets)
         setMessage("Exchanging authorization code for token...");
         // Get the redirect URI that was used (same as the one in the OAuth URL)
         const frontendUrl = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";

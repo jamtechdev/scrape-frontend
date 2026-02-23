@@ -110,59 +110,76 @@ export default function AllAdsPage() {
                   key={ad.id}
                   className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col group"
                 >
-                  {/* Media - Video Priority */}
+                  {/* Media - Enhanced with snapshot.cards images */}
                   <div className="w-full h-64 bg-gray-100 relative overflow-hidden group-hover:scale-[1.02] transition-transform duration-300">
-                    {/* Priority 1: Show video if video_url exists */}
-                    {ad.video_url ? (
-                      <video
-                        className="ad-video w-full h-full object-cover"
-                        src={ad.video_url}
-                        poster={ad.thumbnail_url || undefined}
-                        controls
-                        muted={false}
-                        playsInline
-                        preload="metadata"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          const thumbnailElement = e.target.parentElement.querySelector('.ad-thumbnail');
-                          const fallback = e.target.parentElement.querySelector('.fallback-gradient');
-                          if (ad.thumbnail_url && thumbnailElement) {
-                            thumbnailElement.style.display = 'block';
-                          } else if (fallback) {
-                            fallback.style.display = 'flex';
-                          }
-                        }}
-                      >
-                        <source src={ad.video_url} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                    ) : null}
-                    
-                    {/* Priority 2: Show thumbnail if no video_url OR video failed */}
-                    {(!ad.video_url || (ad.video_url && ad.thumbnail_url)) && ad.thumbnail_url ? (
-                      <img
-                        className={`ad-thumbnail w-full h-full object-cover ${ad.video_url ? 'hidden' : ''}`}
-                        src={ad.thumbnail_url}
-                        alt={ad.ad_creative_link_title || "Ad thumbnail"}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          const fallback = e.target.parentElement.querySelector('.fallback-gradient');
-                          if (fallback) fallback.style.display = 'flex';
-                        }}
-                      />
-                    ) : null}
-                    
-                    {/* Fallback gradient - shown when no video and no thumbnail or both fail */}
-                    {(!ad.video_url && !ad.thumbnail_url) && (
-                      <div 
-                        className="fallback-gradient w-full h-full flex items-center justify-center"
-                        style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}
-                      >
-                        <div className="text-white text-4xl font-bold">
-                          {ad.page_name ? ad.page_name.charAt(0).toUpperCase() : 'A'}
-                        </div>
-                      </div>
-                    )}
+                    {(() => {
+                      // Get first image from snapshot.cards (resized_image_url)
+                      const cardImage = ad.rawAdData?.cards?.[0]?.resized_image_url || 
+                                       ad.rawAdData?.cards?.[0]?.original_image_url ||
+                                       ad.rawAdData?.allImages?.[0]?.url ||
+                                       ad.rawAdData?.primaryImage || 
+                                       ad.thumbnail_url;
+                      
+                      // Get video from cards or video_url
+                      const cardVideo = ad.rawAdData?.cards?.[0]?.video_url ||
+                                       ad.rawAdData?.primaryVideo || 
+                                       ad.video_url;
+                      
+                      return (
+                        <>
+                          {/* Priority 1: Show video if exists */}
+                          {cardVideo ? (
+                            <video
+                              className="ad-video w-full h-full object-cover"
+                              src={cardVideo}
+                              poster={cardImage || undefined}
+                              controls
+                              muted={false}
+                              playsInline
+                              preload="metadata"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                const thumbnailElement = e.target.parentElement.querySelector('.ad-thumbnail');
+                                const fallback = e.target.parentElement.querySelector('.fallback-gradient');
+                                if (cardImage && thumbnailElement) {
+                                  thumbnailElement.style.display = 'block';
+                                } else if (fallback) {
+                                  fallback.style.display = 'flex';
+                                }
+                              }}
+                            >
+                              <source src={cardVideo} type="video/mp4" />
+                              Your browser does not support the video tag.
+                            </video>
+                          ) : null}
+                          
+                          {/* Priority 2: Show image from snapshot.cards */}
+                          {(!cardVideo || (cardVideo && cardImage)) && cardImage ? (
+                            <img
+                              className={`ad-thumbnail w-full h-full object-cover ${cardVideo ? 'hidden' : ''}`}
+                              src={cardImage}
+                              alt={ad.rawAdData?.cards?.[0]?.title || ad.ad_creative_link_title || "Ad thumbnail"}
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                const fallback = e.target.parentElement.querySelector('.fallback-gradient');
+                                if (fallback) fallback.style.display = 'flex';
+                              }}
+                            />
+                          ) : null}
+                          
+                          {/* Fallback - gray gradient (no blue) */}
+                          {!cardVideo && !cardImage && (
+                            <div 
+                              className="fallback-gradient w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300"
+                            >
+                              <div className="text-gray-600 text-4xl font-bold">
+                                {ad.rawAdData?.pageName || ad.page_name ? (ad.rawAdData?.pageName || ad.page_name).charAt(0).toUpperCase() : 'A'}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                     
                     {/* Video indicator - show if video exists */}
                     {ad.video_url && (
