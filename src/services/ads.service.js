@@ -20,6 +20,7 @@ export async function searchAds(searchParams) {
     country: searchParams.country,
     dateStart: searchParams.dateStart,
     dateEnd: searchParams.dateEnd,
+    mostRecent: searchParams.mostRecent || false,
   });
   return response;
 }

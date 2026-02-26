@@ -17,10 +17,12 @@ export default function Dashboard() {
         country,
         dateStart,
         dateEnd,
+        mostRecent,
     setKeyword,
     setCountry,
     setDateStart,
     setDateEnd,
+    setMostRecent,
     loading,
     error,
     success,
@@ -73,12 +75,14 @@ export default function Dashboard() {
         country={country}
         dateStart={dateStart}
         dateEnd={dateEnd}
+        mostRecent={mostRecent}
         countryOptions={countryOptions}
         isProcessing={isProcessing}
         onKeywordChange={(e) => setKeyword(e.target.value)}
         onCountryChange={(e) => setCountry(e.target.value)}
         onDateStartChange={(e) => setDateStart(e.target.value)}
         onDateEndChange={(e) => setDateEnd(e.target.value)}
+        onMostRecentChange={(checked) => setMostRecent(checked)}
         onSubmit={handleSearch}
       />
 

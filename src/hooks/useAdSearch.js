@@ -13,6 +13,7 @@ export function useAdSearch() {
   const [country, setCountry] = useState("DE");
   const [dateStart, setDateStart] = useState("");
   const [dateEnd, setDateEnd] = useState("");
+  const [mostRecent, setMostRecent] = useState(false);
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -173,6 +174,7 @@ export function useAdSearch() {
         country,
         dateStart,
         dateEnd,
+        mostRecent,
       });
 
       if (response.code === 200) {
@@ -236,10 +238,12 @@ export function useAdSearch() {
     country,
     dateStart,
     dateEnd,
+    mostRecent,
     setKeyword,
     setCountry,
     setDateStart,
     setDateEnd,
+    setMostRecent,
     
     // Search state
     loading,
