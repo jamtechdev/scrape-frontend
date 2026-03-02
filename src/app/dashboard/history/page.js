@@ -161,6 +161,15 @@ export default function History() {
     return job.status === 'paused' || job.status === 'failed';
   };
 
+  // Unified handler for pause/resume toggle
+  const handleTogglePauseResume = async (job) => {
+    if (canPauseJob(job)) {
+      await handlePauseJob(job);
+    } else if (canResumeJob(job)) {
+      await handleResumeJob(job);
+    }
+  };
+
 
   return (
     <div>
@@ -368,20 +377,16 @@ export default function History() {
                             {/* Actions */}
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center gap-2">
-                                {canPauseJob(job) && (
+                                {(canPauseJob(job) || canResumeJob(job)) && (
                                   <button
-                                    onClick={() => handlePauseJob(job)}
-                                    className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-sm font-medium"
+                                    onClick={() => handleTogglePauseResume(job)}
+                                    className={`px-4 py-2 text-white rounded-lg transition text-sm font-medium ${
+                                      canPauseJob(job)
+                                        ? 'bg-orange-600 hover:bg-orange-700'
+                                        : 'bg-blue-600 hover:bg-blue-700'
+                                    }`}
                                   >
-                                    Pause
-                                  </button>
-                                )}
-                                {canResumeJob(job) && (
-                                  <button
-                                    onClick={() => handleResumeJob(job)}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
-                                  >
-                                    Continue
+                                    {canPauseJob(job) ? 'Pause' : 'Continue'}
                                   </button>
                                 )}
                                 <button
@@ -539,20 +544,16 @@ export default function History() {
 
                         {/* Action Buttons */}
                         <div className="mt-4 space-y-2">
-                          {canPauseJob(job) && (
+                          {(canPauseJob(job) || canResumeJob(job)) && (
                             <button
-                              onClick={() => handlePauseJob(job)}
-                              className="w-full px-4 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-sm font-medium"
+                              onClick={() => handleTogglePauseResume(job)}
+                              className={`w-full px-4 py-2.5 text-white rounded-lg transition text-sm font-medium ${
+                                canPauseJob(job)
+                                  ? 'bg-orange-600 hover:bg-orange-700'
+                                  : 'bg-blue-600 hover:bg-blue-700'
+                              }`}
                             >
-                              Pause
-                            </button>
-                          )}
-                          {canResumeJob(job) && (
-                            <button
-                              onClick={() => handleResumeJob(job)}
-                              className="w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
-                            >
-                              Continue
+                              {canPauseJob(job) ? 'Pause' : 'Continue'}
                             </button>
                           )}
                           <button
