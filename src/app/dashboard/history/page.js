@@ -18,10 +18,10 @@ export default function History() {
   useEffect(() => {
     fetchJobs();
     
-    // Poll for real-time updates every 3 seconds
+    // Poll for real-time updates every 2 seconds for faster status updates
     const pollInterval = setInterval(() => {
       fetchJobs();
-    }, 3000);
+    }, 2000);
     
     return () => clearInterval(pollInterval);
   }, [statusFilter]);
@@ -119,50 +119,48 @@ export default function History() {
   // Handle pause job button click
   const handlePauseJob = async (job) => {
     try {
+      // Immediately update local state for instant UI feedback
+      setJobs(prevJobs => 
+        prevJobs.map(j => 
+          j.id === job.id 
+            ? { ...j, status: 'paused', error_message: 'Paused by user' }
+            : j
+        )
+      );
+      
       const response = await post(`/ads/jobs/${job.id}/pause`);
       if (response.code === 200) {
-        // Refresh jobs list
+        // Refresh jobs list to get latest data
         await fetchJobs();
-        alert('Job paused successfully! Worker will stop processing this job immediately.');
       }
     } catch (err) {
-      // Handle errors without logging out
-      if (err.status === 401 || err.status === 403) {
-        // Show error message but don't logout
-        alert(err.message || 'Authentication error. Please refresh the page and try again.');
-        return;
-      }
-      const errorInfo = handleApiError(err);
-      alert(errorInfo.message || 'Failed to pause job');
+      // Revert optimistic update on error
+      await fetchJobs();
+      // Silently handle errors - status will update on next poll
     }
   };
 
   // Handle resume job button click
   const handleResumeJob = async (job) => {
     try {
+      // Immediately update local state for instant UI feedback
+      setJobs(prevJobs => 
+        prevJobs.map(j => 
+          j.id === job.id 
+            ? { ...j, status: 'running', error_message: null }
+            : j
+        )
+      );
+      
       const response = await post(`/ads/jobs/${job.id}/resume`);
       if (response.code === 200) {
-        // Immediately update local state for instant UI feedback
-        setJobs(prevJobs => 
-          prevJobs.map(j => 
-            j.id === job.id 
-              ? { ...j, status: 'running', error_message: null }
-              : j
-          )
-        );
         // Refresh jobs list to get latest data
         await fetchJobs();
-        alert('Job resumed successfully! Status set to running. Worker will continue processing.');
       }
     } catch (err) {
-      // Handle errors without logging out
-      if (err.status === 401 || err.status === 403) {
-        // Show error message but don't logout
-        alert(err.message || 'Authentication error. Please refresh the page and try again.');
-        return;
-      }
-      const errorInfo = handleApiError(err);
-      alert(errorInfo.message || 'Failed to resume job');
+      // Revert optimistic update on error
+      await fetchJobs();
+      // Silently handle errors - status will update on next poll
     }
   };
 
@@ -176,37 +174,6 @@ export default function History() {
     return job.status === 'paused' || job.status === 'failed';
   };
 
-  // Check if job can be stopped (running or pending)
-  const canStopJob = (job) => {
-    return job.status === 'running' || job.status === 'pending';
-  };
-
-  // Handle stop job button click
-  const handleStopJob = async (job) => {
-    try {
-      const response = await post(`/ads/jobs/${job.id}/stop`);
-      if (response.code === 200) {
-        // Immediately update local state for instant UI feedback
-        setJobs(prevJobs => 
-          prevJobs.map(j => 
-            j.id === job.id 
-              ? { ...j, status: 'failed', error_message: 'Stopped by user' }
-              : j
-          )
-        );
-        // Refresh jobs list to get latest data
-        await fetchJobs();
-        alert('Job stopped successfully! It will not continue processing.');
-      }
-    } catch (err) {
-      if (err.status === 401 || err.status === 403) {
-        alert(err.message || 'Authentication error. Please refresh the page and try again.');
-        return;
-      }
-      const errorInfo = handleApiError(err);
-      alert(errorInfo.message || 'Failed to stop job');
-    }
-  };
 
   // Unified handler for pause/resume toggle
   const handleTogglePauseResume = async (job) => {
@@ -243,10 +210,8 @@ export default function History() {
         >
           <option value="">All Status</option>
           <option value="completed">Completed</option>
-          <option value="running">Running</option>
           <option value="pending">Pending</option>
           <option value="failed">Failed</option>
-          <option value="paused">Paused</option>
         </select>
       </div>
 
@@ -401,16 +366,20 @@ export default function History() {
                                     ></div>
                                   </div>
                                 </div>
+                              ) : job.status === 'paused' ? (
+                                <div className="text-xs text-orange-600 font-medium">
+                                  Paused
+                                </div>
                               ) : job.coverage?.isComplete ? (
                                 <div className="text-xs text-green-600 font-medium">
                                   100% Complete
                                 </div>
-                                ) : job.status === 'failed' ? (
-                                  <div className="text-xs text-red-600 font-medium">
-                                    Failed
-                                  </div>
-                                  ) : (
-                                    <div className="text-xs text-gray-400">—</div>
+                              ) : job.status === 'failed' ? (
+                                <div className="text-xs text-red-600 font-medium">
+                                  Failed
+                                </div>
+                              ) : (
+                                <div className="text-xs text-gray-400">—</div>
                               )}
                             </td>
 
@@ -436,20 +405,6 @@ export default function History() {
                                     {canPauseJob(job) ? 'Pause' : 'Continue'}
                                   </button>
                                 )}
-                                {canStopJob(job) && (
-                                  <button
-                                    onClick={() => handleStopJob(job)}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium"
-                                  >
-                                    Stop
-                                  </button>
-                                )}
-                                <button
-                                  onClick={() => router.push('/dashboard/ads/all')}
-                                  className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
-                                >
-                                  All Ads
-                                </button>
                               </div>
                             </td>
                           </tr>
@@ -584,6 +539,10 @@ export default function History() {
                                 ></div>
                               </div>
                             </div>
+                          ) : job.status === 'paused' ? (
+                            <div className="text-xs text-orange-600 font-medium">
+                              Paused
+                            </div>
                           ) : job.coverage?.isComplete ? (
                             <div className="text-xs text-green-600 font-medium">
                               100% Complete
@@ -611,20 +570,6 @@ export default function History() {
                               {canPauseJob(job) ? 'Pause' : 'Continue'}
                             </button>
                           )}
-                          {canStopJob(job) && (
-                            <button
-                              onClick={() => handleStopJob(job)}
-                              className="w-full px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium"
-                            >
-                              Stop
-                            </button>
-                          )}
-                          <button
-                            onClick={() => router.push('/dashboard/ads/all')}
-                            className="w-full px-4 py-2.5 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
-                          >
-                            All Ads
-                          </button>
                         </div>
                       </div>
                     </div>
