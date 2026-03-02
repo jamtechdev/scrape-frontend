@@ -17,6 +17,13 @@ export default function History() {
 
   useEffect(() => {
     fetchJobs();
+    
+    // Poll for real-time updates every 3 seconds
+    const pollInterval = setInterval(() => {
+      fetchJobs();
+    }, 3000);
+    
+    return () => clearInterval(pollInterval);
   }, [statusFilter]);
 
   const fetchJobs = async () => {
@@ -135,7 +142,15 @@ export default function History() {
     try {
       const response = await post(`/ads/jobs/${job.id}/resume`);
       if (response.code === 200) {
-        // Refresh jobs list
+        // Immediately update local state for instant UI feedback
+        setJobs(prevJobs => 
+          prevJobs.map(j => 
+            j.id === job.id 
+              ? { ...j, status: 'running', error_message: null }
+              : j
+          )
+        );
+        // Refresh jobs list to get latest data
         await fetchJobs();
         alert('Job resumed successfully! Status set to running. Worker will continue processing.');
       }
@@ -159,6 +174,38 @@ export default function History() {
   // Check if job can be resumed (ALL paused and failed jobs can be resumed)
   const canResumeJob = (job) => {
     return job.status === 'paused' || job.status === 'failed';
+  };
+
+  // Check if job can be stopped (running or pending)
+  const canStopJob = (job) => {
+    return job.status === 'running' || job.status === 'pending';
+  };
+
+  // Handle stop job button click
+  const handleStopJob = async (job) => {
+    try {
+      const response = await post(`/ads/jobs/${job.id}/stop`);
+      if (response.code === 200) {
+        // Immediately update local state for instant UI feedback
+        setJobs(prevJobs => 
+          prevJobs.map(j => 
+            j.id === job.id 
+              ? { ...j, status: 'failed', error_message: 'Stopped by user' }
+              : j
+          )
+        );
+        // Refresh jobs list to get latest data
+        await fetchJobs();
+        alert('Job stopped successfully! It will not continue processing.');
+      }
+    } catch (err) {
+      if (err.status === 401 || err.status === 403) {
+        alert(err.message || 'Authentication error. Please refresh the page and try again.');
+        return;
+      }
+      const errorInfo = handleApiError(err);
+      alert(errorInfo.message || 'Failed to stop job');
+    }
   };
 
   // Unified handler for pause/resume toggle
@@ -389,6 +436,14 @@ export default function History() {
                                     {canPauseJob(job) ? 'Pause' : 'Continue'}
                                   </button>
                                 )}
+                                {canStopJob(job) && (
+                                  <button
+                                    onClick={() => handleStopJob(job)}
+                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium"
+                                  >
+                                    Stop
+                                  </button>
+                                )}
                                 <button
                                   onClick={() => router.push('/dashboard/ads/all')}
                                   className="px-4 py-2 bg-[#26996f] text-white rounded-lg hover:bg-[#1f7a5a] transition text-sm font-medium"
@@ -554,6 +609,14 @@ export default function History() {
                               }`}
                             >
                               {canPauseJob(job) ? 'Pause' : 'Continue'}
+                            </button>
+                          )}
+                          {canStopJob(job) && (
+                            <button
+                              onClick={() => handleStopJob(job)}
+                              className="w-full px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium"
+                            >
+                              Stop
                             </button>
                           )}
                           <button
