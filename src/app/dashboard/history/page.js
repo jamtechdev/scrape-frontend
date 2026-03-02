@@ -71,15 +71,17 @@ export default function History() {
   });
 
   const getStatusBadge = (status) => {
+    // Convert failed to paused - we don't show failed status anymore
+    const normalizedStatus = status === 'failed' ? 'paused' : status;
+    
     const statusConfig = {
       completed: { bg: "bg-green-100", text: "text-green-700", label: "Completed" },
       running: { bg: "bg-purple-100", text: "text-purple-700", label: "Running" },
       pending: { bg: "bg-yellow-100", text: "text-yellow-700", label: "Pending" },
-      failed: { bg: "bg-red-100", text: "text-red-700", label: "Failed" },
       paused: { bg: "bg-orange-100", text: "text-orange-700", label: "Paused" }
     };
 
-    const config = statusConfig[status] || statusConfig.pending;
+    const config = statusConfig[normalizedStatus] || statusConfig.pending;
     return (
       <span className={`${config.bg} ${config.text} px-3 py-1 rounded-full text-xs font-medium`}>
         {config.label}
@@ -190,8 +192,9 @@ export default function History() {
     return job.status === 'running' || job.status === 'pending';
   };
 
-  // Check if job can be resumed (ALL paused and failed jobs can be resumed)
+  // Check if job can be resumed (only paused jobs can be resumed)
   const canResumeJob = (job) => {
+    // Convert failed to paused for display purposes
     return job.status === 'paused' || job.status === 'failed';
   };
 
@@ -231,8 +234,9 @@ export default function History() {
         >
           <option value="">All Status</option>
           <option value="completed">Completed</option>
+          <option value="running">Running</option>
+          <option value="paused">Paused</option>
           <option value="pending">Pending</option>
-          <option value="failed">Failed</option>
         </select>
       </div>
 
@@ -395,9 +399,9 @@ export default function History() {
                                 <div className="text-xs text-green-600 font-medium">
                                   100% Complete
                                 </div>
-                              ) : job.status === 'failed' ? (
-                                <div className="text-xs text-red-600 font-medium">
-                                  Failed
+                              ) : job.status === 'paused' || job.status === 'failed' ? (
+                                <div className="text-xs text-orange-600 font-medium">
+                                  Paused
                                 </div>
                               ) : (
                                 <div className="text-xs text-gray-400">—</div>
@@ -575,9 +579,9 @@ export default function History() {
                             <div className="text-xs text-green-600 font-medium">
                               100% Complete
                             </div>
-                          ) : job.status === 'failed' ? (
-                            <div className="text-xs text-red-600 font-medium">
-                              Failed
+                          ) : job.status === 'paused' || job.status === 'failed' ? (
+                            <div className="text-xs text-orange-600 font-medium">
+                              Paused
                             </div>
                           ) : (
                             <div className="text-xs text-gray-400">—</div>
